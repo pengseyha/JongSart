@@ -1,0 +1,13 @@
+[
+  {
+    "id": "d1",
+    "name": "Dr. Frances",
+    "specialty": "Regenerative Dermatology",
+    "experience": 12,
+    "rating": 4.9,
+    "patients": 847,
+    "clinic": "Advanced Clinic",
+    "imageUrl": "https://randomuser.me/api/portraits/women/68.jpg",
+    "about": "World-renowned specialist in regenerative dermatology."
+  }
+]

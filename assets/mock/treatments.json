@@ -1,0 +1,15 @@
+[
+  {
+    "id": "t1",
+    "name": "Hydra-Laser",
+    "category": "Laser",
+    "duration": 45,
+    "price": 120.00,
+    "description": "Multi-step rejuvenation combining precision laser with hyaluronic acid.",
+    "beforeAfter": ["https://picsum.photos/id/15/400/300", "https://picsum.photos/id/16/400/300"],
+    "faqs": [
+      {"q": "Is it painful?", "a": "Slight tingling. Numbing applied."},
+      {"q": "Sessions needed?", "a": "3-6 sessions, 4 weeks apart."}
+    ]
+  }
+]
