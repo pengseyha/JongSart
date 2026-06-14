@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../../state/app_state.dart';
 import '../../theme/app_colors.dart';
 
 class ClinicDetailScreen extends StatelessWidget {
-  const ClinicDetailScreen({Key? key}) : super(key: key);
+  const ClinicDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isFavorite = context.watch<AppState>().isFavorite('clinic_lumina');
+
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
       body: SafeArea(
@@ -22,12 +26,27 @@ class ClinicDetailScreen extends StatelessWidget {
                         // Top Image and Back/Actions Layout Block
                         Stack(
                           children: [
-                            Container(
+                            SizedBox(
                               height: 280,
                               width: double.infinity,
                               child: Image.network(
                                 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800', // Premium clinic aesthetic
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                  decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xFFD8F3EC),
+                                        Color(0xFF7BC5A8),
+                                      ],
+                                    ),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(Icons.spa_outlined,
+                                        color: Colors.white, size: 56),
+                                  ),
+                                ),
                               ),
                             ),
                             Positioned(
@@ -35,30 +54,57 @@ class ClinicDetailScreen extends StatelessWidget {
                               left: 16,
                               right: 16,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
-                                    decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle),
                                     child: IconButton(
-                                      icon: const Icon(Icons.arrow_back, color: Colors.black, size: 20),
+                                      icon: const Icon(Icons.arrow_back,
+                                          color: Colors.black, size: 20),
                                       onPressed: () => context.pop(),
                                     ),
                                   ),
                                   Row(
                                     children: [
                                       Container(
-                                        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                                        decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle),
                                         child: IconButton(
-                                          icon: const Icon(Icons.share_outlined, color: Colors.black, size: 20),
-                                          onPressed: () {},
+                                          icon: const Icon(Icons.share_outlined,
+                                              color: Colors.black, size: 20),
+                                          onPressed: () {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                  'Clinic profile link ready to share.',
+                                                ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                       const SizedBox(width: 8),
                                       Container(
-                                        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                                        decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle),
                                         child: IconButton(
-                                          icon: const Icon(Icons.favorite_border, color: Colors.black, size: 20),
-                                          onPressed: () {},
+                                          icon: Icon(
+                                              isFavorite
+                                                  ? Icons.favorite
+                                                  : Icons.favorite_border,
+                                              color: isFavorite
+                                                  ? AppColors.primaryMint
+                                                  : Colors.black,
+                                              size: 20),
+                                          onPressed: () => context
+                                              .read<AppState>()
+                                              .toggleFavorite('clinic_lumina'),
                                         ),
                                       ),
                                     ],
@@ -68,59 +114,90 @@ class ClinicDetailScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        
+
                         // Overlapping Info Box Header Card
                         Transform.translate(
                           offset: const Offset(0, -30),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(color: AppColors.borderGrey),
                                 boxShadow: [
-                                  BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
+                                  BoxShadow(
+                                      color:
+                                          Colors.black.withValues(alpha: 0.05),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4)),
                                 ],
                               ),
                               padding: const EdgeInsets.all(16.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
+                                  Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
                                     children: [
-                                      _buildBadge(Icons.check_circle_outline, 'Certified Clinic'),
-                                      const SizedBox(width: 8),
-                                      _buildBadge(Icons.verified_outlined, 'Expert Doctors'),
+                                      _buildBadge(Icons.check_circle_outline,
+                                          'Certified Clinic'),
+                                      _buildBadge(Icons.verified_outlined,
+                                          'Expert Doctors'),
                                     ],
                                   ),
                                   const SizedBox(height: 12),
                                   const Text(
                                     'JongSart Clinic',
-                                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.textDark),
                                   ),
                                   const SizedBox(height: 8),
                                   Row(
                                     children: [
                                       Row(
-                                        children: List.generate(5, (index) => const Icon(Icons.star, color: Colors.amber, size: 16)),
+                                        children: List.generate(
+                                            5,
+                                            (index) => const Icon(Icons.star,
+                                                color: Colors.amber, size: 16)),
                                       ),
                                       const SizedBox(width: 8),
-                                      const Text('4.9', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textDark, fontSize: 13)),
+                                      const Text('4.9',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColors.textDark,
+                                              fontSize: 13)),
                                       const SizedBox(width: 4),
-                                      const Text('(1,221 Reviews)', style: TextStyle(color: AppColors.textGrey, fontSize: 13)),
+                                      const Expanded(
+                                        child: Text('(1,221 Reviews)',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: AppColors.textGrey,
+                                                fontSize: 13)),
+                                      ),
                                     ],
                                   ),
                                   const SizedBox(height: 12),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  const Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      const Icon(Icons.location_on_outlined, color: AppColors.primaryMint, size: 20),
-                                      const SizedBox(width: 8),
-                                      const Expanded(
+                                      Icon(Icons.location_on_outlined,
+                                          color: AppColors.primaryMint,
+                                          size: 20),
+                                      SizedBox(width: 8),
+                                      Expanded(
                                         child: Text(
                                           'No. 42 Russian Federation Boulevard (St. 110),\nPhnom Penh, Cambodia',
-                                          style: TextStyle(color: AppColors.textGrey, fontSize: 13, height: 1.4),
+                                          style: TextStyle(
+                                              color: AppColors.textGrey,
+                                              fontSize: 13,
+                                              height: 1.4),
                                         ),
                                       ),
                                     ],
@@ -139,11 +216,14 @@ class ClinicDetailScreen extends StatelessWidget {
                       children: [
                         Container(
                           decoration: const BoxDecoration(
-                            border: Border(bottom: BorderSide(color: AppColors.borderGrey)),
+                            border: Border(
+                                bottom:
+                                    BorderSide(color: AppColors.borderGrey)),
                           ),
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Row(
                               children: [
                                 _buildTab('Overview', true),
@@ -160,19 +240,30 @@ class ClinicDetailScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('About the Clinic', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                              const Text('About the Clinic',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.textDark)),
                               const SizedBox(height: 12),
                               const Text(
                                 'JongSart ជាគ្លីនិកថែរក្សាស្បែក និងកែសម្ផស្សឈានមុខគេនៅក្នុងប្រទេសកម្ពុជា។ ផ្អែកលើស្តង់ដារអនាម័យខ្ពស់ និងបច្ចេកវិទ្យាព្យាបាលស្បែកយ៉ាងច្បាស់លាស់ យើងរួមបញ្ចូលគ្នានូវជម្រើសព្យាបាលដ៏ល្អបំផុត ជាមួយការថែទាំយ៉ាងយកចិត្តទុកដាក់ ដើម្បីផ្តល់ជូននូវលទ្ធផលស្បែកមានសុខភាពល្អ និងភ្លឺថ្លា។',
-                                style: TextStyle(color: AppColors.textGrey, fontSize: 14, height: 1.6),
+                                style: TextStyle(
+                                    color: AppColors.textGrey,
+                                    fontSize: 14,
+                                    height: 1.6),
                               ),
                               const SizedBox(height: 24),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(child: _buildInfoCard('Opening Hours', _buildHoursList())),
+                                  Expanded(
+                                      child: _buildInfoCard(
+                                          'Opening Hours', _buildHoursList())),
                                   const SizedBox(width: 12),
-                                  Expanded(child: _buildInfoCard('Amenities', _buildAmenitiesList())),
+                                  Expanded(
+                                      child: _buildInfoCard(
+                                          'Amenities', _buildAmenitiesList())),
                                 ],
                               )
                             ],
@@ -184,7 +275,7 @@ class ClinicDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // Fixed Bottom Booking Action CTA Section
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -194,15 +285,17 @@ class ClinicDetailScreen extends StatelessWidget {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryMint,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
                     elevation: 0,
                   ),
-                  onPressed: () {
-                    // Navigate to booking wizard or call handler action
-                  },
+                  onPressed: () => context.push('/booking'),
                   child: const Text(
                     'Book Consultation',
-                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -219,14 +312,18 @@ class ClinicDetailScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.primaryMintLight,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.primaryMint.withOpacity(0.2)),
+        border: Border.all(color: AppColors.primaryMint.withValues(alpha: 0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: AppColors.primaryMint, size: 14),
           const SizedBox(width: 4),
-          Text(text, style: const TextStyle(color: AppColors.primaryMint, fontSize: 12, fontWeight: FontWeight.bold)),
+          Text(text,
+              style: const TextStyle(
+                  color: AppColors.primaryMint,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -257,7 +354,11 @@ class ClinicDetailScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryMint, fontSize: 13)),
+          Text(title,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryMint,
+                  fontSize: 13)),
           const SizedBox(height: 12),
           content,
         ],
@@ -279,11 +380,15 @@ class ClinicDetailScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(day, style: const TextStyle(color: AppColors.textDark, fontSize: 12, fontWeight: FontWeight.w500)),
+        Text(day,
+            style: const TextStyle(
+                color: AppColors.textDark,
+                fontSize: 12,
+                fontWeight: FontWeight.w500)),
         const SizedBox(width: 4),
         Expanded(
           child: Text(
-            hours, 
+            hours,
             textAlign: TextAlign.end,
             style: const TextStyle(color: AppColors.textDark, fontSize: 11),
             overflow: TextOverflow.ellipsis,
@@ -318,7 +423,12 @@ class ClinicDetailScreen extends StatelessWidget {
       children: [
         Icon(icon, size: 14, color: AppColors.textDark),
         const SizedBox(width: 4),
-        Text(label, style: const TextStyle(color: AppColors.textDark, fontSize: 11)),
+        Expanded(
+          child: Text(label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: AppColors.textDark, fontSize: 11)),
+        ),
       ],
     );
   }

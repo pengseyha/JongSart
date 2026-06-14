@@ -14,7 +14,7 @@ void main() {
 }
 
 class JongSartApp extends StatelessWidget {
-  const JongSartApp({Key? key}) : super(key: key);
+  const JongSartApp({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -4,9 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../theme/app_colors.dart';
 import '../../state/app_state.dart';
+import '../../widgets/app_bottom_nav.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,33 +20,55 @@ class HomeScreen extends StatelessWidget {
           slivers: [
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 12.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'JongSart',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.primaryMint),
+                    const Expanded(
+                      child: Text(
+                        'JongSart',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryMint),
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.1),
+                            color: Colors.grey.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Row(
-                            children: const [
-                              Icon(Icons.location_on_outlined, size: 16, color: AppColors.primaryMint),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.location_on_outlined,
+                                  size: 16, color: AppColors.primaryMint),
                               SizedBox(width: 4),
-                              Text('Phnom Penh', style: TextStyle(fontSize: 13, color: AppColors.textDark, fontWeight: FontWeight.w500)),
-                              Icon(Icons.keyboard_arrow_down, size: 16, color: AppColors.textDark),
+                              Text('Phnom Penh',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: AppColors.textDark,
+                                      fontWeight: FontWeight.w500)),
+                              Icon(Icons.keyboard_arrow_down,
+                                  size: 16, color: AppColors.textDark),
                             ],
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const Icon(Icons.notifications_none, color: AppColors.textDark),
+                        IconButton(
+                          onPressed: () => context.push('/promo'),
+                          icon: const Icon(Icons.notifications_none,
+                              color: AppColors.textDark),
+                        ),
                       ],
                     ),
                   ],
@@ -54,7 +77,8 @@ class HomeScreen extends StatelessWidget {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -62,13 +86,17 @@ class HomeScreen extends StatelessWidget {
                     border: Border.all(color: AppColors.borderGrey),
                   ),
                   child: TextField(
-                    decoration: InputDecoration(
+                    readOnly: true,
+                    onTap: () => context.go('/search'),
+                    decoration: const InputDecoration(
                       hintText: 'Search clinics, treatments, doctors...',
-                      hintStyle: const TextStyle(color: AppColors.textGrey, fontSize: 13),
-                      prefixIcon: const Icon(Icons.search, color: AppColors.textGrey),
-                      suffixIcon: const Icon(Icons.tune, color: AppColors.primaryMint),
+                      hintStyle:
+                          TextStyle(color: AppColors.textGrey, fontSize: 13),
+                      prefixIcon: Icon(Icons.search, color: AppColors.textGrey),
+                      suffixIcon:
+                          Icon(Icons.tune, color: AppColors.primaryMint),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                      contentPadding: EdgeInsets.symmetric(vertical: 14),
                     ),
                   ),
                 ),
@@ -90,15 +118,29 @@ class HomeScreen extends StatelessWidget {
                   childAspectRatio: 1.15,
                 ),
                 delegate: SliverChildListDelegate([
-                  _buildConcernCard('Acne', Icons.spa_outlined, Colors.redAccent.withOpacity(0.1), Colors.redAccent),
-                  _buildConcernCard('Pigmentation', Icons.wb_sunny_outlined, Colors.orangeAccent.withOpacity(0.1), Colors.orangeAccent),
-                  _buildConcernCard('Aging', Icons.access_time, Colors.blueAccent.withOpacity(0.1), Colors.blueAccent),
-                  _buildConcernCard('Hydration', Icons.water_drop_outlined, Colors.cyan.withOpacity(0.1), Colors.cyan),
+                  _buildConcernCard(
+                      'Acne',
+                      Icons.spa_outlined,
+                      Colors.redAccent.withValues(alpha: 0.1),
+                      Colors.redAccent),
+                  _buildConcernCard(
+                      'Pigmentation',
+                      Icons.wb_sunny_outlined,
+                      Colors.orangeAccent.withValues(alpha: 0.1),
+                      Colors.orangeAccent),
+                  _buildConcernCard(
+                      'Aging',
+                      Icons.access_time,
+                      Colors.blueAccent.withValues(alpha: 0.1),
+                      Colors.blueAccent),
+                  _buildConcernCard('Hydration', Icons.water_drop_outlined,
+                      Colors.cyan.withValues(alpha: 0.1), Colors.cyan),
                 ]),
               ),
             ),
             SliverToBoxAdapter(
-              child: _buildSectionHeader('Top Dermatologists', () {}),
+              child: _buildSectionHeader(
+                  'Top Dermatologists', () => context.go('/search')),
             ),
             SliverToBoxAdapter(
               child: SizedBox(
@@ -107,9 +149,11 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   children: [
-                    _buildDoctorCard(context, 'Dr. Sarah Chen', 'MEDICAL LASER', 4.9, 'https://randomuser.me/api/portraits/women/44.jpg'),
+                    _buildDoctorCard(context, 'Dr. Sarah Chen', 'MEDICAL LASER',
+                        4.9, 'SC', AppColors.primaryMint),
                     const SizedBox(width: 16),
-                    _buildDoctorCard(context, 'Dr. James Wilson', 'DERMATO-SURGERY', 4.8, 'https://randomuser.me/api/portraits/men/46.jpg'),
+                    _buildDoctorCard(context, 'Dr. James Wilson',
+                        'DERMATO-SURGERY', 4.8, 'JW', const Color(0xFF2563EB)),
                   ],
                 ),
               ),
@@ -135,130 +179,180 @@ class HomeScreen extends StatelessWidget {
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              sliver: state.isLoading 
-                ? const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.all(32.0),
-                      child: Center(child: CircularProgressIndicator(color: AppColors.primaryMint)),
-                    ),
-                  )
-                : state.treatments.isEmpty 
+              sliver: state.isLoading
                   ? const SliverToBoxAdapter(
                       child: Padding(
                         padding: EdgeInsets.all(32.0),
-                        child: Center(child: Text('No treatments found. Try Hot Restarting (Shift+R).', style: TextStyle(color: AppColors.textGrey))),
+                        child: Center(
+                            child: CircularProgressIndicator(
+                                color: AppColors.primaryMint)),
                       ),
                     )
-                  : SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final treatment = state.treatments[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
-                            child: InkWell(
-                              onTap: () => context.push('/treatment-detail'),
-                              borderRadius: BorderRadius.circular(16),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
+                  : state.treatments.isEmpty
+                      ? const SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.all(32.0),
+                            child: Center(
+                                child: Text(
+                                    'No treatments found. Please check back soon.',
+                                    style:
+                                        TextStyle(color: AppColors.textGrey))),
+                          ),
+                        )
+                      : SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final treatment = state.treatments[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: InkWell(
+                                  onTap: () =>
+                                      context.push('/treatment-detail'),
                                   borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(color: AppColors.borderGrey),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Stack(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), bottomLeft: Radius.circular(16)),
-                                          child: CachedNetworkImage(
-                                            imageUrl: treatment.imageUrl,
-                                            width: 100,
-                                            height: 100,
-                                            fit: BoxFit.cover,
-                                            errorWidget: (context, url, error) => Container(width: 100, height: 100, color: Colors.grey.shade200, child: const Icon(Icons.error)),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 8,
-                                          left: 8,
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                            decoration: BoxDecoration(
-                                              color: AppColors.primaryMint,
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                            child: Text(
-                                              treatment.duration,
-                                              style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                          color: AppColors.borderGrey),
                                     ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                    child: Row(
+                                      children: [
+                                        Stack(
                                           children: [
-                                            Text(treatment.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark), maxLines: 1, overflow: TextOverflow.ellipsis),
-                                            const SizedBox(height: 2),
-                                            const Text('Luminaire Aesthetics', style: TextStyle(color: AppColors.textGrey, fontSize: 11)),
-                                            const SizedBox(height: 6),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                const Text('FROM', style: TextStyle(color: AppColors.textGrey, fontSize: 8, fontWeight: FontWeight.bold)),
-                                                Text(treatment.price, style: const TextStyle(color: AppColors.primaryMint, fontWeight: FontWeight.w900, fontSize: 15)),
-                                              ],
+                                            ClipRRect(
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(16),
+                                                      bottomLeft:
+                                                          Radius.circular(16)),
+                                              child: CachedNetworkImage(
+                                                imageUrl: treatment.imageUrl,
+                                                width: 100,
+                                                height: 100,
+                                                fit: BoxFit.cover,
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Container(
+                                                            width: 100,
+                                                            height: 100,
+                                                            color: Colors
+                                                                .grey.shade200,
+                                                            child: const Icon(
+                                                                Icons.error)),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              top: 8,
+                                              left: 8,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 6,
+                                                        vertical: 2),
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.primaryMint,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                                child: Text(
+                                                  treatment.duration,
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),
-                                      ),
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(treatment.title,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        color:
+                                                            AppColors.textDark),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
+                                                const SizedBox(height: 2),
+                                                const Text(
+                                                    'Luminaire Aesthetics',
+                                                    style: TextStyle(
+                                                        color:
+                                                            AppColors.textGrey,
+                                                        fontSize: 11)),
+                                                const SizedBox(height: 6),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Text('FROM',
+                                                        style: TextStyle(
+                                                            color: AppColors
+                                                                .textGrey,
+                                                            fontSize: 8,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                    Text(treatment.price,
+                                                        style: const TextStyle(
+                                                            color: AppColors
+                                                                .primaryMint,
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            fontSize: 15)),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.all(16.0),
+                                          child: Icon(Icons.arrow_forward,
+                                              size: 20,
+                                              color: AppColors.textGrey),
+                                        ),
+                                      ],
                                     ),
-                                    const Padding(
-                                      padding: EdgeInsets.all(16.0),
-                                      child: Icon(Icons.arrow_forward, size: 20, color: AppColors.textGrey),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                          );
-                        },
-                        childCount: state.treatments.length,
-                      ),
-                    ),
+                              );
+                            },
+                            childCount: state.treatments.length,
+                          ),
+                        ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 32)),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppColors.primaryMint,
-        unselectedItemColor: AppColors.textGrey,
-        currentIndex: 0,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.map_outlined), label: 'Map'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite_border), label: 'Favorites'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
-      ),
+      bottomNavigationBar: const AppBottomNav(currentIndex: 0),
     );
   }
 
   Widget _buildClinicBanner(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(16.0),
-      height: 180,
+      height: 240,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         image: const DecorationImage(
-          image: CachedNetworkImageProvider('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800'),
+          image: CachedNetworkImageProvider(
+              'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800'),
           fit: BoxFit.cover,
         ),
       ),
@@ -266,12 +360,15 @@ class HomeScreen extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: LinearGradient(
-            colors: [AppColors.primaryMint.withOpacity(0.9), Colors.transparent],
+            colors: [
+              AppColors.primaryMint.withValues(alpha: 0.9),
+              Colors.transparent
+            ],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
         ),
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(18.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -281,26 +378,40 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: const [
+                    children: [
                       Icon(Icons.star, size: 14, color: AppColors.primaryMint),
                       SizedBox(width: 4),
-                      Text('Editor\'s Pick', style: TextStyle(color: AppColors.primaryMint, fontSize: 11, fontWeight: FontWeight.bold)),
+                      Text('Editor\'s Pick',
+                          style: TextStyle(
+                              color: AppColors.primaryMint,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            const Text('Luminaire Aesthetics', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text('Luminaire Aesthetics',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
-            const Text('Elite Laser & Anti-Aging Specialists', style: TextStyle(color: Colors.white, fontSize: 12)),
+            const Text('Elite Laser & Anti-Aging Specialists',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.white, fontSize: 12)),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -310,19 +421,36 @@ class HomeScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: AppColors.primaryMint,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
                     minimumSize: const Size(110, 36),
                   ),
                   onPressed: () => context.push('/clinic-detail'),
-                  child: const Text('View Clinic', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                  child: const Text('View Clinic',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                 ),
                 Row(
                   children: [
-                    Container(width: 6, height: 6, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle)),
+                    Container(
+                        width: 6,
+                        height: 6,
+                        decoration: const BoxDecoration(
+                            color: Colors.white, shape: BoxShape.circle)),
                     const SizedBox(width: 4),
-                    Container(width: 6, height: 6, decoration: BoxDecoration(color: Colors.white.withOpacity(0.5), shape: BoxShape.circle)),
+                    Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.5),
+                            shape: BoxShape.circle)),
                     const SizedBox(width: 4),
-                    Container(width: 6, height: 6, decoration: BoxDecoration(color: Colors.white.withOpacity(0.5), shape: BoxShape.circle)),
+                    Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.5),
+                            shape: BoxShape.circle)),
                   ],
                 ),
               ],
@@ -339,18 +467,30 @@ class HomeScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+          Expanded(
+            child: Text(title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textDark)),
+          ),
           if (onSeeAll != null)
             TextButton(
               onPressed: onSeeAll,
-              child: const Text('See all', style: TextStyle(color: AppColors.primaryMint, fontWeight: FontWeight.bold)),
+              child: const Text('See all',
+                  style: TextStyle(
+                      color: AppColors.primaryMint,
+                      fontWeight: FontWeight.bold)),
             ),
         ],
       ),
     );
   }
 
-  Widget _buildConcernCard(String title, IconData icon, Color bgColor, Color iconColor) {
+  Widget _buildConcernCard(
+      String title, IconData icon, Color bgColor, Color iconColor) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -366,13 +506,30 @@ class HomeScreen extends StatelessWidget {
             child: Icon(icon, color: iconColor, size: 24),
           ),
           const SizedBox(height: 12),
-          Text(title, style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.textDark, fontSize: 14)),
+          Text(title,
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textDark,
+                  fontSize: 14)),
         ],
       ),
     );
   }
 
-  Widget _buildDoctorCard(BuildContext context, String name, String specialty, double rating, String imageUrl) {
+  Widget _buildDoctorAvatar(String initials, Color color) {
+    return CircleAvatar(
+      radius: 36,
+      backgroundColor: color.withValues(alpha: 0.12),
+      child: Text(
+        initials,
+        style:
+            TextStyle(color: color, fontSize: 20, fontWeight: FontWeight.w800),
+      ),
+    );
+  }
+
+  Widget _buildDoctorCard(BuildContext context, String name, String specialty,
+      double rating, String initials, Color avatarColor) {
     return Container(
       width: 160,
       padding: const EdgeInsets.all(16),
@@ -385,13 +542,14 @@ class HomeScreen extends StatelessWidget {
         children: [
           Stack(
             children: [
-              CircleAvatar(radius: 36, backgroundImage: CachedNetworkImageProvider(imageUrl)),
+              _buildDoctorAvatar(initials, avatarColor),
               Positioned(
                 bottom: 0,
                 right: 0,
                 child: Container(
                   padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                  decoration: const BoxDecoration(
+                      color: Colors.white, shape: BoxShape.circle),
                   child: const CircleAvatar(
                     radius: 10,
                     backgroundColor: AppColors.primaryMint,
@@ -402,12 +560,25 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark), maxLines: 1, overflow: TextOverflow.ellipsis),
+          Text(name,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: AppColors.textDark),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis),
           const SizedBox(height: 4),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(12)),
-            child: Text(specialty, style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 0.5)),
+            decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(12)),
+            child: Text(specialty,
+                style: const TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                    letterSpacing: 0.5)),
           ),
           const SizedBox(height: 8),
           Row(
@@ -415,7 +586,9 @@ class HomeScreen extends StatelessWidget {
             children: [
               const Icon(Icons.star, color: AppColors.primaryMint, size: 14),
               const SizedBox(width: 4),
-              Text(rating.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              Text(rating.toString(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 12)),
             ],
           ),
           const Spacer(),
@@ -424,12 +597,15 @@ class HomeScreen extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () => context.push('/doctor-profile'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0F766E), // Darker green for book button
+                backgroundColor:
+                    const Color(0xFF0F766E), // Darker green for book button
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
                 elevation: 0,
               ),
-              child: const Text('Book', style: TextStyle(fontWeight: FontWeight.bold)),
+              child: const Text('Book',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           )
         ],
@@ -444,7 +620,8 @@ class HomeScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: isSelected ? AppColors.primaryMint : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: isSelected ? AppColors.primaryMint : AppColors.borderGrey),
+        border: Border.all(
+            color: isSelected ? AppColors.primaryMint : AppColors.borderGrey),
       ),
       child: Center(
         child: Text(

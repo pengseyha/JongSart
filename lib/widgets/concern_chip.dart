@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+
 class ConcernChip extends StatelessWidget {
-  final String label; final IconData icon;
+  final String label;
+  final IconData icon;
   const ConcernChip({super.key, required this.label, required this.icon});
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
+
 class AppTheme {
   static ThemeData get lightTheme => light();
   static ThemeData get darkTheme => dark();
@@ -11,7 +12,6 @@ class AppTheme {
       colorScheme: const ColorScheme.light(
         primary: AppColors.mint,
         secondary: AppColors.mintDark,
-        background: AppColors.background,
         surface: AppColors.white,
       ),
       appBarTheme: const AppBarTheme(
@@ -23,11 +23,13 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.mint,
           foregroundColor: AppColors.darkText,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),
       ),
     );
   }
+
   static ThemeData dark() {
     return ThemeData(
       useMaterial3: true,
@@ -35,7 +37,6 @@ class AppTheme {
       colorScheme: const ColorScheme.dark(
         primary: AppColors.mint,
         secondary: AppColors.mintDark,
-        background: Color(0xFF121212),
         surface: Color(0xFF1E1E1E),
       ),
     );

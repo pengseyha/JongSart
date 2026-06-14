@@ -1,30 +1,58 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+import 'dart:ui';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 import 'package:jong_sart/main.dart';
+import 'package:jong_sart/router/app_router.dart';
+import 'package:jong_sart/state/app_state.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const JongSartApp());
+  Future<void> pumpApp(WidgetTester tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => AppState(),
+        child: const JongSartApp(),
+      ),
+    );
+  }
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('renders the home screen', (WidgetTester tester) async {
+    await pumpApp(tester);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('JongSart'), findsOneWidget);
+    expect(find.text('Search clinics, treatments, doctors...'), findsOneWidget);
+  });
+
+  testWidgets('main mobile screens render without layout errors',
+      (WidgetTester tester) async {
+    await pumpApp(tester);
+
+    final routes = [
+      '/',
+      '/search',
+      '/map',
+      '/favorites',
+      '/promo',
+      '/chat',
+      '/booking',
+      '/reviews',
+      '/skin-profile',
+      '/clinic-detail',
+      '/doctor-profile',
+      '/treatment-detail',
+    ];
+
+    for (final route in routes) {
+      AppRouter.router.go(route);
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(tester.takeException(), isNull, reason: route);
+    }
   });
 }

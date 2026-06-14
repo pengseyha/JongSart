@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../theme/app_colors.dart';
 
 class DoctorProfileScreen extends StatefulWidget {
-  const DoctorProfileScreen({Key? key}) : super(key: key);
+  const DoctorProfileScreen({super.key});
 
   @override
   State<DoctorProfileScreen> createState() => _DoctorProfileScreenState();
@@ -13,6 +12,7 @@ class DoctorProfileScreen extends StatefulWidget {
 class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   int _selectedDateIndex = 0;
   int _selectedTimeIndex = 3; // Default to 12:30 PM based on UI
+  bool _isFavorite = false;
 
   final List<Map<String, String>> _dates = [
     {'day': 'MON', 'date': '24'},
@@ -46,12 +46,18 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         ),
         title: const Text(
           'Doctor Profile',
-          style: TextStyle(color: AppColors.primaryMint, fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: AppColors.primaryMint,
+              fontSize: 16,
+              fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite_border, color: AppColors.primaryMint),
-            onPressed: () {},
+            icon: Icon(
+              _isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: AppColors.primaryMint,
+            ),
+            onPressed: () => setState(() => _isFavorite = !_isFavorite),
           ),
         ],
         bottom: PreferredSize(
@@ -73,12 +79,19 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.primaryMint, width: 2),
+                      border:
+                          Border.all(color: AppColors.primaryMint, width: 2),
                     ),
                     child: const CircleAvatar(
                       radius: 50,
-                      backgroundImage: CachedNetworkImageProvider(
-                        'https://randomuser.me/api/portraits/women/44.jpg',
+                      backgroundColor: AppColors.primaryMintLight,
+                      child: Text(
+                        'DF',
+                        style: TextStyle(
+                          color: AppColors.primaryMint,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
                   ),
@@ -89,7 +102,8 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                       border: Border.all(color: Colors.white, width: 2),
                     ),
                     padding: const EdgeInsets.all(4),
-                    child: const Icon(Icons.verified, color: Colors.white, size: 16),
+                    child: const Icon(Icons.verified,
+                        color: Colors.white, size: 16),
                   )
                 ],
               ),
@@ -97,25 +111,36 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               // Name and Specialty
               const Text(
                 'Dr. Frances',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textDark),
               ),
               const SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
                   color: AppColors.primaryMint,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Text(
                   'DERMATOLOGIST',
-                  style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1),
                 ),
               ),
               const SizedBox(height: 8),
               // Localized Clinic Name
               const Text(
                 'JongSart Clinic',
-                style: TextStyle(color: AppColors.textGrey, fontSize: 14, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    color: AppColors.textGrey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 24),
               // Stats Block
@@ -132,9 +157,11 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _buildStatColumn('12 Yrs', 'EXPERIENCE'),
-                      Container(width: 1, height: 30, color: AppColors.borderGrey),
+                      Container(
+                          width: 1, height: 30, color: AppColors.borderGrey),
                       _buildStatColumn('4.9★', 'RATING'),
-                      Container(width: 1, height: 30, color: AppColors.borderGrey),
+                      Container(
+                          width: 1, height: 30, color: AppColors.borderGrey),
                       _buildStatColumn('847', 'PATIENTS'),
                     ],
                   ),
@@ -144,34 +171,44 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               // Languages with clean localized Khmer badge
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Row(
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
                     _buildLanguageChip('ភាសាខ្មែរ'),
-                    const SizedBox(width: 8),
                     _buildLanguageChip('English'),
-                    const SizedBox(width: 8),
                     _buildLanguageChip('French'),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
               // About Summary Text
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('About', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-                    const SizedBox(height: 8),
-                    const Text(
+                    Text('About',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark)),
+                    SizedBox(height: 8),
+                    Text(
                       'Dr. Frances is a world-renowned specialist in regenerative dermatology and advanced clinical skincare. With over a decade of clinical experience, she specializes in custom micro-treatments with luxury care profiles.',
-                      style: TextStyle(color: AppColors.textGrey, fontSize: 14, height: 1.5),
+                      style: TextStyle(
+                          color: AppColors.textGrey, fontSize: 14, height: 1.5),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Row(
-                      children: const [
-                        Text('Read More', style: TextStyle(color: AppColors.primaryMint, fontWeight: FontWeight.bold, fontSize: 14)),
-                        Icon(Icons.keyboard_arrow_down, color: AppColors.primaryMint, size: 16),
+                      children: [
+                        Text('Read More',
+                            style: TextStyle(
+                                color: AppColors.primaryMint,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14)),
+                        Icon(Icons.keyboard_arrow_down,
+                            color: AppColors.primaryMint, size: 16),
                       ],
                     )
                   ],
@@ -179,13 +216,25 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               ),
               const SizedBox(height: 24),
               // Available Slots Selector Header
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('Available Slots', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-                    Text('June 2026', style: TextStyle(color: AppColors.textGrey, fontSize: 12, fontWeight: FontWeight.bold)),
+                  children: [
+                    Expanded(
+                      child: Text('Available Slots',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textDark)),
+                    ),
+                    SizedBox(width: 12),
+                    Text('June 2026',
+                        style: TextStyle(
+                            color: AppColors.textGrey,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -205,9 +254,14 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                         width: 55,
                         margin: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration(
-                          color: isSelected ? AppColors.primaryMint : AppColors.borderGrey.withOpacity(0.5),
+                          color: isSelected
+                              ? AppColors.primaryMint
+                              : AppColors.borderGrey.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: isSelected ? AppColors.primaryMint : AppColors.borderGrey),
+                          border: Border.all(
+                              color: isSelected
+                                  ? AppColors.primaryMint
+                                  : AppColors.borderGrey),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -215,7 +269,9 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             Text(
                               _dates[index]['day']!,
                               style: TextStyle(
-                                color: isSelected ? Colors.white : AppColors.textGrey,
+                                color: isSelected
+                                    ? Colors.white
+                                    : AppColors.textGrey,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -224,7 +280,9 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             Text(
                               _dates[index]['date']!,
                               style: TextStyle(
-                                color: isSelected ? Colors.white : AppColors.textDark,
+                                color: isSelected
+                                    ? Colors.white
+                                    : AppColors.textDark,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -256,22 +314,31 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                     final isAvailable = time['available'] as bool;
 
                     return GestureDetector(
-                      onTap: isAvailable ? () => setState(() => _selectedTimeIndex = index) : null,
+                      onTap: isAvailable
+                          ? () => setState(() => _selectedTimeIndex = index)
+                          : null,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: isSelected 
-                              ? AppColors.primaryMint 
-                              : isAvailable ? Colors.white : AppColors.borderGrey.withOpacity(0.5),
+                          color: isSelected
+                              ? AppColors.primaryMint
+                              : isAvailable
+                                  ? Colors.white
+                                  : AppColors.borderGrey.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: isSelected ? AppColors.primaryMint : AppColors.borderGrey),
+                          border: Border.all(
+                              color: isSelected
+                                  ? AppColors.primaryMint
+                                  : AppColors.borderGrey),
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           time['time'] as String,
                           style: TextStyle(
-                            color: isSelected 
-                                ? Colors.white 
-                                : isAvailable ? AppColors.textDark : AppColors.textGrey.withOpacity(0.5),
+                            color: isSelected
+                                ? Colors.white
+                                : isAvailable
+                                    ? AppColors.textDark
+                                    : AppColors.textGrey.withValues(alpha: 0.5),
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
@@ -288,10 +355,17 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Reviews', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                    const Text('Reviews',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark)),
                     TextButton(
-                      onPressed: () {},
-                      child: const Text('See All', style: TextStyle(color: AppColors.primaryMint, fontWeight: FontWeight.bold)),
+                      onPressed: () => context.push('/reviews'),
+                      child: const Text('See All',
+                          style: TextStyle(
+                              color: AppColors.primaryMint,
+                              fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
@@ -300,13 +374,25 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Column(
                   children: [
-                    _buildReviewCard('SM', 'Sarah M.', '2 days ago', 'Dr. Frances is amazing! My skin has never looked better. Highly professional.', 5, Colors.blue.shade100),
+                    _buildReviewCard(
+                        'SM',
+                        'Sarah M.',
+                        '2 days ago',
+                        'Dr. Frances is amazing! My skin has never looked better. Highly professional.',
+                        5,
+                        Colors.blue.shade100),
                     const SizedBox(height: 12),
-                    _buildReviewCard('JL', 'James L.', '1 week ago', 'The clinic is beautiful and the treatment was very detailed. Very satisfied.', 4, Colors.teal.shade200),
+                    _buildReviewCard(
+                        'JL',
+                        'James L.',
+                        '1 week ago',
+                        'The clinic is beautiful and the treatment was very detailed. Very satisfied.',
+                        4,
+                        Colors.teal.shade200),
                   ],
                 ),
               ),
-              const SizedBox(height: 100), 
+              const SizedBox(height: 100),
             ],
           ),
         ),
@@ -317,20 +403,32 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         decoration: BoxDecoration(
           color: AppColors.backgroundWhite,
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -5)),
+            BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, -5)),
           ],
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: SafeArea(
           child: Row(
             children: [
-              Column(
+              const Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text('CONSULTATION', style: TextStyle(color: AppColors.textGrey, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 0.5)),
+                children: [
+                  Text('CONSULTATION',
+                      style: TextStyle(
+                          color: AppColors.textGrey,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5)),
                   SizedBox(height: 2),
-                  Text('\$120.00', style: TextStyle(color: AppColors.primaryMint, fontSize: 20, fontWeight: FontWeight.bold)),
+                  Text('\$120.00',
+                      style: TextStyle(
+                          color: AppColors.primaryMint,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
                 ],
               ),
               const SizedBox(width: 20),
@@ -339,12 +437,17 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0F766E), 
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      backgroundColor: const Color(0xFF0F766E),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
                       elevation: 0,
                     ),
-                    onPressed: () {},
-                    child: const Text('Book with Dr. Frances', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                    onPressed: () => context.push('/booking'),
+                    child: const Text('Book with Dr. Frances',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold)),
                   ),
                 ),
               ),
@@ -358,9 +461,18 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   Widget _buildStatColumn(String value, String label) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(color: AppColors.primaryMint, fontSize: 16, fontWeight: FontWeight.bold)),
+        Text(value,
+            style: const TextStyle(
+                color: AppColors.primaryMint,
+                fontSize: 16,
+                fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(color: AppColors.textGrey, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 0.5)),
+        Text(label,
+            style: const TextStyle(
+                color: AppColors.textGrey,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5)),
       ],
     );
   }
@@ -373,11 +485,13 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.borderGrey),
       ),
-      child: Text(language, style: const TextStyle(color: AppColors.textDark, fontSize: 12)),
+      child: Text(language,
+          style: const TextStyle(color: AppColors.textDark, fontSize: 12)),
     );
   }
 
-  Widget _buildReviewCard(String initials, String name, String time, String content, int rating, Color avatarColor) {
+  Widget _buildReviewCard(String initials, String name, String time,
+      String content, int rating, Color avatarColor) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -393,31 +507,47 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               CircleAvatar(
                 radius: 18,
                 backgroundColor: avatarColor,
-                child: Text(initials, style: const TextStyle(color: AppColors.textDark, fontSize: 12, fontWeight: FontWeight.bold)),
+                child: Text(initials,
+                    style: const TextStyle(
+                        color: AppColors.textDark,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold)),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.textDark, fontSize: 14)),
+                    Text(name,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark,
+                            fontSize: 14)),
                     Row(
-                      children: List.generate(5, (index) => Icon(
-                        index < rating ? Icons.star : Icons.star_border, 
-                        color: AppColors.primaryMint, 
-                        size: 12,
-                      )),
+                      children: List.generate(
+                          5,
+                          (index) => Icon(
+                                index < rating ? Icons.star : Icons.star_border,
+                                color: AppColors.primaryMint,
+                                size: 12,
+                              )),
                     )
                   ],
                 ),
               ),
-              Text(time, style: const TextStyle(color: AppColors.textGrey, fontSize: 10)),
+              Text(time,
+                  style:
+                      const TextStyle(color: AppColors.textGrey, fontSize: 10)),
             ],
           ),
           const SizedBox(height: 12),
           Text(
             '"$content"',
-            style: const TextStyle(color: AppColors.textDark, fontSize: 13, fontStyle: FontStyle.italic, height: 1.4),
+            style: const TextStyle(
+                color: AppColors.textDark,
+                fontSize: 13,
+                fontStyle: FontStyle.italic,
+                height: 1.4),
           ),
         ],
       ),
