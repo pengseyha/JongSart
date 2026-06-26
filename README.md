@@ -1,17 +1,42 @@
-# jong_sart
+# JongSart
 
-A new Flutter project.
+JongSart is a skincare clinic booking system for Cambodia. It helps customers
+discover clinics, treatments, and doctors, then submit appointment requests for
+clinic staff to review and confirm.
 
-## Getting Started
+## Project Structure
 
-This project is a starting point for a Flutter application.
+```text
+JongSart/
+├── frontend/   # Flutter mobile app
+├── backend/    # Future API service
+├── docs/       # Planning and design documents
+├── README.md   # Full-stack project overview
+└── .gitignore
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Frontend
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+The `frontend/` folder contains the existing Flutter mobile app. The current
+version uses local/mock data and `SharedPreferences` for persistence. There is
+no production backend or authentication yet.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+To run the mobile app:
+
+```bash
+cd frontend
+flutter pub get
+flutter analyze
+flutter test
+flutter run -d chrome
+```
+
+## Backend
+
+The `backend/` folder is reserved for the future API implementation. No backend
+code has been added yet.
+
+## Docs
+
+The `docs/` folder contains planning documents for app flow, API design, and
+database design.
