@@ -2,7 +2,7 @@ class Doctor {
   final String id, name, specialty, clinic, about, imageUrl;
   final int experience, patients;
   final double rating;
-  Doctor(
+  const Doctor(
       {required this.id,
       required this.name,
       required this.specialty,

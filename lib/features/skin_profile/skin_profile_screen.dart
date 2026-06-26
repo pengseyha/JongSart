@@ -18,10 +18,18 @@ class SkinProfileScreen extends StatelessWidget {
           const SizedBox(height: 16),
           _skinScoreCard(state),
           const SizedBox(height: 16),
+          _concernSelector(context, state),
+          const SizedBox(height: 16),
           if (latestBooking != null)
             _upcomingBookingCard(context, latestBooking)
           else
             _emptyBookingCard(context),
+          const SizedBox(height: 10),
+          OutlinedButton.icon(
+            onPressed: () => context.push('/my-bookings'),
+            icon: const Icon(Icons.event_note_outlined),
+            label: const Text('View My Bookings'),
+          ),
           const SizedBox(height: 18),
           _sectionTitle('Clinical Match Recommendations'),
           const SizedBox(height: 10),
@@ -39,6 +47,44 @@ class SkinProfileScreen extends StatelessWidget {
       bottomNavigationBar: const AppBottomNav(currentIndex: 4),
     );
   }
+}
+
+Widget _concernSelector(BuildContext context, AppState state) {
+  const concerns = [
+    'Acne & Breakouts',
+    'Dark Spots',
+    'Sensitive Skin',
+    'Dry Skin',
+    'Anti-aging',
+    'Scar Treatment',
+  ];
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: _panelDecoration(),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionTitle('My Skin Concern'),
+        const SizedBox(height: 4),
+        const Text(
+          'Select your main concern. We save it for your next booking.',
+          style: TextStyle(color: AppColors.textGrey, fontSize: 12),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: concerns
+              .map((concern) => _timeChip(
+                    concern,
+                    state.selectedConcern == concern,
+                    onTap: () => context.read<AppState>().selectConcern(concern),
+                  ))
+              .toList(),
+        ),
+      ],
+    ),
+  );
 }
 
 Widget _profileHeader(AppState state) {
@@ -153,11 +199,19 @@ Widget _upcomingBookingCard(BuildContext context, Booking booking) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Upcoming Consultation',
-          style: TextStyle(fontWeight: FontWeight.w800),
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Latest Booking',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
+            _statusBadge(booking.status),
+          ],
         ),
         const SizedBox(height: 10),
+        _summaryRow(Icons.local_hospital_outlined, 'Clinic', booking.clinicName),
         _summaryRow(Icons.healing_outlined, 'Concern', booking.concern),
         _summaryRow(Icons.calendar_today_outlined, 'Date', booking.date),
         _summaryRow(Icons.schedule, 'Time', booking.time),
@@ -165,7 +219,7 @@ Widget _upcomingBookingCard(BuildContext context, Booking booking) {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () => context.push('/chat'),
+            onPressed: () => context.push('/booking-detail/${booking.id}'),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF007D68),
               foregroundColor: Colors.white,
@@ -174,7 +228,7 @@ Widget _upcomingBookingCard(BuildContext context, Booking booking) {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            child: const Text('Message Reception'),
+            child: const Text('View Booking'),
           ),
         ),
       ],

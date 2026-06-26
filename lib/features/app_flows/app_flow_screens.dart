@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../models/booking.dart';
 import '../../models/clinic.dart';
+import '../../models/doctor.dart';
 import '../../models/offer.dart';
 import '../../models/patient_review.dart';
 import '../../models/skin_recommendation.dart';
+import '../../models/treatment_model.dart';
 import '../../state/app_state.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/app_bottom_nav.dart';
@@ -16,8 +19,56 @@ part '../favorites/favorites_screen.dart';
 part '../promo/promo_screen.dart';
 part '../chat/chat_screen.dart';
 part '../booking/booking_screen.dart';
+part '../bookings/my_bookings_screen.dart';
+part '../bookings/booking_detail_screen.dart';
+part '../staff/clinic_staff_screen.dart';
 part '../reviews/reviews_screen.dart';
 part '../skin_profile/skin_profile_screen.dart';
+
+/// Coloured badge for a booking status, reused across booking screens.
+Widget _statusBadge(BookingStatus status) {
+  late final Color background;
+  late final Color foreground;
+  switch (status) {
+    case BookingStatus.pending:
+      background = const Color(0xFFFFF3DA);
+      foreground = const Color(0xFFB7791F);
+      break;
+    case BookingStatus.confirmed:
+      background = AppColors.primaryMintLight;
+      foreground = AppColors.primaryMint;
+      break;
+    case BookingStatus.rescheduled:
+      background = const Color(0xFFE6EEFF);
+      foreground = const Color(0xFF2563EB);
+      break;
+    case BookingStatus.cancelled:
+      background = const Color(0xFFFFE7EA);
+      foreground = const Color(0xFFD4465D);
+      break;
+    case BookingStatus.completed:
+      background = const Color(0xFFE7F4EC);
+      foreground = const Color(0xFF15803D);
+      break;
+  }
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+    decoration: BoxDecoration(
+      color: background,
+      borderRadius: BorderRadius.circular(999),
+    ),
+    child: Text(
+      status.badgeLabel,
+      style: TextStyle(
+        color: foreground,
+        fontSize: 10,
+        fontWeight: FontWeight.w800,
+      ),
+    ),
+  );
+}
+
+String _formatDate(DateTime date) => DateFormat('d MMM yyyy, h:mm a').format(date);
 
 PreferredSizeWidget _flowAppBar(BuildContext context, String title) {
   final canPop = Navigator.of(context).canPop();
@@ -825,58 +876,6 @@ Widget _giftWellnessCard(BuildContext context) {
   );
 }
 
-Widget _bookingStepper(int activeStep) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: List.generate(5, (index) {
-      final selected = index <= activeStep;
-      return CircleAvatar(
-        radius: 16,
-        backgroundColor:
-            selected ? AppColors.primaryMint : AppColors.borderGrey,
-        child: Text(
-          '${index + 1}',
-          style: TextStyle(
-            color: selected ? Colors.white : AppColors.textGrey,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      );
-    }),
-  );
-}
-
-Widget _concernOption(
-  IconData icon,
-  String title,
-  bool selected, {
-  required VoidCallback onTap,
-}) {
-  return InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(14),
-    child: Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: selected ? AppColors.primaryMintLight : Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-            color: selected ? AppColors.primaryMint : AppColors.borderGrey),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: AppColors.primaryMint),
-          const SizedBox(width: 12),
-          Expanded(child: Text(title, style: _titleStyle())),
-          if (selected)
-            const Icon(Icons.check_circle, color: AppColors.primaryMint),
-        ],
-      ),
-    ),
-  );
-}
-
 Widget _timeChip(String time, bool selected, {required VoidCallback onTap}) {
   return InkWell(
     onTap: onTap,
@@ -896,35 +895,6 @@ Widget _timeChip(String time, bool selected, {required VoidCallback onTap}) {
           fontWeight: FontWeight.bold,
         ),
       ),
-    ),
-  );
-}
-
-Widget _bookingSummary(AppState state) {
-  return Container(
-    padding: const EdgeInsets.all(14),
-    decoration: _panelDecoration(),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _sectionTitle('Booking Summary'),
-        const SizedBox(height: 10),
-        _summaryRow(Icons.healing_outlined, 'Concern', state.selectedConcern),
-        _summaryRow(Icons.calendar_today_outlined, 'Date', state.selectedDate),
-        _summaryRow(Icons.schedule, 'Time', state.selectedTime),
-        _summaryRow(Icons.person_outline, 'Doctor', 'Dr. Frances'),
-        if (state.bookings.isNotEmpty) ...[
-          const Divider(height: 24),
-          Text(
-            'Latest: ${state.bookings.first.status} at ${state.bookings.first.time}',
-            style: const TextStyle(
-              color: AppColors.primaryMint,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ],
     ),
   );
 }

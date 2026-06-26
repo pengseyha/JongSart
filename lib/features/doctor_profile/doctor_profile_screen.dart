@@ -442,7 +442,8 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                           borderRadius: BorderRadius.circular(12)),
                       elevation: 0,
                     ),
-                    onPressed: () => context.push('/booking'),
+                    onPressed: () =>
+                        context.push('/booking?doctorId=doctor_frances'),
                     child: const Text('Book with Dr. Frances',
                         style: TextStyle(
                             color: Colors.white,

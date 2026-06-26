@@ -59,16 +59,38 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
           _sectionTitle('About the Treatment'),
           const SizedBox(height: 10),
           const Text(
-            'The Hydra-Laser Revive is a multi-step rejuvenation treatment that combines precision laser technology with intensive hydration infusion. It targets texture, dark spots, and dullness while maintaining the skin barrier.',
+            'The Hydra-Laser Revive is a multi-step rejuvenation treatment that combines precision laser technology with intensive hydration infusion. It may help with texture, dark spots, and dullness while maintaining the skin barrier.',
             style: TextStyle(
                 color: AppColors.textGrey, fontSize: 13, height: 1.55),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF6FAF9),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColors.borderGrey),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.info_outline, size: 16, color: Color(0xFF007D68)),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Recommended consultation. Please consult with clinic staff before treatment.',
+                    style: TextStyle(
+                        color: AppColors.textGrey, fontSize: 11, height: 1.4),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 18),
           const Row(
             children: [
               Expanded(
                   child: _InfoBox(
-                      title: 'Best For',
+                      title: 'May Help With',
                       body: 'Dullness, sun damage, fine lines')),
               SizedBox(width: 10),
               Expanded(
@@ -202,7 +224,7 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () => context.push('/booking'),
+                  onPressed: () => context.push('/booking?treatmentId=1'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF007D68),
                     foregroundColor: Colors.white,

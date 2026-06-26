@@ -289,7 +289,8 @@ class ClinicDetailScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(14)),
                     elevation: 0,
                   ),
-                  onPressed: () => context.push('/booking'),
+                  onPressed: () =>
+                      context.push('/booking?clinicId=clinic_lumina'),
                   child: const Text(
                     'Book Consultation',
                     style: TextStyle(

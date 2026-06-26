@@ -47,7 +47,25 @@ class AppRouter {
       ),
       GoRoute(
         path: '/booking',
-        builder: (context, state) => const BookingScreen(),
+        builder: (context, state) => BookingScreen(
+          clinicId: state.uri.queryParameters['clinicId'],
+          treatmentId: state.uri.queryParameters['treatmentId'],
+          doctorId: state.uri.queryParameters['doctorId'],
+        ),
+      ),
+      GoRoute(
+        path: '/my-bookings',
+        builder: (context, state) => const MyBookingsScreen(),
+      ),
+      GoRoute(
+        path: '/booking-detail/:id',
+        builder: (context, state) => BookingDetailScreen(
+          bookingId: state.pathParameters['id']!,
+        ),
+      ),
+      GoRoute(
+        path: '/clinic-staff',
+        builder: (context, state) => const ClinicStaffScreen(),
       ),
       GoRoute(
         path: '/reviews',

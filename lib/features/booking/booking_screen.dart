@@ -1,91 +1,399 @@
 part of '../app_flows/app_flow_screens.dart';
 
-class BookingScreen extends StatelessWidget {
-  const BookingScreen({super.key});
+class BookingScreen extends StatefulWidget {
+  final String? clinicId;
+  final String? treatmentId;
+  final String? doctorId;
+
+  const BookingScreen({
+    super.key,
+    this.clinicId,
+    this.treatmentId,
+    this.doctorId,
+  });
+
+  @override
+  State<BookingScreen> createState() => _BookingScreenState();
+}
+
+class _BookingScreenState extends State<BookingScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _telegramController = TextEditingController();
+  final _noteController = TextEditingController();
+
+  static const _concerns = [
+    'Acne & Breakouts',
+    'Dark Spots',
+    'Sensitive Skin',
+    'Dry Skin',
+    'Anti-aging',
+    'Scar Treatment',
+  ];
+  static const _dates = ['Mon 30', 'Tue 1', 'Wed 2', 'Thu 3', 'Fri 4'];
+  static const _times = [
+    '09:00 AM',
+    '10:30 AM',
+    '12:30 PM',
+    '02:00 PM',
+    '03:30 PM',
+  ];
+
+  late String _concern;
+  String? _clinicId;
+  String? _treatmentId;
+  String? _doctorId;
+  String _date = 'Mon 30';
+  String _time = '09:00 AM';
+
+  @override
+  void initState() {
+    super.initState();
+    final state = context.read<AppState>();
+    _concern = state.selectedConcern;
+    _clinicId = widget.clinicId ??
+        (state.clinics.isNotEmpty ? state.clinics.first.id : null);
+    _treatmentId = widget.treatmentId ??
+        (state.treatments.isNotEmpty ? state.treatments.first.id : null);
+    _doctorId = widget.doctorId;
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _telegramController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    if (!_formKey.currentState!.validate()) return;
+
+    final state = context.read<AppState>();
+    final clinic = state.clinicById(_clinicId ?? '');
+
+    Treatment? treatment;
+    for (final item in state.treatments) {
+      if (item.id == _treatmentId) {
+        treatment = item;
+        break;
+      }
+    }
+
+    Doctor? doctor;
+    for (final item in state.doctors) {
+      if (item.id == _doctorId) {
+        doctor = item;
+        break;
+      }
+    }
+
+    state.submitBookingRequest(
+      patientName: _nameController.text.trim(),
+      phone: _phoneController.text.trim(),
+      telegramOrWhatsapp: _telegramController.text.trim(),
+      concern: _concern,
+      treatmentId: _treatmentId ?? '',
+      treatmentName: treatment?.title ?? 'Consultation',
+      clinicId: _clinicId ?? '',
+      clinicName: clinic?.name ?? 'JongSart Clinic',
+      doctorId: doctor?.id,
+      doctorName: doctor?.name,
+      date: _date,
+      time: _time,
+      note: _noteController.text.trim(),
+    );
+    state.addBookingChatNotice();
+
+    _showSuccessSheet();
+  }
+
+  void _showSuccessSheet() {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) {
+        return Padding(
+          padding: const EdgeInsets.all(22),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircleAvatar(
+                radius: 30,
+                backgroundColor: AppColors.primaryMintLight,
+                child: Icon(Icons.check_circle,
+                    color: AppColors.primaryMint, size: 36),
+              ),
+              const SizedBox(height: 14),
+              const Text(
+                'Request sent',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Your appointment request has been sent. Clinic staff will contact you to confirm the schedule.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: AppColors.textGrey, fontSize: 13, height: 1.5),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(sheetContext).pop();
+                    context.push('/my-bookings');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryMint,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  icon: const Icon(Icons.event_note),
+                  label: const Text('View My Bookings'),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.of(sheetContext).pop();
+                    context.push('/chat');
+                  },
+                  icon: const Icon(Icons.chat_bubble_outline),
+                  label: const Text('Chat Clinic'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _textField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    TextInputType? keyboardType,
+    int maxLines = 1,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      maxLines: maxLines,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: AppColors.primaryMint, size: 20),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.borderGrey),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.borderGrey),
+        ),
+      ),
+    );
+  }
+
+  Widget _dropdown<T>({
+    required String label,
+    required T? value,
+    required List<DropdownMenuItem<T>> items,
+    required ValueChanged<T?> onChanged,
+  }) {
+    return DropdownButtonFormField<T>(
+      initialValue: value,
+      isExpanded: true,
+      items: items,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.borderGrey),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.borderGrey),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
-    final concerns = [
-      (Icons.face_retouching_natural, 'Acne & Breakouts'),
-      (Icons.auto_awesome, 'Anti-Aging'),
-      (Icons.blur_on, 'Hyperpigmentation'),
-      (Icons.healing_outlined, 'Sensitive Skin'),
-    ];
-    final dates = ['Mon 24', 'Tue 25', 'Wed 26', 'Thu 27', 'Fri 28'];
-    final times = ['09:00 AM', '10:30 AM', '12:30 PM', '02:00 PM', '03:30 PM'];
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
       appBar: _flowAppBar(context, 'Book Consultation'),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _bookingStepper(state.activeBookingStep),
-          const SizedBox(height: 18),
-          const Text(
-            'What brings you in today?',
-            style: TextStyle(
-              color: AppColors.textDark,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            const Text(
+              'Request an appointment',
+              style: TextStyle(
+                color: AppColors.textDark,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
-          ...concerns.map(
-            (concern) => _concernOption(
-              concern.$1,
-              concern.$2,
-              state.selectedConcern == concern.$2,
-              onTap: () => context.read<AppState>().selectConcern(concern.$2),
+            const SizedBox(height: 4),
+            const Text(
+              'Send your details and clinic staff will contact you to confirm.',
+              style: TextStyle(color: AppColors.textGrey, fontSize: 12),
             ),
-          ),
-          const SizedBox(height: 16),
-          _sectionTitle('Select Date'),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: dates
-                .map((date) => _timeChip(
-                      date,
-                      state.selectedDate == date,
-                      onTap: () => context.read<AppState>().selectDate(date),
-                    ))
-                .toList(),
-          ),
-          const SizedBox(height: 16),
-          _sectionTitle('Select Time'),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: times
-                .map((time) => _timeChip(
-                      time,
-                      state.selectedTime == time,
-                      onTap: () => context.read<AppState>().selectTime(time),
-                    ))
-                .toList(),
-          ),
-          const SizedBox(height: 16),
-          _bookingSummary(state),
-        ],
+            const SizedBox(height: 18),
+            _sectionTitle('Your contact details'),
+            const SizedBox(height: 10),
+            _textField(
+              controller: _nameController,
+              label: 'Full name',
+              icon: Icons.person_outline,
+              validator: (value) => (value == null || value.trim().isEmpty)
+                  ? 'Please enter your name'
+                  : null,
+            ),
+            const SizedBox(height: 12),
+            _textField(
+              controller: _phoneController,
+              label: 'Phone number',
+              icon: Icons.phone_outlined,
+              keyboardType: TextInputType.phone,
+              validator: (value) => (value == null || value.trim().length < 6)
+                  ? 'Please enter a valid phone number'
+                  : null,
+            ),
+            const SizedBox(height: 12),
+            _textField(
+              controller: _telegramController,
+              label: 'Telegram / WhatsApp (optional)',
+              icon: Icons.send_outlined,
+            ),
+            const SizedBox(height: 18),
+            _sectionTitle('Skin concern'),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _concerns
+                  .map((concern) => _timeChip(
+                        concern,
+                        _concern == concern,
+                        onTap: () => setState(() => _concern = concern),
+                      ))
+                  .toList(),
+            ),
+            const SizedBox(height: 18),
+            _sectionTitle('Clinic & treatment'),
+            const SizedBox(height: 10),
+            _dropdown<String>(
+              label: 'Clinic',
+              value: _clinicId,
+              items: state.clinics
+                  .map((clinic) => DropdownMenuItem(
+                        value: clinic.id,
+                        child: Text(clinic.name, overflow: TextOverflow.ellipsis),
+                      ))
+                  .toList(),
+              onChanged: (value) => setState(() => _clinicId = value),
+            ),
+            const SizedBox(height: 12),
+            _dropdown<String>(
+              label: 'Treatment',
+              value: _treatmentId,
+              items: state.treatments
+                  .map((treatment) => DropdownMenuItem(
+                        value: treatment.id,
+                        child: Text(treatment.title,
+                            overflow: TextOverflow.ellipsis),
+                      ))
+                  .toList(),
+              onChanged: (value) => setState(() => _treatmentId = value),
+            ),
+            const SizedBox(height: 12),
+            _dropdown<String?>(
+              label: 'Doctor (optional)',
+              value: _doctorId,
+              items: [
+                const DropdownMenuItem(value: null, child: Text('No preference')),
+                ...state.doctors.map((doctor) => DropdownMenuItem(
+                      value: doctor.id,
+                      child: Text('${doctor.name} - ${doctor.specialty}',
+                          overflow: TextOverflow.ellipsis),
+                    )),
+              ],
+              onChanged: (value) => setState(() => _doctorId = value),
+            ),
+            const SizedBox(height: 18),
+            _sectionTitle('Preferred date'),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _dates
+                  .map((date) => _timeChip(
+                        date,
+                        _date == date,
+                        onTap: () => setState(() => _date = date),
+                      ))
+                  .toList(),
+            ),
+            const SizedBox(height: 16),
+            _sectionTitle('Preferred time'),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _times
+                  .map((time) => _timeChip(
+                        time,
+                        _time == time,
+                        onTap: () => setState(() => _time = time),
+                      ))
+                  .toList(),
+            ),
+            const SizedBox(height: 18),
+            _sectionTitle('Note (optional)'),
+            const SizedBox(height: 10),
+            _textField(
+              controller: _noteController,
+              label: 'Anything the clinic should know?',
+              icon: Icons.notes_outlined,
+              maxLines: 3,
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Consult with clinic staff before treatment. This request is not a confirmed booking yet.',
+              style: TextStyle(color: AppColors.textGrey, fontSize: 11),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ElevatedButton(
-            onPressed: () {
-              final booking = context.read<AppState>().confirmBooking();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                      '${booking.status}: ${booking.date} at ${booking.time}'),
-                ),
-              );
-              context.push('/chat');
-            },
+            onPressed: _submit,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryMint,
               foregroundColor: Colors.white,
@@ -95,7 +403,7 @@ class BookingScreen extends StatelessWidget {
               ),
             ),
             child: const Text(
-              'Confirm Booking',
+              'Submit Appointment Request',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),

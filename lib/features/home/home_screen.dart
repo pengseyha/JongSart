@@ -103,6 +103,9 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             SliverToBoxAdapter(
+              child: _buildQuickActions(context),
+            ),
+            SliverToBoxAdapter(
               child: _buildClinicBanner(context),
             ),
             SliverToBoxAdapter(
@@ -119,22 +122,33 @@ class HomeScreen extends StatelessWidget {
                 ),
                 delegate: SliverChildListDelegate([
                   _buildConcernCard(
+                      context,
                       'Acne',
+                      'Acne & Breakouts',
                       Icons.spa_outlined,
                       Colors.redAccent.withValues(alpha: 0.1),
                       Colors.redAccent),
                   _buildConcernCard(
+                      context,
                       'Pigmentation',
+                      'Dark Spots',
                       Icons.wb_sunny_outlined,
                       Colors.orangeAccent.withValues(alpha: 0.1),
                       Colors.orangeAccent),
                   _buildConcernCard(
+                      context,
                       'Aging',
+                      'Anti-aging',
                       Icons.access_time,
                       Colors.blueAccent.withValues(alpha: 0.1),
                       Colors.blueAccent),
-                  _buildConcernCard('Hydration', Icons.water_drop_outlined,
-                      Colors.cyan.withValues(alpha: 0.1), Colors.cyan),
+                  _buildConcernCard(
+                      context,
+                      'Hydration',
+                      'Dry Skin',
+                      Icons.water_drop_outlined,
+                      Colors.cyan.withValues(alpha: 0.1),
+                      Colors.cyan),
                 ]),
               ),
             ),
@@ -489,28 +503,84 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildConcernCard(
-      String title, IconData icon, Color bgColor, Color iconColor) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderGrey),
+  Widget _buildConcernCard(BuildContext context, String title, String concern,
+      IconData icon, Color bgColor, Color iconColor) {
+    return InkWell(
+      onTap: () {
+        context.read<AppState>().selectConcern(concern);
+        context.push('/booking');
+      },
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.borderGrey),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
+              child: Icon(icon, color: iconColor, size: 24),
+            ),
+            const SizedBox(height: 12),
+            Text(title,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textDark,
+                    fontSize: 14)),
+          ],
+        ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    );
+  }
+
+  Widget _buildQuickActions(BuildContext context) {
+    final actions = [
+      (Icons.add_circle_outline, 'Book', '/booking'),
+      (Icons.event_note_outlined, 'My Bookings', '/my-bookings'),
+      (Icons.chat_bubble_outline, 'Chat', '/chat'),
+      (Icons.badge_outlined, 'Staff Demo', '/clinic-staff'),
+    ];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
-            child: Icon(icon, color: iconColor, size: 24),
-          ),
-          const SizedBox(height: 12),
-          Text(title,
-              style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textDark,
-                  fontSize: 14)),
+          for (final action in actions)
+            Expanded(
+              child: InkWell(
+                borderRadius: BorderRadius.circular(14),
+                onTap: () => context.push(action.$3),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryMintLight,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Icon(action.$1,
+                            color: AppColors.primaryMint, size: 22),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        action.$2,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textDark),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
