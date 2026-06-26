@@ -2,31 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../models/booking.dart';
-import '../../models/clinic.dart';
-import '../../models/doctor.dart';
-import '../../models/offer.dart';
-import '../../models/patient_review.dart';
-import '../../models/skin_recommendation.dart';
-import '../../models/treatment_model.dart';
-import '../../state/app_state.dart';
-import '../../theme/app_colors.dart';
-import '../../widgets/app_bottom_nav.dart';
-
-part '../search/search_screen.dart';
-part '../map/map_screen.dart';
-part '../favorites/favorites_screen.dart';
-part '../promo/promo_screen.dart';
-part '../chat/chat_screen.dart';
-part '../booking/booking_screen.dart';
-part '../bookings/my_bookings_screen.dart';
-part '../bookings/booking_detail_screen.dart';
-part '../staff/clinic_staff_screen.dart';
-part '../reviews/reviews_screen.dart';
-part '../skin_profile/skin_profile_screen.dart';
+import '../models/booking.dart';
+import '../models/clinic.dart';
+import '../models/offer.dart';
+import '../models/patient_review.dart';
+import '../models/skin_recommendation.dart';
+import '../state/app_state.dart';
+import '../core/theme/app_colors.dart';
 
 /// Coloured badge for a booking status, reused across booking screens.
-Widget _statusBadge(BookingStatus status) {
+Widget statusBadge(BookingStatus status) {
   late final Color background;
   late final Color foreground;
   switch (status) {
@@ -68,10 +53,10 @@ Widget _statusBadge(BookingStatus status) {
   );
 }
 
-String _formatDate(DateTime date) =>
+String formatDate(DateTime date) =>
     DateFormat('d MMM yyyy, h:mm a').format(date);
 
-PreferredSizeWidget _flowAppBar(BuildContext context, String title) {
+PreferredSizeWidget flowAppBar(BuildContext context, String title) {
   final canPop = Navigator.of(context).canPop();
   return AppBar(
     backgroundColor: AppColors.backgroundWhite,
@@ -104,7 +89,7 @@ PreferredSizeWidget _flowAppBar(BuildContext context, String title) {
   );
 }
 
-Widget _editableSearchField(String hint,
+Widget editableSearchField(String hint,
     {required ValueChanged<String> onChanged}) {
   return Container(
     decoration: BoxDecoration(
@@ -126,7 +111,7 @@ Widget _editableSearchField(String hint,
   );
 }
 
-Widget _messageInput(
+Widget messageInput(
   TextEditingController controller, {
   required ValueChanged<String> onSubmitted,
 }) {
@@ -150,10 +135,10 @@ Widget _messageInput(
   );
 }
 
-Widget _filterPanel() {
+Widget filterPanel() {
   return Container(
     padding: const EdgeInsets.all(16),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -202,11 +187,11 @@ Widget _filterPanel() {
           spacing: 7,
           runSpacing: 8,
           children: [
-            _choicePill('Dermatology', true),
-            _choicePill('Cosmetic', false),
-            _choicePill('Surgical', false),
-            _choicePill('Laser', false),
-            _choicePill('Pediatric', false),
+            choicePill('Dermatology', true),
+            choicePill('Cosmetic', false),
+            choicePill('Surgical', false),
+            choicePill('Laser', false),
+            choicePill('Pediatric', false),
           ],
         ),
       ],
@@ -214,20 +199,20 @@ Widget _filterPanel() {
   );
 }
 
-Widget _clinicResultCard(BuildContext context, Clinic clinic) {
+Widget clinicResultCard(BuildContext context, Clinic clinic) {
   final state = context.watch<AppState>();
   final isFavorite = state.isFavorite(clinic.id);
 
   return Container(
     margin: const EdgeInsets.only(bottom: 14),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              _clinicImageTile(clinic.id),
+              clinicImageTile(clinic.id),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -237,7 +222,7 @@ Widget _clinicResultCard(BuildContext context, Clinic clinic) {
                       clinic.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: _titleStyle(),
+                      style: titleStyle(),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -252,7 +237,7 @@ Widget _clinicResultCard(BuildContext context, Clinic clinic) {
                     Wrap(
                       spacing: 6,
                       runSpacing: 6,
-                      children: clinic.tags.take(2).map(_smallPill).toList(),
+                      children: clinic.tags.take(2).map(smallPill).toList(),
                     ),
                   ],
                 ),
@@ -303,7 +288,7 @@ Widget _clinicResultCard(BuildContext context, Clinic clinic) {
   );
 }
 
-Widget _clinicImageTile(String id) {
+Widget clinicImageTile(String id) {
   final image = id.contains('emerald')
       ? 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=300&q=80'
       : id.contains('north')
@@ -317,12 +302,12 @@ Widget _clinicImageTile(String id) {
       height: 72,
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) =>
-          _imageTile(Icons.local_hospital),
+          imageTile(Icons.local_hospital),
     ),
   );
 }
 
-Widget _choicePill(String label, bool selected) {
+Widget choicePill(String label, bool selected) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     decoration: BoxDecoration(
@@ -342,11 +327,11 @@ Widget _choicePill(String label, bool selected) {
   );
 }
 
-Widget _mapClinicPreview(BuildContext context, Clinic clinic) {
+Widget mapClinicPreview(BuildContext context, Clinic clinic) {
   return Container(
     width: 260,
     margin: const EdgeInsets.only(right: 12),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -373,7 +358,7 @@ Widget _mapClinicPreview(BuildContext context, Clinic clinic) {
               Text(clinic.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: _titleStyle()),
+                  style: titleStyle()),
               const SizedBox(height: 3),
               Text('${clinic.distance} away - Open until 7PM',
                   maxLines: 1,
@@ -404,7 +389,7 @@ Widget _mapClinicPreview(BuildContext context, Clinic clinic) {
   );
 }
 
-Widget _mapBottomSheet(BuildContext context) {
+Widget mapBottomSheet(BuildContext context) {
   final clinics = context.watch<AppState>().clinics;
   return Container(
     padding: const EdgeInsets.fromLTRB(14, 10, 14, 16),
@@ -450,7 +435,7 @@ Widget _mapBottomSheet(BuildContext context) {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: clinics
-                .map((clinic) => _mapClinicPreview(context, clinic))
+                .map((clinic) => mapClinicPreview(context, clinic))
                 .toList(),
           ),
         ),
@@ -459,10 +444,10 @@ Widget _mapBottomSheet(BuildContext context) {
   );
 }
 
-Widget _emptyState(IconData icon, String title, String body) {
+Widget emptyState(IconData icon, String title, String body) {
   return Container(
     padding: const EdgeInsets.all(22),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Column(
       children: [
         CircleAvatar(
@@ -471,7 +456,7 @@ Widget _emptyState(IconData icon, String title, String body) {
           child: Icon(icon, color: AppColors.primaryMint),
         ),
         const SizedBox(height: 12),
-        Text(title, style: _titleStyle()),
+        Text(title, style: titleStyle()),
         const SizedBox(height: 6),
         Text(
           body,
@@ -483,7 +468,7 @@ Widget _emptyState(IconData icon, String title, String body) {
   );
 }
 
-Widget _mockMap() {
+Widget mockMap() {
   return Container(
     color: const Color(0xFFF3F8F6),
     child: Stack(
@@ -512,8 +497,8 @@ Widget _mockMap() {
             ),
           ),
         ),
-        const Positioned(left: 120, top: 190, child: _MapPin(label: 'Y')),
-        const Positioned(right: 94, top: 280, child: _MapPin(label: 'H')),
+        const Positioned(left: 120, top: 190, child: MapPin(label: 'Y')),
+        const Positioned(right: 94, top: 280, child: MapPin(label: 'H')),
         Positioned(
           left: 80,
           right: 80,
@@ -525,14 +510,14 @@ Widget _mockMap() {
   );
 }
 
-Widget _favoriteClinicCard(BuildContext context, Clinic clinic) {
+Widget favoriteClinicCard(BuildContext context, Clinic clinic) {
   return Container(
     margin: const EdgeInsets.only(bottom: 12),
     padding: const EdgeInsets.all(12),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Row(
       children: [
-        _clinicImageTile(clinic.id),
+        clinicImageTile(clinic.id),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
@@ -542,7 +527,7 @@ Widget _favoriteClinicCard(BuildContext context, Clinic clinic) {
                 clinic.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: _titleStyle(),
+                style: titleStyle(),
               ),
               const SizedBox(height: 4),
               Text(clinic.specialty,
@@ -554,7 +539,7 @@ Widget _favoriteClinicCard(BuildContext context, Clinic clinic) {
               Wrap(
                 spacing: 5,
                 runSpacing: 5,
-                children: clinic.tags.take(2).map(_smallPill).toList(),
+                children: clinic.tags.take(2).map(smallPill).toList(),
               ),
               const SizedBox(height: 7),
               Text('${clinic.distance} km',
@@ -590,7 +575,7 @@ Widget _favoriteClinicCard(BuildContext context, Clinic clinic) {
   );
 }
 
-Widget _tabLabel(String label, bool selected) {
+Widget tabLabel(String label, bool selected) {
   return Container(
     padding: const EdgeInsets.only(bottom: 12),
     decoration: BoxDecoration(
@@ -614,17 +599,17 @@ Widget _tabLabel(String label, bool selected) {
   );
 }
 
-Widget _favoriteRecommendationCard(
+Widget favoriteRecommendationCard(
   BuildContext context,
   SkinRecommendation recommendation,
 ) {
   return Container(
     margin: const EdgeInsets.only(bottom: 12),
     padding: const EdgeInsets.all(12),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Row(
       children: [
-        _imageTile(Icons.spa_outlined),
+        imageTile(Icons.spa_outlined),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
@@ -634,7 +619,7 @@ Widget _favoriteRecommendationCard(
                 recommendation.title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: _titleStyle(),
+                style: titleStyle(),
               ),
               const SizedBox(height: 4),
               Text(recommendation.description,
@@ -669,7 +654,7 @@ Widget _favoriteRecommendationCard(
   );
 }
 
-Widget _flashDeal(BuildContext context, Offer offer) {
+Widget flashDeal(BuildContext context, Offer offer) {
   return Container(
     height: 170,
     padding: const EdgeInsets.all(14),
@@ -697,7 +682,7 @@ Widget _flashDeal(BuildContext context, Offer offer) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _smallPill(offer.badge),
+          smallPill(offer.badge),
           const Spacer(),
           Text(offer.title,
               maxLines: 1,
@@ -731,20 +716,20 @@ Widget _flashDeal(BuildContext context, Offer offer) {
   );
 }
 
-Widget _bundleCard(BuildContext context, Offer offer) {
+Widget bundleCard(BuildContext context, Offer offer) {
   return Container(
     margin: const EdgeInsets.only(bottom: 10),
     padding: const EdgeInsets.all(12),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Row(
       children: [
-        _clinicImageTile(offer.id),
+        clinicImageTile(offer.id),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(offer.title, style: _titleStyle()),
+              Text(offer.title, style: titleStyle()),
               Text(offer.subtitle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -769,7 +754,7 @@ Widget _bundleCard(BuildContext context, Offer offer) {
   );
 }
 
-Widget _couponCard() {
+Widget couponCard() {
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
@@ -822,7 +807,7 @@ Widget _couponCard() {
   );
 }
 
-Widget _giftWellnessCard(BuildContext context) {
+Widget giftWellnessCard(BuildContext context) {
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
@@ -851,10 +836,10 @@ Widget _giftWellnessCard(BuildContext context) {
         Wrap(
           spacing: 8,
           children: [
-            _choicePill('\$50', false),
-            _choicePill('\$100', true),
-            _choicePill('\$250', false),
-            _choicePill('\$500', false),
+            choicePill('\$50', false),
+            choicePill('\$100', true),
+            choicePill('\$250', false),
+            choicePill('\$500', false),
           ],
         ),
         const SizedBox(height: 16),
@@ -881,7 +866,7 @@ Widget _giftWellnessCard(BuildContext context) {
   );
 }
 
-Widget _timeChip(String time, bool selected, {required VoidCallback onTap}) {
+Widget timeChip(String time, bool selected, {required VoidCallback onTap}) {
   return InkWell(
     onTap: onTap,
     borderRadius: BorderRadius.circular(12),
@@ -904,7 +889,7 @@ Widget _timeChip(String time, bool selected, {required VoidCallback onTap}) {
   );
 }
 
-Widget _summaryRow(IconData icon, String label, String value) {
+Widget summaryRow(IconData icon, String label, String value) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 8),
     child: Row(
@@ -930,10 +915,30 @@ Widget _summaryRow(IconData icon, String label, String value) {
   );
 }
 
-Widget _ratingSummary(AppState state) {
+Widget miniRow(IconData icon, String value) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 6),
+    child: Row(
+      children: [
+        Icon(icon, size: 15, color: AppColors.textGrey),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: AppColors.textDark, fontSize: 12),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget ratingSummary(AppState state) {
   return Container(
     padding: const EdgeInsets.all(18),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Column(
       children: [
         Text(state.averageReviewRating.toStringAsFixed(1),
@@ -952,15 +957,15 @@ Widget _ratingSummary(AppState state) {
           style: TextStyle(color: AppColors.textGrey, fontSize: 10),
         ),
         const SizedBox(height: 16),
-        _ratingBar('Cleanliness', 0.97),
-        _ratingBar('Staff Expertise', 0.95),
-        _ratingBar('Treatment Results', 0.92),
+        ratingBar('Cleanliness', 0.97),
+        ratingBar('Staff Expertise', 0.95),
+        ratingBar('Treatment Results', 0.92),
       ],
     ),
   );
 }
 
-Widget _ratingBar(String label, double value) {
+Widget ratingBar(String label, double value) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 10),
     child: Row(
@@ -984,11 +989,11 @@ Widget _ratingBar(String label, double value) {
   );
 }
 
-Widget _reviewCard(PatientReview review) {
+Widget reviewCard(PatientReview review) {
   return Container(
     margin: const EdgeInsets.only(bottom: 16),
     padding: const EdgeInsets.all(16),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1003,7 +1008,7 @@ Widget _reviewCard(PatientReview review) {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(review.name, style: _titleStyle()),
+                  Text(review.name, style: titleStyle()),
                   Text('SEP ${review.id.length + 10}, 2023',
                       style: const TextStyle(
                           color: AppColors.textGrey, fontSize: 9)),
@@ -1020,7 +1025,7 @@ Widget _reviewCard(PatientReview review) {
           ],
         ),
         const SizedBox(height: 12),
-        _smallPill(review.label.toUpperCase()),
+        smallPill(review.label.toUpperCase()),
         const SizedBox(height: 12),
         Text(review.body,
             style: const TextStyle(
@@ -1030,10 +1035,10 @@ Widget _reviewCard(PatientReview review) {
   );
 }
 
-Widget _skinScoreCard(AppState state) {
+Widget skinScoreCard(AppState state) {
   return Container(
     padding: const EdgeInsets.all(16),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1065,9 +1070,9 @@ Widget _skinScoreCard(AppState state) {
           spacing: 8,
           runSpacing: 8,
           children: [
-            _smallPill('Congested Pores'),
-            _smallPill('Uneven Texture'),
-            _smallPill('Sensitivity'),
+            smallPill('Congested Pores'),
+            smallPill('Uneven Texture'),
+            smallPill('Sensitivity'),
           ],
         ),
         const SizedBox(height: 16),
@@ -1088,7 +1093,7 @@ Widget _skinScoreCard(AppState state) {
   );
 }
 
-Widget _recommendationCard(
+Widget recommendationCard(
   BuildContext context,
   SkinRecommendation recommendation,
 ) {
@@ -1096,7 +1101,7 @@ Widget _recommendationCard(
 
   return Container(
     margin: const EdgeInsets.only(bottom: 14),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1119,8 +1124,8 @@ Widget _recommendationCard(
               Row(
                 children: [
                   Expanded(
-                      child: Text(recommendation.title, style: _titleStyle())),
-                  _smallPill(recommendation.match),
+                      child: Text(recommendation.title, style: titleStyle())),
+                  smallPill(recommendation.match),
                 ],
               ),
               const SizedBox(height: 8),
@@ -1159,7 +1164,7 @@ Widget _recommendationCard(
   );
 }
 
-Widget _sectionTitle(String title) {
+Widget sectionTitle(String title) {
   return Text(
     title,
     style: const TextStyle(
@@ -1170,7 +1175,7 @@ Widget _sectionTitle(String title) {
   );
 }
 
-Widget _imageTile(IconData icon) {
+Widget imageTile(IconData icon) {
   return Container(
     width: 64,
     height: 64,
@@ -1182,7 +1187,7 @@ Widget _imageTile(IconData icon) {
   );
 }
 
-Widget _smallPill(String label) {
+Widget smallPill(String label) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
     decoration: BoxDecoration(
@@ -1200,7 +1205,7 @@ Widget _smallPill(String label) {
   );
 }
 
-TextStyle _titleStyle() {
+TextStyle titleStyle() {
   return const TextStyle(
     color: AppColors.textDark,
     fontWeight: FontWeight.bold,
@@ -1208,7 +1213,7 @@ TextStyle _titleStyle() {
   );
 }
 
-BoxDecoration _panelDecoration() {
+BoxDecoration panelDecoration() {
   return BoxDecoration(
     color: Colors.white,
     borderRadius: BorderRadius.circular(14),
@@ -1216,10 +1221,10 @@ BoxDecoration _panelDecoration() {
   );
 }
 
-class _MapPin extends StatelessWidget {
+class MapPin extends StatelessWidget {
   final String label;
 
-  const _MapPin({required this.label});
+  const MapPin({super.key, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -1233,11 +1238,11 @@ class _MapPin extends StatelessWidget {
   }
 }
 
-class _ChatBubble extends StatelessWidget {
+class ChatBubble extends StatelessWidget {
   final String text;
   final bool isMe;
 
-  const _ChatBubble({required this.text, required this.isMe});
+  const ChatBubble({super.key, required this.text, required this.isMe});
 
   @override
   Widget build(BuildContext context) {

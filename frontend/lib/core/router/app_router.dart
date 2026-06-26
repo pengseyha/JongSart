@@ -1,9 +1,19 @@
 import 'package:go_router/go_router.dart';
-import '../features/home/home_screen.dart';
-import '../features/treatment_detail/treatment_detail_screen.dart';
-import '../features/detail/clinic_detail_screen.dart';
-import '../features/doctor_profile/doctor_profile_screen.dart';
-import '../features/app_flows/app_flow_screens.dart';
+import '../../features/booking/booking_detail_screen.dart';
+import '../../features/booking/booking_screen.dart';
+import '../../features/booking/my_bookings_screen.dart';
+import '../../features/chat/chat_screen.dart';
+import '../../features/clinic_detail/clinic_detail_screen.dart';
+import '../../features/clinic_staff/clinic_staff_screen.dart';
+import '../../features/doctor_profile/doctor_profile_screen.dart';
+import '../../features/favorites/favorites_screen.dart';
+import '../../features/home/home_screen.dart';
+import '../../features/map/map_screen.dart';
+import '../../features/promo/promo_screen.dart';
+import '../../features/reviews/reviews_screen.dart';
+import '../../features/search/search_screen.dart';
+import '../../features/skin_profile/skin_profile_screen.dart';
+import '../../features/treatment_detail/treatment_detail_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(

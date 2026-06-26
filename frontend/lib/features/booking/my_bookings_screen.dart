@@ -1,4 +1,4 @@
-part of '../app_flows/app_flow_screens.dart';
+import '../../core/utils/screen_imports.dart';
 
 class MyBookingsScreen extends StatelessWidget {
   const MyBookingsScreen({super.key});
@@ -9,13 +9,13 @@ class MyBookingsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: _flowAppBar(context, 'My Bookings'),
+      appBar: flowAppBar(context, 'My Bookings'),
       body: bookings.isEmpty
           ? ListView(
               padding: const EdgeInsets.all(16),
               children: [
                 const SizedBox(height: 40),
-                _emptyState(
+                emptyState(
                   Icons.event_busy_outlined,
                   'No bookings yet',
                   'Your appointment requests will appear here. Book a consultation to get started.',
@@ -38,8 +38,7 @@ class MyBookingsScreen extends StatelessWidget {
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                for (final booking in bookings)
-                  _bookingCard(context, booking),
+                for (final booking in bookings) _bookingCard(context, booking),
               ],
             ),
     );
@@ -53,7 +52,7 @@ Widget _bookingCard(BuildContext context, Booking booking) {
     child: Container(
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(14),
-      decoration: _panelDecoration(),
+      decoration: panelDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -64,19 +63,19 @@ Widget _bookingCard(BuildContext context, Booking booking) {
                   booking.clinicName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: _titleStyle(),
+                  style: titleStyle(),
                 ),
               ),
-              _statusBadge(booking.status),
+              statusBadge(booking.status),
             ],
           ),
           const SizedBox(height: 8),
-          _miniRow(Icons.spa_outlined, booking.treatmentName),
+          miniRow(Icons.spa_outlined, booking.treatmentName),
           if (booking.doctorName != null)
-            _miniRow(Icons.person_outline, booking.doctorName!),
-          _miniRow(
-              Icons.calendar_today_outlined, '${booking.date} - ${booking.time}'),
-          _miniRow(Icons.phone_outlined, booking.phone),
+            miniRow(Icons.person_outline, booking.doctorName!),
+          miniRow(Icons.calendar_today_outlined,
+              '${booking.date} - ${booking.time}'),
+          miniRow(Icons.phone_outlined, booking.phone),
           const Divider(height: 20),
           Row(
             children: [
@@ -112,26 +111,6 @@ Widget _bookingCard(BuildContext context, Booking booking) {
           ),
         ],
       ),
-    ),
-  );
-}
-
-Widget _miniRow(IconData icon, String value) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 6),
-    child: Row(
-      children: [
-        Icon(icon, size: 15, color: AppColors.textGrey),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            value,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: AppColors.textDark, fontSize: 12),
-          ),
-        ),
-      ],
     ),
   );
 }

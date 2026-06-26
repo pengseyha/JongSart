@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../models/treatment_model.dart';
 import '../../state/app_state.dart';
-import '../../theme/app_colors.dart';
+import '../../core/theme/app_colors.dart';
 
 class TreatmentDetailScreen extends StatefulWidget {
   final String? treatmentId;

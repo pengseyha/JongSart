@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import '../models/treatment_model.dart';
+import '../../models/treatment_model.dart';
 
 class MockRepository {
   Future<List<Treatment>> loadTreatments() async {

@@ -1,4 +1,4 @@
-part of '../app_flows/app_flow_screens.dart';
+import '../../core/utils/screen_imports.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
@@ -11,26 +11,26 @@ class FavoritesScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: _flowAppBar(context, 'Favorites'),
+      appBar: flowAppBar(context, 'Favorites'),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Row(
             children: [
-              Expanded(child: _tabLabel('Clinics', true)),
-              Expanded(child: _tabLabel('Treatments', false)),
+              Expanded(child: tabLabel('Clinics', true)),
+              Expanded(child: tabLabel('Treatments', false)),
             ],
           ),
           const SizedBox(height: 18),
           if (favoriteClinics.isEmpty && favoriteRecommendations.isEmpty)
-            _emptyState(
+            emptyState(
               Icons.favorite_border,
               'No favorites yet',
               'Save clinics and treatments to compare them later.',
             )
           else ...[
             ...favoriteClinics
-                .map((clinic) => _favoriteClinicCard(context, clinic)),
+                .map((clinic) => favoriteClinicCard(context, clinic)),
             if (favoriteRecommendations.isNotEmpty) ...[
               const SizedBox(height: 8),
               const Text(
@@ -41,7 +41,7 @@ class FavoritesScreen extends StatelessWidget {
             ],
             ...favoriteRecommendations.map(
               (recommendation) =>
-                  _favoriteRecommendationCard(context, recommendation),
+                  favoriteRecommendationCard(context, recommendation),
             ),
           ],
         ],

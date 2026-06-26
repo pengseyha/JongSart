@@ -1,4 +1,4 @@
-part of '../app_flows/app_flow_screens.dart';
+import '../../core/utils/screen_imports.dart';
 
 class BookingDetailScreen extends StatelessWidget {
   final String bookingId;
@@ -12,10 +12,10 @@ class BookingDetailScreen extends StatelessWidget {
     if (booking == null) {
       return Scaffold(
         backgroundColor: AppColors.backgroundWhite,
-        appBar: _flowAppBar(context, 'Booking Detail'),
+        appBar: flowAppBar(context, 'Booking Detail'),
         body: Padding(
           padding: const EdgeInsets.all(16),
-          child: _emptyState(
+          child: emptyState(
             Icons.error_outline,
             'Booking not found',
             'This booking may have been removed.',
@@ -26,22 +26,22 @@ class BookingDetailScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: _flowAppBar(context, 'Booking Detail'),
+      appBar: flowAppBar(context, 'Booking Detail'),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: _panelDecoration(),
+            decoration: panelDecoration(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     Expanded(
-                      child: Text(booking.treatmentName, style: _titleStyle()),
+                      child: Text(booking.treatmentName, style: titleStyle()),
                     ),
-                    _statusBadge(booking.status),
+                    statusBadge(booking.status),
                   ],
                 ),
                 const SizedBox(height: 4),
@@ -54,44 +54,43 @@ class BookingDetailScreen extends StatelessWidget {
           const SizedBox(height: 14),
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: _panelDecoration(),
+            decoration: panelDecoration(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _sectionTitle('Appointment'),
+                sectionTitle('Appointment'),
                 const SizedBox(height: 10),
-                _summaryRow(Icons.local_hospital_outlined, 'Clinic',
+                summaryRow(Icons.local_hospital_outlined, 'Clinic',
                     booking.clinicName),
-                _summaryRow(
+                summaryRow(
                     Icons.spa_outlined, 'Treatment', booking.treatmentName),
                 if (booking.doctorName != null)
-                  _summaryRow(
+                  summaryRow(
                       Icons.person_outline, 'Doctor', booking.doctorName!),
-                _summaryRow(Icons.healing_outlined, 'Concern', booking.concern),
-                _summaryRow(
-                    Icons.calendar_today_outlined, 'Date', booking.date),
-                _summaryRow(Icons.schedule, 'Time', booking.time),
+                summaryRow(Icons.healing_outlined, 'Concern', booking.concern),
+                summaryRow(Icons.calendar_today_outlined, 'Date', booking.date),
+                summaryRow(Icons.schedule, 'Time', booking.time),
                 if (booking.note.isNotEmpty)
-                  _summaryRow(Icons.notes_outlined, 'Note', booking.note),
+                  summaryRow(Icons.notes_outlined, 'Note', booking.note),
               ],
             ),
           ),
           const SizedBox(height: 14),
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: _panelDecoration(),
+            decoration: panelDecoration(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _sectionTitle('Patient'),
+                sectionTitle('Patient'),
                 const SizedBox(height: 10),
-                _summaryRow(Icons.person_outline, 'Name', booking.patientName),
-                _summaryRow(Icons.phone_outlined, 'Phone', booking.phone),
+                summaryRow(Icons.person_outline, 'Name', booking.patientName),
+                summaryRow(Icons.phone_outlined, 'Phone', booking.phone),
                 if (booking.telegramOrWhatsapp != null)
-                  _summaryRow(Icons.send_outlined, 'Telegram/WhatsApp',
+                  summaryRow(Icons.send_outlined, 'Telegram/WhatsApp',
                       booking.telegramOrWhatsapp!),
-                _summaryRow(Icons.access_time, 'Created',
-                    _formatDate(booking.createdAt)),
+                summaryRow(Icons.access_time, 'Created',
+                    formatDate(booking.createdAt)),
               ],
             ),
           ),

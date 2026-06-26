@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../data/local_store.dart';
-import '../data/mock_repository.dart';
+import '../core/storage/local_storage_service.dart';
+import '../data/mock/mock_repository.dart';
 import '../models/booking.dart';
 import '../models/chat_message.dart';
 import '../models/clinic.dart';
@@ -12,7 +12,7 @@ import '../models/treatment_model.dart';
 
 class AppState extends ChangeNotifier {
   final MockRepository _repository = MockRepository();
-  final LocalStore _store = LocalStore();
+  final LocalStorageService _store = LocalStorageService();
 
   List<Treatment> _treatments = [];
   bool _isLoading = true;

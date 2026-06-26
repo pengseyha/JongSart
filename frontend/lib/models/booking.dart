@@ -155,8 +155,8 @@ class Booking {
       time: json['time'] as String? ?? '',
       note: json['note'] as String? ?? '',
       status: BookingStatus.fromName(json['status'] as String?),
-      createdAt:
-          DateTime.tryParse(json['createdAt'] as String? ?? '') ?? DateTime.now(),
+      createdAt: DateTime.tryParse(json['createdAt'] as String? ?? '') ??
+          DateTime.now(),
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.tryParse(json['updatedAt'] as String),

@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/booking.dart';
-import '../models/chat_message.dart';
-import '../models/patient_review.dart';
+import '../../models/booking.dart';
+import '../../models/chat_message.dart';
+import '../../models/patient_review.dart';
 
 /// Simple wrapper around shared_preferences that handles JSON serialization
 /// for the app's local state. No backend - everything lives on the device.
-class LocalStore {
+class LocalStorageService {
   static const _kBookings = 'jongsart_bookings';
   static const _kFavorites = 'jongsart_favorites';
   static const _kClaimedOffers = 'jongsart_claimed_offers';

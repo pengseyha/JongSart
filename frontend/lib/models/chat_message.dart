@@ -25,7 +25,8 @@ class ChatMessage {
       id: json['id'] as String,
       text: json['text'] as String? ?? '',
       isMe: json['isMe'] as bool? ?? false,
-      sentAt: DateTime.tryParse(json['sentAt'] as String? ?? '') ?? DateTime.now(),
+      sentAt:
+          DateTime.tryParse(json['sentAt'] as String? ?? '') ?? DateTime.now(),
     );
   }
 }

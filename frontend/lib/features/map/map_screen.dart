@@ -1,4 +1,4 @@
-part of '../app_flows/app_flow_screens.dart';
+import '../../core/utils/screen_imports.dart';
 
 class MapScreen extends StatelessWidget {
   const MapScreen({super.key});
@@ -7,10 +7,10 @@ class MapScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: _flowAppBar(context, 'Clinic Map'),
+      appBar: flowAppBar(context, 'Clinic Map'),
       body: Stack(
         children: [
-          Positioned.fill(child: _mockMap()),
+          Positioned.fill(child: mockMap()),
           Positioned(
             top: 24,
             right: 18,
@@ -31,7 +31,7 @@ class MapScreen extends StatelessWidget {
             left: 16,
             right: 16,
             bottom: 16,
-            child: _mapBottomSheet(context),
+            child: mapBottomSheet(context),
           ),
         ],
       ),

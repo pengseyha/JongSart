@@ -1,4 +1,4 @@
-part of '../app_flows/app_flow_screens.dart';
+import '../../core/utils/screen_imports.dart';
 
 class SkinProfileScreen extends StatelessWidget {
   const SkinProfileScreen({super.key});
@@ -10,13 +10,13 @@ class SkinProfileScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: _flowAppBar(context, 'Profile'),
+      appBar: flowAppBar(context, 'Profile'),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           _profileHeader(state),
           const SizedBox(height: 16),
-          _skinScoreCard(state),
+          skinScoreCard(state),
           const SizedBox(height: 16),
           _concernSelector(context, state),
           const SizedBox(height: 16),
@@ -31,10 +31,10 @@ class SkinProfileScreen extends StatelessWidget {
             label: const Text('View My Bookings'),
           ),
           const SizedBox(height: 18),
-          _sectionTitle('Clinical Match Recommendations'),
+          sectionTitle('Clinical Match Recommendations'),
           const SizedBox(height: 10),
           ...state.skinRecommendations.map(
-            (recommendation) => _recommendationCard(context, recommendation),
+            (recommendation) => recommendationCard(context, recommendation),
           ),
           const SizedBox(height: 8),
           OutlinedButton.icon(
@@ -60,11 +60,11 @@ Widget _concernSelector(BuildContext context, AppState state) {
   ];
   return Container(
     padding: const EdgeInsets.all(16),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionTitle('My Skin Concern'),
+        sectionTitle('My Skin Concern'),
         const SizedBox(height: 4),
         const Text(
           'Select your main concern. We save it for your next booking.',
@@ -75,10 +75,11 @@ Widget _concernSelector(BuildContext context, AppState state) {
           spacing: 8,
           runSpacing: 8,
           children: concerns
-              .map((concern) => _timeChip(
+              .map((concern) => timeChip(
                     concern,
                     state.selectedConcern == concern,
-                    onTap: () => context.read<AppState>().selectConcern(concern),
+                    onTap: () =>
+                        context.read<AppState>().selectConcern(concern),
                   ))
               .toList(),
         ),
@@ -90,7 +91,7 @@ Widget _concernSelector(BuildContext context, AppState state) {
 Widget _profileHeader(AppState state) {
   return Container(
     padding: const EdgeInsets.all(16),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Column(
       children: [
         const CircleAvatar(
@@ -159,7 +160,7 @@ Widget _profileStat(String value, String label) {
 Widget _emptyBookingCard(BuildContext context) {
   return Container(
     padding: const EdgeInsets.all(16),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Row(
       children: [
         const CircleAvatar(
@@ -195,7 +196,7 @@ Widget _emptyBookingCard(BuildContext context) {
 Widget _upcomingBookingCard(BuildContext context, Booking booking) {
   return Container(
     padding: const EdgeInsets.all(16),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -207,14 +208,14 @@ Widget _upcomingBookingCard(BuildContext context, Booking booking) {
                 style: TextStyle(fontWeight: FontWeight.w800),
               ),
             ),
-            _statusBadge(booking.status),
+            statusBadge(booking.status),
           ],
         ),
         const SizedBox(height: 10),
-        _summaryRow(Icons.local_hospital_outlined, 'Clinic', booking.clinicName),
-        _summaryRow(Icons.healing_outlined, 'Concern', booking.concern),
-        _summaryRow(Icons.calendar_today_outlined, 'Date', booking.date),
-        _summaryRow(Icons.schedule, 'Time', booking.time),
+        summaryRow(Icons.local_hospital_outlined, 'Clinic', booking.clinicName),
+        summaryRow(Icons.healing_outlined, 'Concern', booking.concern),
+        summaryRow(Icons.calendar_today_outlined, 'Date', booking.date),
+        summaryRow(Icons.schedule, 'Time', booking.time),
         const SizedBox(height: 8),
         SizedBox(
           width: double.infinity,

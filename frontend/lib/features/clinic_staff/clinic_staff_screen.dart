@@ -1,4 +1,4 @@
-part of '../app_flows/app_flow_screens.dart';
+import '../../core/utils/screen_imports.dart';
 
 class ClinicStaffScreen extends StatelessWidget {
   const ClinicStaffScreen({super.key});
@@ -14,11 +14,11 @@ class ClinicStaffScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: _flowAppBar(context, 'Clinic Staff (Demo)'),
+      appBar: flowAppBar(context, 'Clinic Staff (Demo)'),
       body: state.bookings.isEmpty
           ? Padding(
               padding: const EdgeInsets.all(16),
-              child: _emptyState(
+              child: emptyState(
                 Icons.inbox_outlined,
                 'No appointment requests',
                 'New requests submitted by customers will show up here for staff to manage.',
@@ -71,7 +71,7 @@ Widget _staffSection(
         padding: const EdgeInsets.only(bottom: 10, top: 4),
         child: Row(
           children: [
-            Expanded(child: _sectionTitle('$title (${bookings.length})')),
+            Expanded(child: sectionTitle('$title (${bookings.length})')),
           ],
         ),
       ),
@@ -85,26 +85,25 @@ Widget _staffBookingCard(BuildContext context, Booking booking) {
   return Container(
     margin: const EdgeInsets.only(bottom: 12),
     padding: const EdgeInsets.all(14),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
             Expanded(
-              child: Text(booking.patientName.isEmpty
-                  ? 'Guest'
-                  : booking.patientName,
-                  style: _titleStyle()),
+              child: Text(
+                  booking.patientName.isEmpty ? 'Guest' : booking.patientName,
+                  style: titleStyle()),
             ),
-            _statusBadge(booking.status),
+            statusBadge(booking.status),
           ],
         ),
         const SizedBox(height: 6),
-        _miniRow(Icons.spa_outlined, booking.treatmentName),
-        _miniRow(
+        miniRow(Icons.spa_outlined, booking.treatmentName),
+        miniRow(
             Icons.calendar_today_outlined, '${booking.date} - ${booking.time}'),
-        _miniRow(Icons.phone_outlined, booking.phone),
+        miniRow(Icons.phone_outlined, booking.phone),
         const Divider(height: 18),
         Wrap(
           spacing: 8,
@@ -205,7 +204,7 @@ void _showRescheduleDialog(BuildContext context, Booking booking) {
                   spacing: 6,
                   runSpacing: 6,
                   children: dates
-                      .map((d) => _timeChip(d, d == date,
+                      .map((d) => timeChip(d, d == date,
                           onTap: () => setDialogState(() => date = d)))
                       .toList(),
                 ),
@@ -216,7 +215,7 @@ void _showRescheduleDialog(BuildContext context, Booking booking) {
                   spacing: 6,
                   runSpacing: 6,
                   children: times
-                      .map((t) => _timeChip(t, t == time,
+                      .map((t) => timeChip(t, t == time,
                           onTap: () => setDialogState(() => time = t)))
                       .toList(),
                 ),

@@ -1,4 +1,4 @@
-part of '../app_flows/app_flow_screens.dart';
+import '../../core/utils/screen_imports.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -21,19 +21,19 @@ class _SearchScreenState extends State<SearchScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: _flowAppBar(context, 'Search'),
+      appBar: flowAppBar(context, 'Search'),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _editableSearchField(
+          editableSearchField(
             'Search clinics, treatments, doctors...',
             onChanged: (value) => setState(() => _query = value),
           ),
           const SizedBox(height: 16),
-          _filterPanel(),
+          filterPanel(),
           const SizedBox(height: 18),
           if (!hasResults)
-            _emptyState(
+            emptyState(
               Icons.search_off,
               'No results found',
               'Try another skin concern or clinic name.',
@@ -50,7 +50,7 @@ class _SearchScreenState extends State<SearchScreen> {
             if (clinics.isNotEmpty) ...[
               _searchSectionLabel('Clinics (${clinics.length})'),
               const SizedBox(height: 10),
-              ...clinics.map((clinic) => _clinicResultCard(context, clinic)),
+              ...clinics.map((clinic) => clinicResultCard(context, clinic)),
               const SizedBox(height: 8),
             ],
             if (doctors.isNotEmpty) ...[
@@ -102,10 +102,10 @@ Widget _treatmentResultCard(BuildContext context, Treatment treatment) {
   return Container(
     margin: const EdgeInsets.only(bottom: 12),
     padding: const EdgeInsets.all(12),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Row(
       children: [
-        _imageTile(Icons.spa_outlined),
+        imageTile(Icons.spa_outlined),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -114,7 +114,7 @@ Widget _treatmentResultCard(BuildContext context, Treatment treatment) {
               Text(treatment.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: _titleStyle()),
+                  style: titleStyle()),
               const SizedBox(height: 4),
               Text(treatment.category,
                   style:
@@ -143,7 +143,7 @@ Widget _doctorResultCard(BuildContext context, Doctor doctor) {
   return Container(
     margin: const EdgeInsets.only(bottom: 12),
     padding: const EdgeInsets.all(12),
-    decoration: _panelDecoration(),
+    decoration: panelDecoration(),
     child: Row(
       children: [
         CircleAvatar(
@@ -163,7 +163,7 @@ Widget _doctorResultCard(BuildContext context, Doctor doctor) {
               Text(doctor.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: _titleStyle()),
+                  style: titleStyle()),
               const SizedBox(height: 4),
               Text('${doctor.specialty} - ${doctor.clinic}',
                   maxLines: 1,

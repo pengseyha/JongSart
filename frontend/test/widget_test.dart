@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:jong_sart/main.dart';
+import 'package:jong_sart/app.dart';
 import 'package:jong_sart/models/booking.dart';
-import 'package:jong_sart/router/app_router.dart';
+import 'package:jong_sart/core/router/app_router.dart';
 import 'package:jong_sart/state/app_state.dart';
 
 void main() {

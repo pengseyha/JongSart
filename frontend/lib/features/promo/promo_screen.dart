@@ -1,4 +1,4 @@
-part of '../app_flows/app_flow_screens.dart';
+import '../../core/utils/screen_imports.dart';
 
 class PromoScreen extends StatelessWidget {
   const PromoScreen({super.key});
@@ -10,7 +10,7 @@ class PromoScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: _flowAppBar(context, 'Promotions'),
+      appBar: flowAppBar(context, 'Promotions'),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -58,17 +58,17 @@ class PromoScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          _flashDeal(context, offers.first),
+          flashDeal(context, offers.first),
           const SizedBox(height: 18),
-          _sectionTitle('Treatment Bundles'),
+          sectionTitle('Treatment Bundles'),
           const SizedBox(height: 10),
-          ...offers.skip(1).map((offer) => _bundleCard(context, offer)),
+          ...offers.skip(1).map((offer) => bundleCard(context, offer)),
           const SizedBox(height: 12),
-          _giftWellnessCard(context),
+          giftWellnessCard(context),
           const SizedBox(height: 18),
-          _sectionTitle('Your Coupons'),
+          sectionTitle('Your Coupons'),
           const SizedBox(height: 10),
-          _couponCard(),
+          couponCard(),
         ],
       ),
       bottomNavigationBar: const AppBottomNav(currentIndex: 3),

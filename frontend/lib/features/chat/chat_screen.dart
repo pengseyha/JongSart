@@ -1,4 +1,4 @@
-part of '../app_flows/app_flow_screens.dart';
+import '../../core/utils/screen_imports.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -112,7 +112,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 const SizedBox(height: 18),
                 ...messages.map((message) =>
-                    _ChatBubble(text: message.text, isMe: message.isMe)),
+                    ChatBubble(text: message.text, isMe: message.isMe)),
                 const SizedBox(height: 4),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -147,7 +147,7 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Row(
                 children: [
                   Expanded(
-                    child: _messageInput(
+                    child: messageInput(
                       _messageController,
                       onSubmitted: (_) => _send(),
                     ),

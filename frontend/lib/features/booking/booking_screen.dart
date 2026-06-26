@@ -1,4 +1,4 @@
-part of '../app_flows/app_flow_screens.dart';
+import '../../core/utils/screen_imports.dart';
 
 class BookingScreen extends StatefulWidget {
   final String? clinicId;
@@ -245,7 +245,7 @@ class _BookingScreenState extends State<BookingScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: _flowAppBar(context, 'Book Consultation'),
+      appBar: flowAppBar(context, 'Book Consultation'),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -265,7 +265,7 @@ class _BookingScreenState extends State<BookingScreen> {
               style: TextStyle(color: AppColors.textGrey, fontSize: 12),
             ),
             const SizedBox(height: 18),
-            _sectionTitle('Your contact details'),
+            sectionTitle('Your contact details'),
             const SizedBox(height: 10),
             _textField(
               controller: _nameController,
@@ -292,13 +292,13 @@ class _BookingScreenState extends State<BookingScreen> {
               icon: Icons.send_outlined,
             ),
             const SizedBox(height: 18),
-            _sectionTitle('Skin concern'),
+            sectionTitle('Skin concern'),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: _concerns
-                  .map((concern) => _timeChip(
+                  .map((concern) => timeChip(
                         concern,
                         _concern == concern,
                         onTap: () => setState(() => _concern = concern),
@@ -306,7 +306,7 @@ class _BookingScreenState extends State<BookingScreen> {
                   .toList(),
             ),
             const SizedBox(height: 18),
-            _sectionTitle('Clinic & treatment'),
+            sectionTitle('Clinic & treatment'),
             const SizedBox(height: 10),
             _dropdown<String>(
               label: 'Clinic',
@@ -349,13 +349,13 @@ class _BookingScreenState extends State<BookingScreen> {
               onChanged: (value) => setState(() => _doctorId = value),
             ),
             const SizedBox(height: 18),
-            _sectionTitle('Preferred date'),
+            sectionTitle('Preferred date'),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: _dates
-                  .map((date) => _timeChip(
+                  .map((date) => timeChip(
                         date,
                         _date == date,
                         onTap: () => setState(() => _date = date),
@@ -363,13 +363,13 @@ class _BookingScreenState extends State<BookingScreen> {
                   .toList(),
             ),
             const SizedBox(height: 16),
-            _sectionTitle('Preferred time'),
+            sectionTitle('Preferred time'),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: _times
-                  .map((time) => _timeChip(
+                  .map((time) => timeChip(
                         time,
                         _time == time,
                         onTap: () => setState(() => _time = time),
@@ -377,7 +377,7 @@ class _BookingScreenState extends State<BookingScreen> {
                   .toList(),
             ),
             const SizedBox(height: 18),
-            _sectionTitle('Note (optional)'),
+            sectionTitle('Note (optional)'),
             const SizedBox(height: 10),
             _textField(
               controller: _noteController,
