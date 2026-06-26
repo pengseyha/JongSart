@@ -74,21 +74,8 @@ class _BookingScreenState extends State<BookingScreen> {
     final state = context.read<AppState>();
     final clinic = state.clinicById(_clinicId ?? '');
 
-    Treatment? treatment;
-    for (final item in state.treatments) {
-      if (item.id == _treatmentId) {
-        treatment = item;
-        break;
-      }
-    }
-
-    Doctor? doctor;
-    for (final item in state.doctors) {
-      if (item.id == _doctorId) {
-        doctor = item;
-        break;
-      }
-    }
+    final treatment = state.treatmentById(_treatmentId ?? '');
+    final doctor = state.doctorById(_doctorId ?? '');
 
     state.submitBookingRequest(
       patientName: _nameController.text.trim(),
@@ -240,6 +227,21 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
+    if (_clinicId == null && state.clinics.isNotEmpty) {
+      _clinicId = state.clinics.first.id;
+    } else if (_clinicId != null && state.clinicById(_clinicId!) == null) {
+      _clinicId = state.clinics.isNotEmpty ? state.clinics.first.id : null;
+    }
+    if (_treatmentId == null && state.treatments.isNotEmpty) {
+      _treatmentId = state.treatments.first.id;
+    } else if (_treatmentId != null &&
+        state.treatmentById(_treatmentId!) == null) {
+      _treatmentId =
+          state.treatments.isNotEmpty ? state.treatments.first.id : null;
+    }
+    if (_doctorId != null && state.doctorById(_doctorId!) == null) {
+      _doctorId = null;
+    }
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
@@ -312,7 +314,8 @@ class _BookingScreenState extends State<BookingScreen> {
               items: state.clinics
                   .map((clinic) => DropdownMenuItem(
                         value: clinic.id,
-                        child: Text(clinic.name, overflow: TextOverflow.ellipsis),
+                        child:
+                            Text(clinic.name, overflow: TextOverflow.ellipsis),
                       ))
                   .toList(),
               onChanged: (value) => setState(() => _clinicId = value),
@@ -335,7 +338,8 @@ class _BookingScreenState extends State<BookingScreen> {
               label: 'Doctor (optional)',
               value: _doctorId,
               items: [
-                const DropdownMenuItem(value: null, child: Text('No preference')),
+                const DropdownMenuItem(
+                    value: null, child: Text('No preference')),
                 ...state.doctors.map((doctor) => DropdownMenuItem(
                       value: doctor.id,
                       child: Text('${doctor.name} - ${doctor.specialty}',

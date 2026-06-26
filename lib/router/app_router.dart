@@ -15,15 +15,21 @@ class AppRouter {
       ),
       GoRoute(
         path: '/treatment-detail',
-        builder: (context, state) => const TreatmentDetailScreen(),
+        builder: (context, state) => TreatmentDetailScreen(
+          treatmentId: state.uri.queryParameters['id'],
+        ),
       ),
       GoRoute(
         path: '/clinic-detail',
-        builder: (context, state) => const ClinicDetailScreen(),
+        builder: (context, state) => ClinicDetailScreen(
+          clinicId: state.uri.queryParameters['id'],
+        ),
       ),
       GoRoute(
         path: '/doctor-profile',
-        builder: (context, state) => const DoctorProfileScreen(),
+        builder: (context, state) => DoctorProfileScreen(
+          doctorId: state.uri.queryParameters['id'],
+        ),
       ),
       GoRoute(
         path: '/search',

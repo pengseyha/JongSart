@@ -163,11 +163,11 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   children: [
-                    _buildDoctorCard(context, 'Dr. Sarah Chen', 'MEDICAL LASER',
-                        4.9, 'SC', AppColors.primaryMint),
+                    _buildDoctorCard(context, 'doctor_sarah', 'Dr. Sarah Chen',
+                        'MEDICAL LASER', 4.9, 'SC', AppColors.primaryMint),
                     const SizedBox(width: 16),
-                    _buildDoctorCard(context, 'Dr. James Wilson',
-                        'DERMATO-SURGERY', 4.8, 'JW', const Color(0xFF2563EB)),
+                    _buildDoctorCard(context, 'doctor_frances', 'Dr. Frances',
+                        'DERMATOLOGIST', 4.9, 'DF', const Color(0xFF2563EB)),
                   ],
                 ),
               ),
@@ -220,8 +220,8 @@ class HomeScreen extends StatelessWidget {
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 12.0),
                                 child: InkWell(
-                                  onTap: () =>
-                                      context.push('/treatment-detail'),
+                                  onTap: () => context.push(
+                                      '/treatment-detail?id=${Uri.encodeComponent(treatment.id)}'),
                                   borderRadius: BorderRadius.circular(16),
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -439,7 +439,8 @@ class HomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20)),
                     minimumSize: const Size(110, 36),
                   ),
-                  onPressed: () => context.push('/clinic-detail'),
+                  onPressed: () =>
+                      context.push('/clinic-detail?id=clinic_lumina'),
                   child: const Text('View Clinic',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
@@ -598,8 +599,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDoctorCard(BuildContext context, String name, String specialty,
-      double rating, String initials, Color avatarColor) {
+  Widget _buildDoctorCard(BuildContext context, String doctorId, String name,
+      String specialty, double rating, String initials, Color avatarColor) {
     return Container(
       width: 160,
       padding: const EdgeInsets.all(16),
@@ -665,7 +666,8 @@ class HomeScreen extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => context.push('/doctor-profile'),
+              onPressed: () => context
+                  .push('/doctor-profile?id=${Uri.encodeComponent(doctorId)}'),
               style: ElevatedButton.styleFrom(
                 backgroundColor:
                     const Color(0xFF0F766E), // Darker green for book button

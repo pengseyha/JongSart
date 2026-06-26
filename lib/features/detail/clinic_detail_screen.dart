@@ -5,11 +5,24 @@ import '../../state/app_state.dart';
 import '../../theme/app_colors.dart';
 
 class ClinicDetailScreen extends StatelessWidget {
-  const ClinicDetailScreen({super.key});
+  final String? clinicId;
+
+  const ClinicDetailScreen({super.key, this.clinicId});
 
   @override
   Widget build(BuildContext context) {
-    final isFavorite = context.watch<AppState>().isFavorite('clinic_lumina');
+    final state = context.watch<AppState>();
+    final clinic = state.clinicById(clinicId ?? '') ??
+        (state.clinics.isNotEmpty ? state.clinics.first : null);
+    final currentClinicId = clinic?.id ?? 'clinic_lumina';
+    final clinicName = clinic?.name ?? 'JongSart Clinic';
+    final clinicRating = clinic?.rating.toStringAsFixed(1) ?? '4.9';
+    final reviewCount = clinic?.reviewCount ?? 1221;
+    final address = clinic?.address ??
+        'No. 42 Russian Federation Boulevard (St. 110), Phnom Penh, Cambodia';
+    final specialty =
+        clinic?.specialty ?? 'Skincare and beauty clinic in Cambodia';
+    final isFavorite = state.isFavorite(currentClinicId);
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
@@ -104,7 +117,7 @@ class ClinicDetailScreen extends StatelessWidget {
                                               size: 20),
                                           onPressed: () => context
                                               .read<AppState>()
-                                              .toggleFavorite('clinic_lumina'),
+                                              .toggleFavorite(currentClinicId),
                                         ),
                                       ),
                                     ],
@@ -149,9 +162,9 @@ class ClinicDetailScreen extends StatelessWidget {
                                     ],
                                   ),
                                   const SizedBox(height: 12),
-                                  const Text(
-                                    'JongSart Clinic',
-                                    style: TextStyle(
+                                  Text(
+                                    clinicName,
+                                    style: const TextStyle(
                                         fontSize: 22,
                                         fontWeight: FontWeight.bold,
                                         color: AppColors.textDark),
@@ -166,35 +179,35 @@ class ClinicDetailScreen extends StatelessWidget {
                                                 color: Colors.amber, size: 16)),
                                       ),
                                       const SizedBox(width: 8),
-                                      const Text('4.9',
-                                          style: TextStyle(
+                                      Text(clinicRating,
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: AppColors.textDark,
                                               fontSize: 13)),
                                       const SizedBox(width: 4),
-                                      const Expanded(
-                                        child: Text('(1,221 Reviews)',
+                                      Expanded(
+                                        child: Text('($reviewCount Reviews)',
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 color: AppColors.textGrey,
                                                 fontSize: 13)),
                                       ),
                                     ],
                                   ),
                                   const SizedBox(height: 12),
-                                  const Row(
+                                  Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Icon(Icons.location_on_outlined,
+                                      const Icon(Icons.location_on_outlined,
                                           color: AppColors.primaryMint,
                                           size: 20),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
-                                          'No. 42 Russian Federation Boulevard (St. 110),\nPhnom Penh, Cambodia',
-                                          style: TextStyle(
+                                          address,
+                                          style: const TextStyle(
                                               color: AppColors.textGrey,
                                               fontSize: 13,
                                               height: 1.4),
@@ -246,9 +259,9 @@ class ClinicDetailScreen extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.textDark)),
                               const SizedBox(height: 12),
-                              const Text(
-                                'JongSart ជាគ្លីនិកថែរក្សាស្បែក និងកែសម្ផស្សឈានមុខគេនៅក្នុងប្រទេសកម្ពុជា។ ផ្អែកលើស្តង់ដារអនាម័យខ្ពស់ និងបច្ចេកវិទ្យាព្យាបាលស្បែកយ៉ាងច្បាស់លាស់ យើងរួមបញ្ចូលគ្នានូវជម្រើសព្យាបាលដ៏ល្អបំផុត ជាមួយការថែទាំយ៉ាងយកចិត្តទុកដាក់ ដើម្បីផ្តល់ជូននូវលទ្ធផលស្បែកមានសុខភាពល្អ និងភ្លឺថ្លា។',
-                                style: TextStyle(
+                              Text(
+                                '$clinicName provides $specialty with structured appointment requests, consultation-first care, and local follow-up for customers in Phnom Penh, Cambodia.',
+                                style: const TextStyle(
                                     color: AppColors.textGrey,
                                     fontSize: 14,
                                     height: 1.6),
@@ -289,8 +302,9 @@ class ClinicDetailScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(14)),
                     elevation: 0,
                   ),
-                  onPressed: () =>
-                      context.push('/booking?clinicId=clinic_lumina'),
+                  onPressed: () => context.push(
+                    '/booking?clinicId=${Uri.encodeComponent(currentClinicId)}',
+                  ),
                   child: const Text(
                     'Book Consultation',
                     style: TextStyle(

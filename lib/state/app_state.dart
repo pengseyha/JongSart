@@ -245,7 +245,9 @@ class AppState extends ChangeNotifier {
     if (savedChat != null && savedChat.isNotEmpty) _chatMessages = savedChat;
 
     final savedReviews = await _store.loadReviews();
-    if (savedReviews != null && savedReviews.isNotEmpty) _reviews = savedReviews;
+    if (savedReviews != null && savedReviews.isNotEmpty) {
+      _reviews = savedReviews;
+    }
 
     _isLoading = false;
     notifyListeners();
@@ -335,6 +337,20 @@ class AppState extends ChangeNotifier {
   Clinic? clinicById(String id) {
     for (final clinic in _clinics) {
       if (clinic.id == id) return clinic;
+    }
+    return null;
+  }
+
+  Treatment? treatmentById(String id) {
+    for (final treatment in _treatments) {
+      if (treatment.id == id) return treatment;
+    }
+    return null;
+  }
+
+  Doctor? doctorById(String id) {
+    for (final doctor in _doctors) {
+      if (doctor.id == id) return doctor;
     }
     return null;
   }

@@ -68,7 +68,8 @@ Widget _statusBadge(BookingStatus status) {
   );
 }
 
-String _formatDate(DateTime date) => DateFormat('d MMM yyyy, h:mm a').format(date);
+String _formatDate(DateTime date) =>
+    DateFormat('d MMM yyyy, h:mm a').format(date);
 
 PreferredSizeWidget _flowAppBar(BuildContext context, String title) {
   final canPop = Navigator.of(context).canPop();
@@ -289,7 +290,9 @@ Widget _clinicResultCard(BuildContext context, Clinic clinic) {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onPressed: () => context.push('/clinic-detail'),
+                onPressed: () => context.push(
+                  '/clinic-detail?id=${Uri.encodeComponent(clinic.id)}',
+                ),
                 child: const Text('View Clinic'),
               ),
             ],
@@ -568,7 +571,9 @@ Widget _favoriteClinicCard(BuildContext context, Clinic clinic) {
               icon: const Icon(Icons.favorite, color: Color(0xFF007D68)),
             ),
             TextButton(
-              onPressed: () => context.push('/clinic-detail'),
+              onPressed: () => context.push(
+                '/clinic-detail?id=${Uri.encodeComponent(clinic.id)}',
+              ),
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 6),
                 minimumSize: const Size(48, 30),

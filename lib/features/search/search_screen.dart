@@ -42,12 +42,9 @@ class _SearchScreenState extends State<SearchScreen> {
             if (treatments.isNotEmpty) ...[
               _searchSectionLabel('Treatments (${treatments.length})'),
               const SizedBox(height: 10),
-              ...treatments.map((treatment) => _treatmentResultCard(
-                    context,
-                    treatment.title,
-                    treatment.category,
-                    treatment.price,
-                  )),
+              ...treatments.map(
+                (treatment) => _treatmentResultCard(context, treatment),
+              ),
               const SizedBox(height: 8),
             ],
             if (clinics.isNotEmpty) ...[
@@ -59,12 +56,9 @@ class _SearchScreenState extends State<SearchScreen> {
             if (doctors.isNotEmpty) ...[
               _searchSectionLabel('Doctors (${doctors.length})'),
               const SizedBox(height: 10),
-              ...doctors.map((doctor) => _doctorResultCard(
-                    context,
-                    doctor.name,
-                    doctor.specialty,
-                    doctor.clinic,
-                  )),
+              ...doctors.map(
+                (doctor) => _doctorResultCard(context, doctor),
+              ),
               const SizedBox(height: 8),
             ],
           ],
@@ -104,8 +98,7 @@ Widget _searchSectionLabel(String label) {
   );
 }
 
-Widget _treatmentResultCard(
-    BuildContext context, String title, String category, String price) {
+Widget _treatmentResultCard(BuildContext context, Treatment treatment) {
   return Container(
     margin: const EdgeInsets.only(bottom: 12),
     padding: const EdgeInsets.all(12),
@@ -118,16 +111,16 @@ Widget _treatmentResultCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title,
+              Text(treatment.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: _titleStyle()),
               const SizedBox(height: 4),
-              Text(category,
+              Text(treatment.category,
                   style:
                       const TextStyle(color: AppColors.textGrey, fontSize: 12)),
               const SizedBox(height: 4),
-              Text('From $price',
+              Text('From ${treatment.price}',
                   style: const TextStyle(
                       color: AppColors.primaryMint,
                       fontWeight: FontWeight.bold,
@@ -136,7 +129,9 @@ Widget _treatmentResultCard(
           ),
         ),
         TextButton(
-          onPressed: () => context.push('/treatment-detail'),
+          onPressed: () => context.push(
+            '/treatment-detail?id=${Uri.encodeComponent(treatment.id)}',
+          ),
           child: const Text('View'),
         ),
       ],
@@ -144,8 +139,7 @@ Widget _treatmentResultCard(
   );
 }
 
-Widget _doctorResultCard(
-    BuildContext context, String name, String specialty, String clinic) {
+Widget _doctorResultCard(BuildContext context, Doctor doctor) {
   return Container(
     margin: const EdgeInsets.only(bottom: 12),
     padding: const EdgeInsets.all(12),
@@ -156,7 +150,7 @@ Widget _doctorResultCard(
           radius: 24,
           backgroundColor: AppColors.primaryMintLight,
           child: Text(
-            name.replaceAll('Dr. ', '').substring(0, 1),
+            doctor.name.replaceAll('Dr. ', '').substring(0, 1),
             style: const TextStyle(
                 color: AppColors.primaryMint, fontWeight: FontWeight.bold),
           ),
@@ -166,12 +160,12 @@ Widget _doctorResultCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(name,
+              Text(doctor.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: _titleStyle()),
               const SizedBox(height: 4),
-              Text('$specialty - $clinic',
+              Text('${doctor.specialty} - ${doctor.clinic}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style:
@@ -180,7 +174,9 @@ Widget _doctorResultCard(
           ),
         ),
         TextButton(
-          onPressed: () => context.push('/doctor-profile'),
+          onPressed: () => context.push(
+            '/doctor-profile?id=${Uri.encodeComponent(doctor.id)}',
+          ),
           child: const Text('View'),
         ),
       ],

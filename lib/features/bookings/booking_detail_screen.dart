@@ -85,8 +85,7 @@ class BookingDetailScreen extends StatelessWidget {
               children: [
                 _sectionTitle('Patient'),
                 const SizedBox(height: 10),
-                _summaryRow(
-                    Icons.person_outline, 'Name', booking.patientName),
+                _summaryRow(Icons.person_outline, 'Name', booking.patientName),
                 _summaryRow(Icons.phone_outlined, 'Phone', booking.phone),
                 if (booking.telegramOrWhatsapp != null)
                   _summaryRow(Icons.send_outlined, 'Telegram/WhatsApp',
@@ -155,7 +154,8 @@ List<Widget> _actionsForStatus(BuildContext context, Booking booking) {
           'Book Again',
           Icons.refresh,
           () => context.push(
-              '/booking?clinicId=${booking.clinicId}&treatmentId=${booking.treatmentId}'),
+            '/booking?clinicId=${Uri.encodeComponent(booking.clinicId)}&treatmentId=${Uri.encodeComponent(booking.treatmentId)}',
+          ),
         ),
       ];
   }
@@ -170,8 +170,7 @@ Widget _primaryAction(String label, IconData icon, VoidCallback onTap) {
         backgroundColor: AppColors.primaryMint,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 14),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       icon: Icon(icon, size: 18),
       label: Text(label),
@@ -224,7 +223,8 @@ void _showReviewSheet(BuildContext context, Booking booking) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('Leave a review',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 4),
                 Text('How was your ${booking.treatmentName}?',
                     style: const TextStyle(
@@ -233,8 +233,7 @@ void _showReviewSheet(BuildContext context, Booking booking) {
                 Row(
                   children: List.generate(5, (index) {
                     return IconButton(
-                      onPressed: () =>
-                          setSheetState(() => rating = index + 1),
+                      onPressed: () => setSheetState(() => rating = index + 1),
                       icon: Icon(
                         index < rating ? Icons.star : Icons.star_border,
                         color: AppColors.primaryMint,

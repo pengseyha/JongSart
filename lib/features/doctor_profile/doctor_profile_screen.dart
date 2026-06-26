@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../../state/app_state.dart';
 import '../../theme/app_colors.dart';
 
 class DoctorProfileScreen extends StatefulWidget {
-  const DoctorProfileScreen({super.key});
+  final String? doctorId;
+
+  const DoctorProfileScreen({super.key, this.doctorId});
 
   @override
   State<DoctorProfileScreen> createState() => _DoctorProfileScreenState();
@@ -12,7 +16,6 @@ class DoctorProfileScreen extends StatefulWidget {
 class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   int _selectedDateIndex = 0;
   int _selectedTimeIndex = 3; // Default to 12:30 PM based on UI
-  bool _isFavorite = false;
 
   final List<Map<String, String>> _dates = [
     {'day': 'MON', 'date': '24'},
@@ -34,6 +37,28 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<AppState>();
+    final doctor = state.doctorById(widget.doctorId ?? '') ??
+        (state.doctors.isNotEmpty ? state.doctors.first : null);
+    final doctorId = doctor?.id ?? 'doctor_frances';
+    final doctorName = doctor?.name ?? 'Dr. Frances';
+    final specialty = doctor?.specialty ?? 'Dermatologist';
+    final clinicName = doctor?.clinic ?? 'JongSart Clinic';
+    final about = doctor?.about ??
+        'Specialist in clinical skincare and gentle facial treatments.';
+    final experience = doctor?.experience ?? 12;
+    final rating = doctor?.rating.toStringAsFixed(1) ?? '4.9';
+    final patients = doctor?.patients ?? 847;
+    final initials = doctorName
+        .replaceAll('Dr. ', '')
+        .split(' ')
+        .where((part) => part.isNotEmpty)
+        .map((part) => part[0])
+        .take(2)
+        .join()
+        .toUpperCase();
+    final isFavorite = state.isFavorite(doctorId);
+
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
       appBar: AppBar(
@@ -54,10 +79,10 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              _isFavorite ? Icons.favorite : Icons.favorite_border,
+              isFavorite ? Icons.favorite : Icons.favorite_border,
               color: AppColors.primaryMint,
             ),
-            onPressed: () => setState(() => _isFavorite = !_isFavorite),
+            onPressed: () => context.read<AppState>().toggleFavorite(doctorId),
           ),
         ],
         bottom: PreferredSize(
@@ -82,12 +107,12 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                       border:
                           Border.all(color: AppColors.primaryMint, width: 2),
                     ),
-                    child: const CircleAvatar(
+                    child: CircleAvatar(
                       radius: 50,
                       backgroundColor: AppColors.primaryMintLight,
                       child: Text(
-                        'DF',
-                        style: TextStyle(
+                        initials,
+                        style: const TextStyle(
                           color: AppColors.primaryMint,
                           fontSize: 28,
                           fontWeight: FontWeight.w800,
@@ -109,9 +134,9 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               ),
               const SizedBox(height: 16),
               // Name and Specialty
-              const Text(
-                'Dr. Frances',
-                style: TextStyle(
+              Text(
+                doctorName,
+                style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textDark),
@@ -124,9 +149,9 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   color: AppColors.primaryMint,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Text(
-                  'DERMATOLOGIST',
-                  style: TextStyle(
+                child: Text(
+                  specialty.toUpperCase(),
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
@@ -135,9 +160,9 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               ),
               const SizedBox(height: 8),
               // Localized Clinic Name
-              const Text(
-                'JongSart Clinic',
-                style: TextStyle(
+              Text(
+                clinicName,
+                style: const TextStyle(
                     color: AppColors.textGrey,
                     fontSize: 14,
                     fontWeight: FontWeight.w500),
@@ -156,13 +181,13 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildStatColumn('12 Yrs', 'EXPERIENCE'),
+                      _buildStatColumn('$experience Yrs', 'EXPERIENCE'),
                       Container(
                           width: 1, height: 30, color: AppColors.borderGrey),
-                      _buildStatColumn('4.9★', 'RATING'),
+                      _buildStatColumn('$rating★', 'RATING'),
                       Container(
                           width: 1, height: 30, color: AppColors.borderGrey),
-                      _buildStatColumn('847', 'PATIENTS'),
+                      _buildStatColumn('$patients', 'PATIENTS'),
                     ],
                   ),
                 ),
@@ -183,24 +208,24 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               ),
               const SizedBox(height: 24),
               // About Summary Text
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('About',
+                    const Text('About',
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: AppColors.textDark)),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
-                      'Dr. Frances is a world-renowned specialist in regenerative dermatology and advanced clinical skincare. With over a decade of clinical experience, she specializes in custom micro-treatments with luxury care profiles.',
-                      style: TextStyle(
+                      about,
+                      style: const TextStyle(
                           color: AppColors.textGrey, fontSize: 14, height: 1.5),
                     ),
-                    SizedBox(height: 4),
-                    Row(
+                    const SizedBox(height: 4),
+                    const Row(
                       children: [
                         Text('Read More',
                             style: TextStyle(
@@ -442,10 +467,11 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                           borderRadius: BorderRadius.circular(12)),
                       elevation: 0,
                     ),
-                    onPressed: () =>
-                        context.push('/booking?doctorId=doctor_frances'),
-                    child: const Text('Book with Dr. Frances',
-                        style: TextStyle(
+                    onPressed: () => context.push(
+                      '/booking?doctorId=${Uri.encodeComponent(doctorId)}',
+                    ),
+                    child: Text('Book with $doctorName',
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.bold)),

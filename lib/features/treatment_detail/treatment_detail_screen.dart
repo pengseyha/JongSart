@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../../models/treatment_model.dart';
+import '../../state/app_state.dart';
 import '../../theme/app_colors.dart';
 
 class TreatmentDetailScreen extends StatefulWidget {
-  const TreatmentDetailScreen({super.key});
+  final String? treatmentId;
+
+  const TreatmentDetailScreen({super.key, this.treatmentId});
 
   @override
   State<TreatmentDetailScreen> createState() => _TreatmentDetailScreenState();
@@ -24,6 +29,15 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<AppState>();
+    final selectedTreatment = widget.treatmentId == null
+        ? null
+        : state.treatmentById(widget.treatmentId!);
+    final treatment = selectedTreatment ??
+        (state.treatments.isNotEmpty ? state.treatments.first : null);
+    final treatmentName = treatment?.title ?? 'Hydra-Laser Revive';
+    final category = treatment?.category ?? 'Advanced Therapy';
+
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
       appBar: AppBar(
@@ -54,13 +68,13 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
         children: [
           _beforeAfterHero(),
           const SizedBox(height: 8),
-          _summaryCard(context),
+          _summaryCard(context, treatment),
           const SizedBox(height: 20),
           _sectionTitle('About the Treatment'),
           const SizedBox(height: 10),
-          const Text(
-            'The Hydra-Laser Revive is a multi-step rejuvenation treatment that combines precision laser technology with intensive hydration infusion. It may help with texture, dark spots, and dullness while maintaining the skin barrier.',
-            style: TextStyle(
+          Text(
+            '$treatmentName is a carefully planned $category skincare service. It may help with texture, dullness, congestion, or uneven tone depending on your skin profile while keeping consultation and aftercare clear.',
+            style: const TextStyle(
                 color: AppColors.textGrey, fontSize: 13, height: 1.55),
           ),
           const SizedBox(height: 10),
@@ -188,7 +202,15 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
     );
   }
 
-  Widget _summaryCard(BuildContext context) {
+  Widget _summaryCard(BuildContext context, Treatment? treatment) {
+    final state = context.watch<AppState>();
+    final title = treatment?.title ?? 'Hydra-Laser Revive';
+    final category = treatment?.category ?? 'Advanced Therapy';
+    final price = treatment?.price ?? '\$450.00';
+    final treatmentId = treatment?.id;
+    final isFavorite =
+        treatmentId == null ? _isFavorite : state.isFavorite(treatmentId);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -199,21 +221,21 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              _HeroLabel('Advanced Therapy'),
-              Spacer(),
-              Text('\$450',
-                  style: TextStyle(
+              _HeroLabel(category),
+              const Spacer(),
+              Text(price,
+                  style: const TextStyle(
                       color: Color(0xFF007D68),
                       fontSize: 18,
                       fontWeight: FontWeight.w800)),
             ],
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Hydra-Laser\nRevive',
-            style: TextStyle(
+          Text(
+            title,
+            style: const TextStyle(
                 fontSize: 20, fontWeight: FontWeight.w800, height: 1.05),
           ),
           const SizedBox(height: 6),
@@ -224,7 +246,12 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () => context.push('/booking?treatmentId=1'),
+                  onPressed: () {
+                    final query = treatmentId == null
+                        ? ''
+                        : '?treatmentId=${Uri.encodeComponent(treatmentId)}';
+                    context.push('/booking$query');
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF007D68),
                     foregroundColor: Colors.white,
@@ -237,9 +264,15 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
               ),
               const SizedBox(width: 10),
               IconButton.outlined(
-                onPressed: () => setState(() => _isFavorite = !_isFavorite),
+                onPressed: () {
+                  if (treatmentId == null) {
+                    setState(() => _isFavorite = !_isFavorite);
+                  } else {
+                    context.read<AppState>().toggleFavorite(treatmentId);
+                  }
+                },
                 icon: Icon(
-                  _isFavorite ? Icons.favorite : Icons.favorite_border,
+                  isFavorite ? Icons.favorite : Icons.favorite_border,
                   color: const Color(0xFF007D68),
                 ),
               ),
