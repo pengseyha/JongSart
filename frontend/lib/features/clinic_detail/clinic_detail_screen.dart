@@ -21,7 +21,7 @@ class ClinicDetailScreen extends StatelessWidget {
     final reviewCount = clinic?.reviewCount ?? 1221;
     final address = clinic?.address ?? 'BKK1, Phnom Penh, Cambodia';
     final specialty =
-        clinic?.specialty ?? 'Skincare and beauty clinic in Cambodia';
+        clinic?.specialty ?? 'Skincare and Beauty clinic in Cambodia';
     final isFavorite = state.isFavorite(currentClinicId);
 
     return Scaffold(
@@ -94,7 +94,7 @@ class ClinicDetailScreen extends StatelessWidget {
                                                 .showSnackBar(
                                               const SnackBar(
                                                 content: Text(
-                                                  'Clinic profile link ready to share.',
+                                                  'Clinic profile',
                                                 ),
                                               ),
                                             );
@@ -209,8 +209,8 @@ class ClinicDetailScreen extends StatelessWidget {
                                           address,
                                           style: const TextStyle(
                                               color: AppColors.textGrey,
-                                              fontSize: 13,
-                                              height: 1.4),
+                                              fontSize: 14,
+                                              height: 1.3),
                                         ),
                                       ),
                                     ],
@@ -255,7 +255,7 @@ class ClinicDetailScreen extends StatelessWidget {
                             children: [
                               const Text('About the Clinic',
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 17,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.textDark)),
                               const SizedBox(height: 12),
@@ -384,7 +384,7 @@ class ClinicDetailScreen extends StatelessWidget {
   Widget _buildHoursList() {
     return Column(
       children: [
-        _buildTimeRow('Mon - Sat', '8:00 AM - 7:00 PM'),
+        _buildTimeRow('Monday - Saturday', '8:00 AM - 7:00 PM'),
         const SizedBox(height: 8),
         _buildTimeRow('Sunday', '9:00 AM - 6:00 PM'),
         const SizedBox(height: 8),
