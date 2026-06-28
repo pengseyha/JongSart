@@ -405,7 +405,7 @@ class HomeScreen extends StatelessWidget {
     if (confirmed != true || !context.mounted) return;
     await context.read<AppState>().logout();
     if (!context.mounted) return;
-    context.go('/role-selection');
+    context.go('/login');
   }
 
   Widget _buildClinicBanner(BuildContext context) {

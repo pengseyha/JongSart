@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../state/app_state.dart';
+import 'auth_widgets.dart';
 
-/// Branded splash that waits for the local auth session to load, then routes
-/// the user to the right place: customer home, staff dashboard, or the
-/// role selection screen for guests.
+/// Branded splash that restores a saved session, or starts the single-login
+/// auth flow for guests.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -44,72 +44,103 @@ class _SplashScreenState extends State<SplashScreen> {
       context.go('/clinic-staff');
     } else if (state.isLoggedIn && state.isCustomer) {
       context.go('/');
-    } else {
-      context.go('/role-selection');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authLoaded = context.watch<AppState>().authLoaded;
+
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFBFEFE4), Color(0xFF0F766E)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      backgroundColor: AppColors.backgroundWhite,
+      body: Stack(
+        children: [
+          const AuthGradientHeader(
+            title: 'Let\'s care for your skin',
+            subtitle:
+                'Book consultations, manage appointments, and connect with clinic staff.',
+            height: 455,
           ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 96,
-                height: 96,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(28),
-                  border:
-                      Border.all(color: Colors.white.withValues(alpha: 0.75)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.12),
-                      blurRadius: 24,
-                      offset: const Offset(0, 10),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.fromLTRB(
+                24,
+                30,
+                24,
+                MediaQuery.of(context).padding.bottom + 30,
+              ),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(34)),
+              ),
+              child: SafeArea(
+                top: false,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'JongSart',
+                      style: TextStyle(
+                        color: AppColors.textDark,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'A soft, simple skincare clinic booking demo.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.textGrey,
+                        fontSize: 13,
+                        height: 1.45,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 54,
+                      child: ElevatedButton(
+                        onPressed:
+                            authLoaded ? () => context.go('/login') : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.brandDarkGreen,
+                          foregroundColor: Colors.white,
+                          disabledBackgroundColor:
+                              AppColors.brandDarkGreen.withValues(alpha: 0.5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: authLoaded
+                            ? const Text(
+                                'Get Started',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              )
+                            : const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.4,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
+                                ),
+                              ),
+                      ),
                     ),
                   ],
                 ),
-                child: const Icon(Icons.spa,
-                    color: AppColors.brandDarkGreen, size: 48),
               ),
-              const SizedBox(height: 22),
-              const Text(
-                'JongSart',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                'Soft skincare clinic care',
-                style: TextStyle(color: Colors.white, fontSize: 13),
-              ),
-              const SizedBox(height: 34),
-              const SizedBox(
-                width: 26,
-                height: 26,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.4,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

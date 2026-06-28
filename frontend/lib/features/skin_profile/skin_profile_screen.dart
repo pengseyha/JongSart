@@ -198,7 +198,7 @@ Widget _profileActions(BuildContext context) {
 Future<void> _switchAccount(BuildContext context) async {
   await context.read<AppState>().logout();
   if (!context.mounted) return;
-  context.go('/role-selection');
+  context.go('/login');
 }
 
 Widget _profileStat(String value, String label) {

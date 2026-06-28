@@ -55,24 +55,24 @@ class AuthTextField extends StatelessWidget {
             prefixIcon: Icon(icon, color: AppColors.primaryMint, size: 20),
             suffixIcon: suffix,
             filled: true,
-            fillColor: Colors.white,
+            fillColor: const Color(0xFFF6FAF9),
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.borderGrey),
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: Color(0xFFE6F0ED)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
               borderSide:
-                  const BorderSide(color: AppColors.primaryMint, width: 1.5),
+                  const BorderSide(color: AppColors.brandDarkGreen, width: 1.5),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
               borderSide: const BorderSide(color: Color(0xFFD4465D)),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
               borderSide:
                   const BorderSide(color: Color(0xFFD4465D), width: 1.5),
             ),
@@ -109,7 +109,7 @@ class AuthPrimaryButton extends StatelessWidget {
           elevation: 0,
           disabledBackgroundColor: const Color(0xFF0F766E),
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         ),
         child: busy
             ? const SizedBox(
@@ -206,4 +206,171 @@ void showAuthSnackBar(BuildContext context, String message,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
+}
+
+class AuthBrandMark extends StatelessWidget {
+  final double size;
+  final bool light;
+
+  const AuthBrandMark({
+    super.key,
+    this.size = 58,
+    this.light = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: light ? Colors.white : null,
+        gradient: light
+            ? null
+            : const LinearGradient(
+                colors: [Color(0xFFEFFFFB), Color(0xFFB5F0E6)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+        borderRadius: BorderRadius.circular(size * 0.3),
+        border: Border.all(
+          color: light
+              ? Colors.white.withValues(alpha: 0.7)
+              : const Color(0xFFD6EEE8),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: light ? 0.12 : 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Icon(
+        Icons.spa,
+        color: AppColors.brandDarkGreen,
+        size: size * 0.48,
+      ),
+    );
+  }
+}
+
+class AuthGradientHeader extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final double height;
+  final bool showBack;
+
+  const AuthGradientHeader({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    this.height = 330,
+    this.showBack = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFFBFEFE4), Color(0xFF3B9B82), Color(0xFF0F766E)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: -38,
+            top: MediaQuery.of(context).padding.top + 18,
+            child: const _DecorCircle(size: 142, opacity: 0.14),
+          ),
+          const Positioned(
+            left: -42,
+            top: 124,
+            child: _DecorCircle(size: 110, opacity: 0.10),
+          ),
+          Positioned(
+            right: 34,
+            bottom: 58,
+            child: Icon(
+              Icons.eco_outlined,
+              size: 54,
+              color: Colors.white.withValues(alpha: 0.12),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              24,
+              MediaQuery.of(context).padding.top + 18,
+              24,
+              42,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (showBack)
+                  IconButton.filledTonal(
+                    onPressed: () => Navigator.of(context).maybePop(),
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.white.withValues(alpha: 0.18),
+                      foregroundColor: Colors.white,
+                    ),
+                    icon: const Icon(Icons.arrow_back),
+                  )
+                else
+                  const AuthBrandMark(light: true),
+                const Spacer(),
+                if (showBack) const AuthBrandMark(light: true, size: 52),
+                if (showBack) const SizedBox(height: 18),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    height: 1.08,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.9),
+                    fontSize: 14,
+                    height: 1.45,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DecorCircle extends StatelessWidget {
+  final double size;
+  final double opacity;
+
+  const _DecorCircle({required this.size, required this.opacity});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: Colors.white.withValues(alpha: opacity),
+          width: 20,
+        ),
+      ),
+    );
+  }
 }

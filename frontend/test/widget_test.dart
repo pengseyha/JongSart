@@ -195,4 +195,18 @@ void main() {
     expect(state.isStaff, isTrue);
     expect(state.isCustomer, isFalse);
   });
+
+  test('demo customer can log in without signing up first', () async {
+    final state = AppState();
+
+    final error = await state.loginWithRole(
+      identifier: 'pengseyha0000@gmail.com',
+      password: '12345678',
+    );
+
+    expect(error, isNull);
+    expect(state.isCustomer, isTrue);
+    expect(state.userName, 'Seyha Peng');
+    expect(state.email, 'pengseyha0000@gmail.com');
+  });
 }

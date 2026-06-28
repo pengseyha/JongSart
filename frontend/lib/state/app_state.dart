@@ -29,6 +29,14 @@ class AppState extends ChangeNotifier {
   static const String _staffUsername = 'staff@jongsart.com';
   static const String _staffPassword = 'staff123';
 
+  // Demo customer account for presentation login without signing up again.
+  static const Map<String, String> _demoCustomerAccount = {
+    'name': 'Seyha Peng',
+    'phone': '010000000',
+    'email': 'pengseyha0000@gmail.com',
+    'password': '12345678',
+  };
+
   Set<String> _favoriteIds = {'clinic_lumina', 'treatment_hydra'};
   Set<String> _claimedOfferIds = {};
   List<Booking> _bookings = [];
@@ -322,7 +330,7 @@ class AppState extends ChangeNotifier {
     final phoneNumber = phone.trim();
     final mail = email?.trim() ?? '';
 
-    final accounts = await _store.loadAccounts();
+    final accounts = await _loadAccountsWithDemoCustomer();
     final duplicate = accounts.any((account) =>
         account['phone'] == phoneNumber ||
         (mail.isNotEmpty && account['email'] == mail));
@@ -338,7 +346,8 @@ class AppState extends ChangeNotifier {
     });
     await _store.saveAccounts(accounts);
 
-    _applySession(role: 'customer', name: name, phone: phoneNumber, email: mail);
+    _applySession(
+        role: 'customer', name: name, phone: phoneNumber, email: mail);
     await _persistSession();
     notifyListeners();
     return null;
@@ -351,13 +360,14 @@ class AppState extends ChangeNotifier {
     required String password,
   }) async {
     final id = identifier.trim().toLowerCase();
-    final accounts = await _store.loadAccounts();
+    final accounts = await _loadAccountsWithDemoCustomer();
 
     Map<String, String>? match;
     for (final account in accounts) {
       final accountPhone = (account['phone'] ?? '').toLowerCase();
       final accountEmail = (account['email'] ?? '').toLowerCase();
-      if ((accountPhone == id || (accountEmail.isNotEmpty && accountEmail == id)) &&
+      if ((accountPhone == id ||
+              (accountEmail.isNotEmpty && accountEmail == id)) &&
           account['password'] == password) {
         match = account;
         break;
@@ -377,6 +387,33 @@ class AppState extends ChangeNotifier {
     await _persistSession();
     notifyListeners();
     return null;
+  }
+
+  /// Single demo login entry point. Staff credentials open the staff dashboard;
+  /// every other account is checked against local customer accounts.
+  Future<String?> loginWithRole({
+    required String identifier,
+    required String password,
+  }) async {
+    final id = identifier.trim().toLowerCase();
+    if (id == _staffUsername) {
+      return loginStaff(username: identifier, password: password);
+    }
+    return loginCustomer(identifier: identifier, password: password);
+  }
+
+  Future<List<Map<String, String>>> _loadAccountsWithDemoCustomer() async {
+    final accounts = await _store.loadAccounts();
+    final hasDemoAccount = accounts.any((account) =>
+        (account['email'] ?? '').toLowerCase() ==
+        _demoCustomerAccount['email']);
+
+    if (!hasDemoAccount) {
+      accounts.add(Map<String, String>.from(_demoCustomerAccount));
+      await _store.saveAccounts(accounts);
+    }
+
+    return accounts;
   }
 
   /// Logs in clinic staff against the mock staff account.

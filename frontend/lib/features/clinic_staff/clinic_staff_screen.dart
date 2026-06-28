@@ -193,7 +193,7 @@ Future<void> _confirmStaffLogout(BuildContext context) async {
     context: context,
     builder: (dialogContext) => AlertDialog(
       title: const Text('Log out?'),
-      content: const Text('You will return to the role selection screen.'),
+      content: const Text('You will return to the login screen.'),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -214,7 +214,7 @@ Future<void> _confirmStaffLogout(BuildContext context) async {
   if (confirmed != true || !context.mounted) return;
   await context.read<AppState>().logout();
   if (!context.mounted) return;
-  context.go('/role-selection');
+  context.go('/login');
 }
 
 Widget _staffTab(
