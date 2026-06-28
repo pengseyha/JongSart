@@ -11,7 +11,7 @@ class ReviewsScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundWhite,
       appBar: flowAppBar(context, 'Patient Reviews'),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
         children: [
           const Text(
             'Patient Experiences',
@@ -47,7 +47,7 @@ class ReviewsScreen extends StatelessWidget {
           ...state.reviews.map(reviewCard),
         ],
       ),
-      bottomNavigationBar: const AppBottomNav(currentIndex: 4),
+      bottomNavigationBar: const AppBottomNav(currentIndex: -1),
     );
   }
 }

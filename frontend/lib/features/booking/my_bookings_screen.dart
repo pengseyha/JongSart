@@ -12,7 +12,7 @@ class MyBookingsScreen extends StatelessWidget {
       appBar: flowAppBar(context, 'My Bookings'),
       body: bookings.isEmpty
           ? ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
               children: [
                 const SizedBox(height: 40),
                 emptyState(
@@ -36,11 +36,12 @@ class MyBookingsScreen extends StatelessWidget {
               ],
             )
           : ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
               children: [
                 for (final booking in bookings) _bookingCard(context, booking),
               ],
             ),
+      bottomNavigationBar: const AppBottomNav(currentIndex: 2),
     );
   }
 }

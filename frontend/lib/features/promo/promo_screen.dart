@@ -12,7 +12,7 @@ class PromoScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundWhite,
       appBar: flowAppBar(context, 'Promotions'),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
         children: [
           const Text(
             'Curated Offers',
@@ -71,7 +71,7 @@ class PromoScreen extends StatelessWidget {
           couponCard(),
         ],
       ),
-      bottomNavigationBar: const AppBottomNav(currentIndex: 3),
+      bottomNavigationBar: const AppBottomNav(currentIndex: -1),
     );
   }
 }

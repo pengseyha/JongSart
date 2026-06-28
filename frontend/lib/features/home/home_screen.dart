@@ -594,6 +594,8 @@ class HomeScreen extends StatelessWidget {
       (Icons.event_note_outlined, 'Bookings', '/my-bookings'),
       (Icons.chat_bubble_outline, 'Chat', '/chat'),
       (Icons.local_offer_outlined, 'Promos', '/promo'),
+      (Icons.map_outlined, 'Map', '/map'),
+      (Icons.favorite_border, 'Favorites', '/favorites'),
       (Icons.face_retouching_natural, 'Skin', '/skin-profile'),
     ];
     return Padding(

@@ -10,8 +10,8 @@ class AppBottomNav extends StatelessWidget {
   static const _routes = [
     '/',
     '/search',
-    '/map',
-    '/favorites',
+    '/my-bookings',
+    '/chat',
     '/skin-profile'
   ];
 
@@ -20,8 +20,8 @@ class AppBottomNav extends StatelessWidget {
     final items = [
       (Icons.home_filled, 'Home'),
       (Icons.search, 'Search'),
-      (Icons.map_outlined, 'Map'),
-      (Icons.favorite_border, 'Favorites'),
+      (Icons.event_note_outlined, 'Bookings'),
+      (Icons.chat_bubble_outline, 'Chat'),
       (Icons.person_outline, 'Profile'),
     ];
 
@@ -40,7 +40,7 @@ class AppBottomNav extends StatelessWidget {
           children: items.asMap().entries.map((entry) {
             final index = entry.key;
             final item = entry.value;
-            final selected = index == currentIndex;
+            final selected = currentIndex >= 0 && index == currentIndex;
 
             return Expanded(
               child: InkWell(
@@ -83,7 +83,7 @@ class AppBottomNav extends StatelessWidget {
                         color: selected
                             ? const Color(0xFF063D36)
                             : AppColors.textDark,
-                        fontSize: 10,
+                        fontSize: 9.5,
                         fontWeight:
                             selected ? FontWeight.w700 : FontWeight.w500,
                       ),
