@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AppState>(context);
+    final firstName = _firstName(state.userName);
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
@@ -31,7 +32,7 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           Text(
                             state.isLoggedIn && state.userName.isNotEmpty
-                                ? 'Hi, ${state.userName} 👋'
+                                ? 'Hi, $firstName 👋'
                                 : 'Hi there 👋',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -42,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 2),
                           const Text(
-                            'Welcome back to JongSart',
+                            'Ready for your next skincare visit?',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -132,63 +133,41 @@ class HomeScreen extends StatelessWidget {
             SliverToBoxAdapter(
               child: _buildSectionHeader('Skin Concerns', null),
             ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 1.15,
-                ),
-                delegate: SliverChildListDelegate([
-                  _buildConcernCard(
-                      context,
-                      'Acne',
-                      'Acne & Breakouts',
-                      Icons.spa_outlined,
-                      Colors.redAccent.withValues(alpha: 0.1),
-                      Colors.redAccent),
-                  _buildConcernCard(
-                      context,
-                      'Pigmentation',
-                      'Dark Spots',
-                      Icons.wb_sunny_outlined,
-                      Colors.orangeAccent.withValues(alpha: 0.1),
-                      Colors.orangeAccent),
-                  _buildConcernCard(
-                      context,
-                      'Aging',
-                      'Anti-aging',
-                      Icons.access_time,
-                      Colors.blueAccent.withValues(alpha: 0.1),
-                      Colors.blueAccent),
-                  _buildConcernCard(
-                      context,
-                      'Hydration',
-                      'Dry Skin',
-                      Icons.water_drop_outlined,
-                      Colors.cyan.withValues(alpha: 0.1),
-                      Colors.cyan),
-                ]),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: _buildSectionHeader(
-                  'Top Dermatologists', () => context.go('/search')),
-            ),
             SliverToBoxAdapter(
               child: SizedBox(
-                height: 250,
+                height: 86,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   children: [
-                    _buildDoctorCard(context, 'doctor_sarah', 'Dr. Sarah Chen',
-                        'MEDICAL LASER', 4.9, 'SC', AppColors.primaryMint),
-                    const SizedBox(width: 16),
-                    _buildDoctorCard(context, 'doctor_frances', 'Dr. Frances',
-                        'DERMATOLOGIST', 4.9, 'DF', const Color(0xFF2563EB)),
+                    _buildConcernCard(
+                        context,
+                        'Acne',
+                        'Acne & Breakouts',
+                        Icons.spa_outlined,
+                        Colors.redAccent.withValues(alpha: 0.1),
+                        Colors.redAccent),
+                    _buildConcernCard(
+                        context,
+                        'Pigmentation',
+                        'Dark Spots',
+                        Icons.wb_sunny_outlined,
+                        Colors.orangeAccent.withValues(alpha: 0.1),
+                        Colors.orangeAccent),
+                    _buildConcernCard(
+                        context,
+                        'Aging',
+                        'Anti-aging',
+                        Icons.access_time,
+                        Colors.blueAccent.withValues(alpha: 0.1),
+                        Colors.blueAccent),
+                    _buildConcernCard(
+                        context,
+                        'Hydration',
+                        'Dry Skin',
+                        Icons.water_drop_outlined,
+                        Colors.cyan.withValues(alpha: 0.1),
+                        Colors.cyan),
                   ],
                 ),
               ),
@@ -371,12 +350,38 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 32)),
+            SliverToBoxAdapter(
+              child: _buildSectionHeader(
+                  'Top Dermatologists', () => context.go('/search')),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 204,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  children: [
+                    _buildDoctorCard(context, 'doctor_sarah', 'Dr. Sarah Chen',
+                        'MEDICAL LASER', 4.9, 'SC', AppColors.primaryMint),
+                    const SizedBox(width: 12),
+                    _buildDoctorCard(context, 'doctor_frances', 'Dr. Frances',
+                        'DERMATOLOGIST', 4.9, 'DF', const Color(0xFF2563EB)),
+                  ],
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 104)),
           ],
         ),
       ),
       bottomNavigationBar: const AppBottomNav(currentIndex: 0),
     );
+  }
+
+  String _firstName(String name) {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) return 'there';
+    return trimmed.split(RegExp(r'\s+')).first;
   }
 
   Future<void> _confirmLogout(BuildContext context) async {
@@ -563,25 +568,31 @@ class HomeScreen extends StatelessWidget {
       },
       borderRadius: BorderRadius.circular(16),
       child: Container(
+        width: 142,
+        margin: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.borderGrey),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(9),
               decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
-              child: Icon(icon, color: iconColor, size: 24),
+              child: Icon(icon, color: iconColor, size: 20),
             ),
-            const SizedBox(height: 12),
-            Text(title,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textDark,
-                    fontSize: 14)),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textDark,
+                      fontSize: 12)),
+            ),
           ],
         ),
       ),
@@ -594,17 +605,14 @@ class HomeScreen extends StatelessWidget {
       (Icons.event_note_outlined, 'Bookings', '/my-bookings'),
       (Icons.chat_bubble_outline, 'Chat', '/chat'),
       (Icons.local_offer_outlined, 'Promos', '/promo'),
-      (Icons.map_outlined, 'Map', '/map'),
-      (Icons.favorite_border, 'Favorites', '/favorites'),
-      (Icons.face_retouching_natural, 'Skin', '/skin-profile'),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: GridView.count(
-        crossAxisCount: 3,
+        crossAxisCount: 2,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
-        childAspectRatio: 1.45,
+        childAspectRatio: 2.6,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         children: [
@@ -655,8 +663,8 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildDoctorAvatar(String initials, Color color) {
     return Container(
-      width: 76,
-      height: 76,
+      width: 58,
+      height: 58,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
@@ -679,7 +687,7 @@ class HomeScreen extends StatelessWidget {
       child: Icon(
         initials == 'SC' ? Icons.medical_services_outlined : Icons.person,
         color: color,
-        size: 34,
+        size: 28,
       ),
     );
   }
@@ -687,8 +695,8 @@ class HomeScreen extends StatelessWidget {
   Widget _buildDoctorCard(BuildContext context, String doctorId, String name,
       String specialty, double rating, String initials, Color avatarColor) {
     return Container(
-      width: 160,
-      padding: const EdgeInsets.all(16),
+      width: 138,
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -715,15 +723,15 @@ class HomeScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           Text(name,
               style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: 13,
                   color: AppColors.textDark),
               maxLines: 1,
               overflow: TextOverflow.ellipsis),
-          const SizedBox(height: 4),
+          const SizedBox(height: 3),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
@@ -736,7 +744,7 @@ class HomeScreen extends StatelessWidget {
                     color: Colors.grey,
                     letterSpacing: 0.5)),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -760,6 +768,8 @@ class HomeScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 elevation: 0,
+                minimumSize: const Size.fromHeight(34),
+                padding: EdgeInsets.zero,
               ),
               child: const Text('Book',
                   style: TextStyle(fontWeight: FontWeight.bold)),
