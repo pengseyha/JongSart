@@ -78,7 +78,29 @@ messages, and reviews are **persisted locally** and restored on restart.
 - **provider** — state management (`AppState` / `ChangeNotifier`)
 - **go_router** — navigation
 - **shared_preferences** — local persistence (JSON)
+- **http** — API client for the NestJS mock backend (prepared, not yet wired in)
 - **flutter_map**, **cached_network_image**, **intl**
+
+## Backend API Preparation
+
+The app currently uses **local / mock data** (assets + `SharedPreferences`) for
+everything. A small API client layer is prepared so the app can be connected to
+the **NestJS mock backend** later **without rewriting the screens**.
+
+- The Flutter app is **not fully switched to backend data yet** — local/mock
+  data is still the single source of truth, and all existing flows keep working.
+- The API client lives in `lib/core/network/` (`api_config.dart`,
+  `api_client.dart`, `api_result.dart`) and `lib/data/remote/backend_api_service.dart`.
+- **Base URL** is set in one place, `ApiConfig.baseUrl`:
+  - **Chrome / Flutter web:** `http://localhost:3000`
+  - **Android emulator:** `http://10.0.2.2:3000`
+    (use `ApiConfig.androidEmulatorBaseUrl`)
+- `BackendApiService` exposes `getHealth`, `getClinics`, `getDoctors`,
+  `getTreatments`, `getPromotions`, `getBookings`, `createBooking`,
+  `updateBookingStatus`, `getChats`, and `sendChatMessage`. Each returns an
+  `ApiResult` with either `data` or a readable `error`.
+- To try it manually, start the backend (`cd backend && npm run start:dev`) and
+  call `BackendApiService().debugPingHealth()`.
 
 ## Folder structure
 
