@@ -1,0 +1,46 @@
+[
+  {
+    "id": "clinic_lumina",
+    "name": "JongSart Skin Clinic",
+    "specialty": "Dermatology consultation and clinical facials",
+    "address": "BKK1, Phnom Penh",
+    "distance": "0.9 km",
+    "rating": 4.9,
+    "reviewCount": 320,
+    "tags": ["Dermatology", "Facial", "Open"],
+    "isOpen": true
+  },
+  {
+    "id": "clinic_emerald",
+    "name": "Sovanna Aesthetic Clinic",
+    "specialty": "Facial care and skin health consultation",
+    "address": "Toul Kork, Phnom Penh",
+    "distance": "2.7 km",
+    "rating": 4.8,
+    "reviewCount": 215,
+    "tags": ["Acne Care", "Hydra Facial"],
+    "isOpen": true
+  },
+  {
+    "id": "clinic_north_peak",
+    "name": "Mekong Dermatology Center",
+    "specialty": "Pigmentation care and scar care consultation",
+    "address": "Sen Sok, Phnom Penh",
+    "distance": "4.8 km",
+    "rating": 4.7,
+    "reviewCount": 168,
+    "tags": ["Pigmentation", "Scar Care"],
+    "isOpen": false
+  },
+  {
+    "id": "clinic_tonle",
+    "name": "Tonle Skin & Beauty Clinic",
+    "specialty": "Laser and brightening care consultation",
+    "address": "Riverside, Phnom Penh",
+    "distance": "3.5 km",
+    "rating": 4.8,
+    "reviewCount": 142,
+    "tags": ["Laser", "Brightening"],
+    "isOpen": true
+  }
+]
