@@ -41,7 +41,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     final doctor = state.doctorById(widget.doctorId ?? '') ??
         (state.doctors.isNotEmpty ? state.doctors.first : null);
     final doctorId = doctor?.id ?? 'doctor_frances';
-    final doctorName = doctor?.name ?? 'Dr. Sok Vicheka';
+    final doctorName = doctor?.name ?? 'Dr. Peng Seyha';
     final specialty = doctor?.specialty ?? 'Dermatology Consultation';
     final clinicName = doctor?.clinic ?? 'JongSart Skin Clinic';
     final about = doctor?.about ??

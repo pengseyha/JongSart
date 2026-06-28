@@ -56,8 +56,8 @@ class HomeScreen extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize: 10,
-                                color: AppColors.textGrey
-                                    .withValues(alpha: 0.7)),
+                                color:
+                                    AppColors.textGrey.withValues(alpha: 0.7)),
                           ),
                         ],
                       ),
@@ -371,11 +371,23 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   children: [
-                    _buildDoctorCard(context, 'doctor_sarah', 'Dr. Lim Rachana',
-                        'LASER & PIGMENTATION', 4.8, 'SC', AppColors.primaryMint),
+                    _buildDoctorCard(
+                        context,
+                        'doctor_sarah',
+                        'Dr. Oun Rithi',
+                        'ACNE & SENSITIVE CARE',
+                        4.8,
+                        'OR',
+                        AppColors.primaryMint),
                     const SizedBox(width: 12),
-                    _buildDoctorCard(context, 'doctor_frances', 'Dr. Sok Vicheka',
-                        'DERMATOLOGY', 4.9, 'DF', const Color(0xFF2563EB)),
+                    _buildDoctorCard(
+                        context,
+                        'doctor_frances',
+                        'Dr. Peng Seyha',
+                        'DERMATOLOGY',
+                        4.9,
+                        'PS',
+                        const Color(0xFF2563EB)),
                   ],
                 ),
               ),

@@ -1,12 +1,52 @@
 [
   {
     "id": "d1",
-    "name": "Dr. Sok Vicheka",
+    "name": "Dr. Peng Seyha",
     "specialty": "Dermatology Consultation",
     "experience": 12,
     "rating": 4.9,
     "patients": 840,
     "clinic": "JongSart Skin Clinic",
-    "about": "Provides skin health consultation and gentle facial care. Clinic staff will confirm suitability before any treatment."
+    "about": "Provides dermatology consultation and gentle facial care. Clinic staff will confirm suitability before any treatment."
+  },
+  {
+    "id": "d2",
+    "name": "Dr. Oun Rithi",
+    "specialty": "Acne & Sensitive Skin Care",
+    "experience": 9,
+    "rating": 4.8,
+    "patients": 530,
+    "clinic": "JongSart Skin Clinic",
+    "about": "Supports acne and sensitive skin care through consultation-first planning."
+  },
+  {
+    "id": "d3",
+    "name": "Dr. Soeun Sereyvath",
+    "specialty": "Aesthetic Dermatology",
+    "experience": 7,
+    "rating": 4.8,
+    "patients": 410,
+    "clinic": "Sovanna Aesthetic Clinic",
+    "about": "Provides aesthetic dermatology consultation and gentle facial care recommendations."
+  },
+  {
+    "id": "d4",
+    "name": "Dr. Lim Kimhorng",
+    "specialty": "Laser & Pigmentation Care",
+    "experience": 8,
+    "rating": 4.8,
+    "patients": 385,
+    "clinic": "Tonle Skin & Beauty Clinic",
+    "about": "Provides laser and pigmentation care consultation with suitability checks."
+  },
+  {
+    "id": "d5",
+    "name": "Dr. Sopheap Sothiphak",
+    "specialty": "Skin Health Consultation",
+    "experience": 10,
+    "rating": 4.7,
+    "patients": 460,
+    "clinic": "Phnom Penh Derma Care",
+    "about": "Provides skin health consultation and treatment planning support."
   }
 ]

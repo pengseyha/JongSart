@@ -236,8 +236,8 @@ Promotions · Chat · Map · Reviews · Skin Profile.
 
 - Mock / local data only — no backend, server, or real authentication.
 - All clinics, doctors, treatments, and reviews are fictional Cambodia-localized
-  demo content (e.g. JongSart Skin Clinic, Sovanna Aesthetic Clinic; Dr. Sok
-  Vicheka, Dr. Lim Rachana) — not real businesses or people.
+  demo content (e.g. JongSart Skin Clinic, Sovanna Aesthetic Clinic; Dr. Peng
+  Seyha, Dr. Oun Rithi) — not real businesses or people.
 - Detail screens (treatment/clinic/doctor) use representative sample content.
 - The map is a stylized mock, not live map tiles.
 - "Clinic Staff" uses a single mock staff login (`staff@jongsart.com` / `staff123`)

@@ -141,7 +141,7 @@ class AppState extends ChangeNotifier {
   List<Doctor> _doctors = const [
     Doctor(
       id: 'doctor_frances',
-      name: 'Dr. Sok Vicheka',
+      name: 'Dr. Peng Seyha',
       specialty: 'Dermatology Consultation',
       experience: 12,
       rating: 4.9,
@@ -153,26 +153,50 @@ class AppState extends ChangeNotifier {
     ),
     Doctor(
       id: 'doctor_sarah',
-      name: 'Dr. Lim Rachana',
-      specialty: 'Laser & Pigmentation Care',
+      name: 'Dr. Oun Rithi',
+      specialty: 'Acne & Sensitive Skin Care',
       experience: 9,
       rating: 4.8,
       patients: 530,
       clinic: 'JongSart Skin Clinic',
       about:
-          'Focuses on pigmentation care and scar care consultation. Each visit starts with a short consultation to recommend a suitable care option.',
+          'Supports acne and sensitive skin care through consultation-first planning. Clinic staff will check the skin condition before recommending care.',
       imageUrl: '',
     ),
     Doctor(
       id: 'doctor_lina',
-      name: 'Dr. Chan Sopheak',
-      specialty: 'Acne & Sensitive Skin Care',
+      name: 'Dr. Soeun Sereyvath',
+      specialty: 'Aesthetic Dermatology',
       experience: 7,
       rating: 4.8,
       patients: 410,
       clinic: 'Sovanna Aesthetic Clinic',
       about:
-          'Supports acne and sensitive skin care with a gentle approach. Clinic staff will check the skin condition first before recommending care.',
+          'Provides aesthetic dermatology consultation and gentle facial care recommendations for customers seeking a cleaner skin plan.',
+      imageUrl: '',
+    ),
+    Doctor(
+      id: 'doctor_sreyneang',
+      name: 'Dr. Lim Kimhorng',
+      specialty: 'Laser & Pigmentation Care',
+      experience: 8,
+      rating: 4.8,
+      patients: 385,
+      clinic: 'Tonle Skin & Beauty Clinic',
+      about:
+          'Provides laser and pigmentation care consultation. Clinic staff will confirm suitability before recommending any treatment.',
+      imageUrl: '',
+    ),
+    Doctor(
+      id: 'doctor_dara',
+      name: 'Dr. Sopheap Sothiphak',
+      specialty: 'Skin Health Consultation',
+      experience: 10,
+      rating: 4.7,
+      patients: 460,
+      clinic: 'Phnom Penh Derma Care',
+      about:
+          'Provides skin health consultation and treatment planning support for customers in Phnom Penh.',
       imageUrl: '',
     ),
   ];

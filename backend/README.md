@@ -99,7 +99,7 @@ Create a booking request:
 ```bash
 curl -X POST http://localhost:3000/bookings \
   -H "Content-Type: application/json" \
-  -d '{"patientName":"Dara Sok","phone":"012345678","treatmentName":"Hydra Facial Care","clinicName":"JongSart Skin Clinic","doctorName":"Dr. Sok Vicheka","date":"Mon 30","time":"09:00 AM","note":"Sensitive skin"}'
+  -d '{"patientName":"Dara Sok","phone":"012345678","treatmentName":"Hydra Facial Care","clinicName":"JongSart Skin Clinic","doctorName":"Dr. Peng Seyha","date":"Mon 30","time":"09:00 AM","note":"Sensitive skin"}'
 ```
 
 Update booking status:
