@@ -78,7 +78,7 @@ messages, and reviews are **persisted locally** and restored on restart.
 - **provider** — state management (`AppState` / `ChangeNotifier`)
 - **go_router** — navigation
 - **shared_preferences** — local persistence (JSON)
-- **http** — API client for the NestJS mock backend (prepared, not yet wired in)
+- **http** — API client for optional NestJS mock backend sync
 - **flutter_map**, **cached_network_image**, **intl**
 
 ## Backend API Preparation
@@ -117,9 +117,9 @@ and promotions — from the NestJS mock API, while everything else stays local.
 - The data source is tracked in `AppState.catalogSource` (`local` / `backend`)
   and shown as a small, non-intrusive label on the Home header
   ("Data source: Local demo data" or "Data source: Backend API").
-- **Still local for now (MVP):** auth/login, chat, reviews, favorites, claimed
-  promos, and skin-profile selection. Booking writes have a safe optional sync
-  layer, described below.
+- **Still local for now (MVP):** auth/login, reviews, favorites, claimed
+  promos, and skin-profile selection. Booking and chat writes have safe optional
+  sync layers, described below.
 - Base URL: Chrome uses `http://localhost:3000`; the Android emulator may use
   `http://10.0.2.2:3000` (see `ApiConfig`).
 
@@ -145,9 +145,30 @@ local flow stays the source of truth.
   skipped.
 - Sync state is tracked in `AppState` (`isBookingSyncing`, `bookingSyncSource`
   = `local` / `backend`, `bookingSyncError`, `bookingSyncLabel`).
-- **Still local for now:** auth/login, chat, reviews, favorites, claimed promos,
-  and skin-profile selection. Staff login stays mock
+- **Still local for now:** auth/login, reviews, favorites, claimed promos, chat
+  remains a shared MVP thread, and skin-profile selection. Staff login stays mock
   (`staff@jongsart.com` / `staff123`).
+
+## Chat backend sync
+
+Clinic chat now **optionally** syncs with the NestJS mock API while keeping the
+existing local shared chat thread.
+
+- **Customer messages:** when a customer sends a chat message, it appears in the
+  app immediately and is saved to local SharedPreferences. The app then tries to
+  send it to `POST /chats/messages` in the background.
+- **Staff replies:** staff replies are also saved locally first, then mirrored to
+  `POST /chats/messages` if the backend is running.
+- **Startup pull:** after local chat messages are restored,
+  `AppState.refreshBackendChats()` runs in the background. Backend messages are
+  merged without deleting local messages, and duplicate-looking messages are
+  skipped.
+- **Fallback:** if the backend is offline, slow, or errors, chat still works from
+  the local SharedPreferences thread. No error dialog is shown to the user.
+- Sync state is tracked in `AppState` (`isChatSyncing`, `chatSyncSource`
+  = `local` / `backend`, `chatSyncError`, `chatSyncLabel`).
+- **Still local for now:** auth/login remains local. The chat is still one shared
+  MVP clinic thread, not per-booking chat.
 
 ## Folder structure
 

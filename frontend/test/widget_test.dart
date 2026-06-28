@@ -6,11 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:jong_sart/app.dart';
 import 'package:jong_sart/models/booking.dart';
+import 'package:jong_sart/models/chat_message.dart';
 import 'package:jong_sart/models/clinic.dart';
 import 'package:jong_sart/models/treatment_model.dart';
 import 'package:jong_sart/core/router/app_router.dart';
 import 'package:jong_sart/data/remote/booking_repository.dart';
 import 'package:jong_sart/data/remote/catalog_repository.dart';
+import 'package:jong_sart/data/remote/chat_repository.dart';
 import 'package:jong_sart/state/app_state.dart';
 
 /// Catalog repository that always fails, to simulate an offline backend.
@@ -104,6 +106,16 @@ class _CreateThenFailStatusBookingRepository extends BookingRepository {
     String id,
     String statusLabel,
   ) async =>
+      null;
+}
+
+/// Chat repository that always behaves like an offline backend.
+class _FailingChatRepository extends ChatRepository {
+  @override
+  Future<List<ChatMessage>> getBackendChats() async => const [];
+
+  @override
+  Future<ChatMessage?> sendBackendChatMessage(ChatMessage message) async =>
       null;
 }
 
@@ -326,7 +338,10 @@ void main() {
   });
 
   test('customer and clinic share one chat thread', () async {
-    final state = AppState(autoLoadRemoteCatalog: false);
+    final state = AppState(
+      chatRepository: _FailingChatRepository(),
+      autoLoadRemoteCatalog: false,
+    );
     final initialCount = state.chatMessages.length;
 
     // Customer message adds the message plus an auto acknowledgement.
@@ -339,6 +354,50 @@ void main() {
     expect(state.chatMessages.last.isMe, isFalse);
     expect(state.chatMessages.last.text,
         'Yes, we start with a gentle consultation.');
+  });
+
+  test('customer can send chat when backend is unavailable', () async {
+    final state = AppState(
+      chatRepository: _FailingChatRepository(),
+      autoLoadRemoteCatalog: false,
+    );
+    final initialCount = state.chatMessages.length;
+
+    state.sendChatMessage('Can I book this Saturday afternoon?');
+
+    expect(state.chatMessages.length, initialCount + 2);
+    expect(state.chatMessages[initialCount].text,
+        'Can I book this Saturday afternoon?');
+    expect(state.chatMessages[initialCount].isMe, isTrue);
+
+    await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(state.chatSyncSource, 'local');
+    expect(state.chatSyncError, contains('saved locally'));
+  });
+
+  test('staff can reply to chat when backend is unavailable', () async {
+    final state = AppState(
+      chatRepository: _FailingChatRepository(),
+      autoLoadRemoteCatalog: false,
+    );
+    final initialCount = state.chatMessages.length;
+
+    state.sendClinicReply(
+      'Your request is now pending confirmation. We will contact you soon.',
+    );
+
+    expect(state.chatMessages.length, initialCount + 1);
+    expect(state.chatMessages.last.isMe, isFalse);
+    expect(state.chatMessages.last.text,
+        'Your request is now pending confirmation. We will contact you soon.');
+
+    await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(state.chatSyncSource, 'local');
+    expect(state.chatSyncError, contains('saved locally'));
   });
 
   test('staff login only accepts the mock staff account', () async {

@@ -4,8 +4,8 @@ import '../../core/network/api_result.dart';
 /// Talks to the local NestJS mock backend.
 ///
 /// The app still runs safely on local/mock data + SharedPreferences. Catalog
-/// reads and booking sync use this service as an optional best-effort layer;
-/// auth and chat are not connected to the backend yet.
+/// reads, booking sync, and chat sync use this service as optional best-effort
+/// layers; auth is not connected to the backend yet.
 ///
 /// Every method returns an [ApiResult] so callers never have to try/catch:
 /// on success `result.data` is set, on failure `result.error` holds a

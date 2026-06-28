@@ -5,6 +5,7 @@ import '../core/storage/local_storage_service.dart';
 import '../data/mock/mock_repository.dart';
 import '../data/remote/booking_repository.dart';
 import '../data/remote/catalog_repository.dart';
+import '../data/remote/chat_repository.dart';
 import '../models/booking.dart';
 import '../models/chat_message.dart';
 import '../models/clinic.dart';
@@ -19,6 +20,7 @@ class AppState extends ChangeNotifier {
   final LocalStorageService _store = LocalStorageService();
   final CatalogRepository _catalogRepository;
   final BookingRepository _bookingRepository;
+  final ChatRepository _chatRepository;
 
   /// When true, the app tries to load the read-only catalog from the backend
   /// during bootstrap. Disabled in tests for determinism.
@@ -32,6 +34,12 @@ class AppState extends ChangeNotifier {
   // Maps a local booking id -> its backend id, so status updates can target
   // the right backend record. Kept in memory (backend is also in-memory).
   final Map<String, String> _backendBookingIds = {};
+
+  // --- Chat backend sync state ------------------------------------------
+  bool _isChatSyncing = false;
+  // 'local' = local-only so far, 'backend' = at least one backend sync worked.
+  String _chatSyncSource = 'local';
+  String? _chatSyncError;
 
   List<Treatment> _treatments = [];
   bool _isLoading = true;
@@ -301,12 +309,25 @@ class AppState extends ChangeNotifier {
       ? 'Bookings synced with backend'
       : 'Using local booking data';
 
+  // --- Chat sync getters ------------------------------------------------
+  bool get isChatSyncing => _isChatSyncing;
+  String get chatSyncSource => _chatSyncSource;
+  bool get isChatSyncedWithBackend => _chatSyncSource == 'backend';
+  String? get chatSyncError => _chatSyncError;
+
+  /// Friendly label for an optional chat sync indicator in the UI.
+  String get chatSyncLabel => _chatSyncSource == 'backend'
+      ? 'Chat synced with backend'
+      : 'Using local chat';
+
   AppState({
     CatalogRepository? catalogRepository,
     BookingRepository? bookingRepository,
+    ChatRepository? chatRepository,
     bool autoLoadRemoteCatalog = true,
   })  : _catalogRepository = catalogRepository ?? CatalogRepository(),
         _bookingRepository = bookingRepository ?? BookingRepository(),
+        _chatRepository = chatRepository ?? ChatRepository(),
         _autoLoadRemoteCatalog = autoLoadRemoteCatalog {
     _bootstrap();
   }
@@ -367,6 +388,7 @@ class AppState extends ChangeNotifier {
     if (_autoLoadRemoteCatalog) {
       unawaited(_loadRemoteCatalog());
       unawaited(refreshBackendBookings());
+      unawaited(refreshBackendChats());
     }
   }
 
@@ -660,21 +682,21 @@ class AppState extends ChangeNotifier {
     final trimmed = text.trim();
     if (trimmed.isEmpty) return;
 
-    _chatMessages.add(ChatMessage(
+    final customerMessage = ChatMessage(
       id: 'm${DateTime.now().millisecondsSinceEpoch}',
       text: trimmed,
       isMe: true,
       sentAt: DateTime.now(),
-    ));
+    );
+    _addLocalChatMessage(customerMessage);
 
-    _chatMessages.add(ChatMessage(
+    final autoReply = ChatMessage(
       id: 'm${DateTime.now().millisecondsSinceEpoch + 1}',
       text: _autoReplyFor(trimmed),
       isMe: false,
       sentAt: DateTime.now(),
-    ));
-    _store.saveChatMessages(_chatMessages);
-    notifyListeners();
+    );
+    _addLocalChatMessage(autoReply);
   }
 
   /// Clinic staff reply in the shared clinic thread. Stored as a non-customer
@@ -684,14 +706,13 @@ class AppState extends ChangeNotifier {
     final trimmed = text.trim();
     if (trimmed.isEmpty) return;
 
-    _chatMessages.add(ChatMessage(
+    final reply = ChatMessage(
       id: 'm${DateTime.now().millisecondsSinceEpoch}',
       text: trimmed,
       isMe: false,
       sentAt: DateTime.now(),
-    ));
-    _store.saveChatMessages(_chatMessages);
-    notifyListeners();
+    );
+    _addLocalChatMessage(reply);
   }
 
   String _autoReplyFor(String text) {
@@ -707,15 +728,87 @@ class AppState extends ChangeNotifier {
 
   /// Adds the automatic clinic notice shown right after a booking request.
   void addBookingChatNotice() {
-    _chatMessages.add(ChatMessage(
+    final notice = ChatMessage(
       id: 'm${DateTime.now().millisecondsSinceEpoch}',
       text:
           'Thank you. Your appointment request is pending confirmation. Our clinic staff will contact you soon.',
       isMe: false,
       sentAt: DateTime.now(),
-    ));
+    );
+    _addLocalChatMessage(notice);
+  }
+
+  void _addLocalChatMessage(ChatMessage message) {
+    _chatMessages.add(message);
     _store.saveChatMessages(_chatMessages);
     notifyListeners();
+    unawaited(_pushChatMessageToBackend(message));
+  }
+
+  Future<void> _pushChatMessageToBackend(ChatMessage message) async {
+    _isChatSyncing = true;
+    _safeNotify();
+    try {
+      final remote = await _chatRepository.sendBackendChatMessage(message);
+      if (remote != null) {
+        _chatSyncSource = 'backend';
+        _chatSyncError = null;
+      } else {
+        _chatSyncError = 'Backend unavailable; chat saved locally.';
+      }
+    } catch (e) {
+      _chatSyncError = e.toString();
+    } finally {
+      _isChatSyncing = false;
+      _safeNotify();
+    }
+  }
+
+  /// Pulls backend chat messages and merges them into the local shared thread.
+  /// Local messages are never deleted, and duplicate-looking messages are
+  /// skipped so the demo thread stays readable.
+  Future<void> refreshBackendChats() async {
+    _isChatSyncing = true;
+    _safeNotify();
+    try {
+      final remote = await _chatRepository.getBackendChats();
+      if (remote.isEmpty) {
+        _chatSyncError = 'No backend chat messages (or backend offline).';
+        return;
+      }
+
+      final knownIds = _chatMessages.map((message) => message.id).toSet();
+      final knownFingerprints = _chatMessages.map(_chatFingerprint).toSet();
+      final newMessages = remote
+          .where(
+            (message) =>
+                !knownIds.contains(message.id) &&
+                !knownFingerprints.contains(_chatFingerprint(message)),
+          )
+          .toList()
+        ..sort((a, b) => a.sentAt.compareTo(b.sentAt));
+
+      if (newMessages.isNotEmpty) {
+        _chatMessages.addAll(newMessages);
+        _chatMessages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
+        _store.saveChatMessages(_chatMessages);
+      }
+      _chatSyncSource = 'backend';
+      _chatSyncError = null;
+    } catch (e) {
+      _chatSyncError = e.toString();
+    } finally {
+      _isChatSyncing = false;
+      _safeNotify();
+    }
+  }
+
+  String _chatFingerprint(ChatMessage message) {
+    return [
+      message.text.trim().toLowerCase(),
+      message.isMe ? 'customer' : 'staff',
+      message.sentAt.toIso8601String(),
+    ].join('|');
   }
 
   // --- Reviews ----------------------------------------------------------
