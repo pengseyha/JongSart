@@ -17,8 +17,8 @@ class BookingDetailScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: emptyState(
             Icons.error_outline,
-            'Booking not found',
-            'This booking may have been removed.',
+            'This Booking not found',
+            'This booking might be removed.',
           ),
         ),
       );
@@ -273,7 +273,7 @@ void _showReviewSheet(BuildContext context, Booking booking) {
                       Navigator.of(sheetContext).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Thank you for your review!')),
+                            content: Text('Thanks for your review!')),
                       );
                     },
                     style: ElevatedButton.styleFrom(

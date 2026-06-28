@@ -12,7 +12,7 @@ class MyBookingsScreen extends StatelessWidget {
       appBar: flowAppBar(context, 'My Bookings'),
       body: bookings.isEmpty
           ? ListView(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 90),
               children: [
                 const SizedBox(height: 40),
                 emptyState(
@@ -103,7 +103,7 @@ Widget _bookingCard(BuildContext context, Booking booking) {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
-                  child: const Text('View Detail'),
+                  child: const Text('View Details'),
                 ),
               ),
             ],
@@ -135,7 +135,7 @@ void _confirmCancel(BuildContext context, String bookingId) {
     builder: (dialogContext) => AlertDialog(
       title: const Text('Cancel request?'),
       content: const Text(
-          'This will cancel your pending appointment request. You can book again anytime.'),
+          'This will cancel your pending appointment request. The clinic will be notified and you will not be able to book this appointment again.'),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(dialogContext).pop(),

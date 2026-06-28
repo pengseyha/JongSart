@@ -337,7 +337,7 @@ class ClinicDetailScreen extends StatelessWidget {
           Text(text,
               style: const TextStyle(
                   color: AppColors.primaryMint,
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.bold)),
         ],
       ),
@@ -346,13 +346,13 @@ class ClinicDetailScreen extends StatelessWidget {
 
   Widget _buildTab(String title, bool isSelected) {
     return Padding(
-      padding: const EdgeInsets.only(right: 24.0, bottom: 12.0),
+      padding: const EdgeInsets.only(right: 25, bottom: 12.0),
       child: Text(
         title,
         style: TextStyle(
           color: isSelected ? AppColors.primaryMint : AppColors.textGrey,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-          fontSize: 14,
+          fontSize: 15,
         ),
       ),
     );
@@ -360,7 +360,7 @@ class ClinicDetailScreen extends StatelessWidget {
 
   Widget _buildInfoCard(String title, Widget content) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(17),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(16),
@@ -373,8 +373,8 @@ class ClinicDetailScreen extends StatelessWidget {
               style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryMint,
-                  fontSize: 13)),
-          const SizedBox(height: 12),
+                  fontSize: 12)),
+          const SizedBox(height: 11),
           content,
         ],
       ),
@@ -438,7 +438,7 @@ class ClinicDetailScreen extends StatelessWidget {
   Widget _buildAmenityItem(IconData icon, String label) {
     return Row(
       children: [
-        Icon(icon, size: 14, color: AppColors.textDark),
+        Icon(icon, size: 13, color: AppColors.textDark),
         const SizedBox(width: 4),
         Expanded(
           child: Text(label,

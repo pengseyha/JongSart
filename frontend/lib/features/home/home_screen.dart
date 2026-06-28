@@ -67,7 +67,7 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                              horizontal: 11, vertical: 6),
                           decoration: BoxDecoration(
                             color: Colors.grey.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(20),
@@ -75,17 +75,17 @@ class HomeScreen extends StatelessWidget {
                           child: const Row(
                             children: [
                               Icon(Icons.location_on_outlined,
-                                  size: 16, color: AppColors.primaryMint),
+                                  size: 15, color: AppColors.primaryMint),
                               SizedBox(width: 4),
                               Text('Phnom Penh',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: 12,
                                       color: AppColors.textDark,
                                       fontWeight: FontWeight.w500)),
                               Icon(Icons.keyboard_arrow_down,
-                                  size: 16, color: AppColors.textDark),
+                                  size: 15, color: AppColors.textDark),
                             ],
                           ),
                         ),
@@ -306,7 +306,7 @@ class HomeScreen extends StatelessWidget {
                                                     style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        fontSize: 14,
+                                                        fontSize: 13,
                                                         color:
                                                             AppColors.textDark),
                                                     maxLines: 1,
@@ -412,7 +412,7 @@ class HomeScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Log out?'),
-        content: const Text('You will need to sign in again to continue.'),
+        content: const Text('Are you sure you want to log out?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
