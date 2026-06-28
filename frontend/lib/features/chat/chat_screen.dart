@@ -51,10 +51,10 @@ class _ChatScreenState extends State<ChatScreen> {
         ? const [
             'Your booking is confirmed.',
             'Please arrive 10 minutes early.',
-            'Could you share your preferred time?',
+            'Could you share your preferred time to confirm?',
           ]
         : const [
-            'What is included?',
+            'What is include?',
             'Do I need a referral?',
             'Book a slot',
           ];
@@ -80,7 +80,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: const Color(0xFF007D68),
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 11),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +136,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 11),
               children: [
                 Center(
                   child: Container(
@@ -152,7 +152,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 18),
+                const SizedBox(height: 17),
                 ...messages.map((message) => ChatBubble(
                       text: message.text,
                       isMe: isStaff ? !message.isMe : message.isMe,
@@ -197,7 +197,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     onPressed: _send,
                     style: IconButton.styleFrom(
                       backgroundColor: AppColors.primaryMint,
-                      foregroundColor: Colors.white,
+                      foregroundColor: const Color.fromARGB(255, 213, 206, 206),
                     ),
                     icon: const Icon(Icons.send),
                   ),

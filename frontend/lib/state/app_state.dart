@@ -79,7 +79,7 @@ class AppState extends ChangeNotifier {
     ChatMessage(
       id: 'm1',
       text:
-          'Hello! Welcome to JongSart. I am Sophea, your clinic receptionist. How can I help you today?',
+          'Hello! Welcome to JongSart Clinic. I am Sophea, your clinic receptionist. How can I help you today?',
       isMe: false,
       sentAt: DateTime(2026, 6, 7, 9, 15),
     ),
@@ -99,7 +99,7 @@ class AppState extends ChangeNotifier {
     ),
   ];
 
-  String _selectedConcern = 'Acne & Breakouts';
+  String _selectedConcern = 'Acne & Breakout';
 
   // Mutable so the read-only backend catalog can replace it when available.
   List<Clinic> _clinics = const [
@@ -116,10 +116,10 @@ class AppState extends ChangeNotifier {
     ),
     Clinic(
       id: 'clinic_emerald',
-      name: 'Sovanna Aesthetic Clinic',
+      name: 'Sereyvath Aesthetic Clinic',
       specialty: 'Facial care and skin health consultation',
-      address: 'Toul Kork, Phnom Penh',
-      distance: '2.7 km',
+      address: 'Toul Kork 2, Phnom Penh',
+      distance: '3.1 km',
       rating: 4.8,
       reviewCount: 215,
       tags: ['Acne Care', 'Hydra Facial'],
@@ -128,9 +128,9 @@ class AppState extends ChangeNotifier {
     Clinic(
       id: 'clinic_north_peak',
       name: 'Mekong Dermatology Center',
-      specialty: 'Pigmentation care and scar care consultation',
-      address: 'Sen Sok, Phnom Penh',
-      distance: '4.8 km',
+      specialty: 'Pigmentation care and scar care',
+      address: 'Chaom Chav, Phnom Penh',
+      distance: '5.8 km',
       rating: 4.7,
       reviewCount: 168,
       tags: ['Pigmentation', 'Scar Care'],
@@ -170,7 +170,7 @@ class AppState extends ChangeNotifier {
       experience: 7,
       rating: 4.8,
       patients: 410,
-      clinic: 'Sovanna Aesthetic Clinic',
+      clinic: 'Sereyvath Aesthetic Clinic',
       about:
           'Provides aesthetic dermatology consultation and gentle facial care recommendations for customers seeking a cleaner skin plan.',
       imageUrl: '',
@@ -228,10 +228,10 @@ class AppState extends ChangeNotifier {
   List<PatientReview> _reviews = const [
     PatientReview(
       id: 'review_elena',
-      name: 'Sreyneang',
+      name: 'Raksmey',
       label: 'Deep Cleansing Facial',
       body:
-          'The staff explained the facial process clearly and the clinic was clean. Booking through the app was simple.',
+          'The staff explained the facial process clearly and the clinic was clean. Booking through the app was wonderful and easy to use.',
       rating: 5.0,
     ),
     PatientReview(
@@ -239,15 +239,15 @@ class AppState extends ChangeNotifier {
       name: 'Dara',
       label: 'Acne Consultation',
       body:
-          'I liked that the appointment was pending first, then staff contacted me to confirm the time.',
+          'I liked that the appointment was pending first, then staff contacted me to confirm the time and remaid me with  a clear confirmation',
       rating: 4.8,
     ),
     PatientReview(
       id: 'review_sarah',
-      name: 'Pisey',
+      name: 'Pratna',
       label: 'Skin Consultation',
       body:
-          'The consultation helped me understand which treatment was suitable for my skin concern.',
+          'The consultation helped me understand which treatment was suitable for my skin concern and recommend me a skin care routine',
       rating: 4.9,
     ),
   ];
@@ -255,8 +255,8 @@ class AppState extends ChangeNotifier {
   final List<SkinRecommendation> _skinRecommendations = const [
     SkinRecommendation(
       id: 'treatment_hydra',
-      title: 'Hydra Facial Care',
-      match: '92% match',
+      title: 'Hydra Facial',
+      match: '94% match',
       description:
           'A hydrating facial care option that may help dry or combination skin. Clinic staff will confirm suitability first.',
       price: '\$45',
@@ -264,7 +264,7 @@ class AppState extends ChangeNotifier {
     SkinRecommendation(
       id: 'treatment_blue_light',
       title: 'Acne Care Consultation',
-      match: '89% match',
+      match: '82% match',
       description:
           'A recommended care option for acne and breakout-prone skin, starting with a short consultation.',
       price: '\$15',

@@ -23,7 +23,7 @@ class _SearchScreenState extends State<SearchScreen> {
       backgroundColor: AppColors.backgroundWhite,
       appBar: flowAppBar(context, 'Search'),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(15),
         children: [
           editableSearchField(
             'Search clinics, treatments, doctors...',
@@ -35,8 +35,8 @@ class _SearchScreenState extends State<SearchScreen> {
           if (!hasResults)
             emptyState(
               Icons.search_off,
-              'No results found',
-              'Try another skin concern or clinic name.',
+              'No results found for that search',
+              'Try another skin concern or clinic name to search.',
             )
           else ...[
             if (treatments.isNotEmpty) ...[
@@ -49,13 +49,13 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
             if (clinics.isNotEmpty) ...[
               _searchSectionLabel('Clinics (${clinics.length})'),
-              const SizedBox(height: 10),
+              const SizedBox(height: 9),
               ...clinics.map((clinic) => clinicResultCard(context, clinic)),
               const SizedBox(height: 8),
             ],
             if (doctors.isNotEmpty) ...[
               _searchSectionLabel('Doctors (${doctors.length})'),
-              const SizedBox(height: 10),
+              const SizedBox(height: 9),
               ...doctors.map(
                 (doctor) => _doctorResultCard(context, doctor),
               ),
@@ -68,7 +68,7 @@ class _SearchScreenState extends State<SearchScreen> {
               onPressed: () => context.go('/map'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF007D68),
-                foregroundColor: Colors.white,
+                foregroundColor: const Color.fromARGB(255, 233, 230, 230),
                 elevation: 0,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
@@ -92,7 +92,7 @@ Widget _searchSectionLabel(String label) {
     label,
     style: const TextStyle(
       color: AppColors.textDark,
-      fontSize: 14,
+      fontSize: 13,
       fontWeight: FontWeight.w800,
     ),
   );
@@ -116,7 +116,7 @@ Widget _treatmentResultCard(BuildContext context, Treatment treatment) {
                 imageTile(Icons.spa_outlined),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 11),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,7 +214,7 @@ Widget _doctorResultAvatar(Doctor doctor) {
       boxShadow: [
         BoxShadow(
           color: color.withValues(alpha: 0.12),
-          blurRadius: 12,
+          blurRadius: 13,
           offset: const Offset(0, 6),
         ),
       ],

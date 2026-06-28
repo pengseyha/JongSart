@@ -19,12 +19,12 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   int _selectedTimeIndex = 3; // Default to 12:30 PM based on UI
 
   final List<Map<String, String>> _dates = [
-    {'day': 'MON', 'date': '24'},
-    {'day': 'TUE', 'date': '25'},
-    {'day': 'WED', 'date': '26'},
-    {'day': 'THU', 'date': '27'},
-    {'day': 'FRI', 'date': '28'},
-    {'day': 'SAT', 'date': '29'},
+    {'day': 'MONDAY', 'date': '24'},
+    {'day': 'TUESDAY', 'date': '25'},
+    {'day': 'WEDNESDAY', 'date': '26'},
+    {'day': 'THURSDAY', 'date': '27'},
+    {'day': 'FRIDAY', 'date': '28'},
+    {'day': 'SATURDAY', 'date': '29'},
   ];
 
   final List<Map<String, dynamic>> _times = [
@@ -125,7 +125,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                                   ? Icons.medical_services_outlined
                                   : Icons.person,
                               color: _doctorAccent(doctorId),
-                              size: 44,
+                              size: 43,
                             ),
                           ),
                         ),
@@ -140,7 +140,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                     ),
                     padding: const EdgeInsets.all(4),
                     child: const Icon(Icons.verified,
-                        color: Colors.white, size: 16),
+                        color: Colors.white, size: 15),
                   )
                 ],
               ),
@@ -165,7 +165,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   specialty.toUpperCase(),
                   style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 10,
+                      fontSize: 11,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1),
                 ),
@@ -176,7 +176,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 clinicName,
                 style: const TextStyle(
                     color: AppColors.textGrey,
-                    fontSize: 14,
+                    fontSize: 15,
                     fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 24),
@@ -258,7 +258,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text('Available Slots',
+                      child: Text('Available Slot',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -267,7 +267,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                               color: AppColors.textDark)),
                     ),
                     SizedBox(width: 12),
-                    Text('June 2026',
+                    Text('Jun 2026',
                         style: TextStyle(
                             color: AppColors.textGrey,
                             fontSize: 12,
@@ -292,7 +292,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? AppColors.primaryMint
+                              ? const Color.fromARGB(255, 56, 162, 134)
                               : AppColors.borderGrey.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
@@ -308,7 +308,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                               style: TextStyle(
                                 color: isSelected
                                     ? Colors.white
-                                    : AppColors.textGrey,
+                                    : const Color.fromARGB(255, 93, 110, 136),
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -377,7 +377,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                                     ? AppColors.textDark
                                     : AppColors.textGrey.withValues(alpha: 0.5),
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: 11,
                           ),
                         ),
                       ),
@@ -385,7 +385,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   },
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 22),
               // Reviews Feed Block
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -413,18 +413,18 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   children: [
                     _buildReviewCard(
                         'SR',
-                        'Sreyneang',
+                        'Sereyvath',
                         '2 days ago',
-                        'The staff were friendly and explained everything clearly. Booking through the app was easy.',
+                        'The staff were friendly and explained everything clearly. Booking via the app was easy.',
                         5,
                         Colors.blue.shade100),
                     const SizedBox(height: 12),
                     _buildReviewCard(
                         'DR',
-                        'Dara',
+                        'Vath',
                         '1 week ago',
                         'Clean clinic and the consultation was helpful. I felt comfortable during the visit.',
-                        4,
+                        5,
                         Colors.teal.shade200),
                   ],
                 ),

@@ -286,10 +286,10 @@ class _BookingScreenState extends State<BookingScreen> {
                   ? 'Please enter your name'
                   : null,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 11),
             _textField(
               controller: _phoneController,
-              label: 'Phone number',
+              label: 'Phone numbers',
               icon: Icons.phone_outlined,
               keyboardType: TextInputType.phone,
               validator: (value) => (value == null || value.trim().length < 6)
@@ -299,7 +299,7 @@ class _BookingScreenState extends State<BookingScreen> {
             const SizedBox(height: 12),
             _textField(
               controller: _telegramController,
-              label: 'Telegram / WhatsApp (optional)',
+              label: 'Telegram / WhatsApp ',
               icon: Icons.send_outlined,
             ),
             const SizedBox(height: 18),
@@ -398,7 +398,7 @@ class _BookingScreenState extends State<BookingScreen> {
             ),
             const SizedBox(height: 12),
             const Text(
-              'Consult with clinic staff before treatment. This request is not a confirmed booking yet.',
+              'Consult with clinic staff before treatment',
               style: TextStyle(color: AppColors.textGrey, fontSize: 11),
             ),
           ],
@@ -406,15 +406,15 @@ class _BookingScreenState extends State<BookingScreen> {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(15),
           child: ElevatedButton(
             onPressed: _submit,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryMint,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 15),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(13),
               ),
             ),
             child: const Text(

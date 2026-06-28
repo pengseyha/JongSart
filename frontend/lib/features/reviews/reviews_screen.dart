@@ -17,7 +17,7 @@ class ReviewsScreen extends StatelessWidget {
             'Customer Reviews',
             style: TextStyle(
               color: AppColors.textDark,
-              fontSize: 24,
+              fontSize: 23,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -26,7 +26,7 @@ class ReviewsScreen extends StatelessWidget {
             'Feedback from customers who booked through JongSart.',
             style: TextStyle(color: AppColors.textGrey, fontSize: 13),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 17),
           ratingSummary(state),
           const SizedBox(height: 16),
           SingleChildScrollView(

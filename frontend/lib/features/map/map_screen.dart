@@ -18,7 +18,7 @@ class MapScreen extends StatelessWidget {
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Centered map on your current area.'),
+                    content: Text('Centere map on your current location'),
                   ),
                 );
               },

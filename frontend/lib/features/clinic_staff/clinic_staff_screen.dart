@@ -74,7 +74,7 @@ class ClinicStaffScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
                       color: AppColors.primaryMintLight,
                       borderRadius: BorderRadius.circular(12),
@@ -85,10 +85,10 @@ class ClinicStaffScreen extends StatelessWidget {
                         SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            'Admin view. Confirm customer requests, reply in chat, and mark visits completed.',
+                            'Admin view. Confirm customer request, reply in chat, and mark visits completed.',
                             style: TextStyle(
                                 color: AppColors.textDark,
-                                fontSize: 12,
+                                fontSize: 13,
                                 height: 1.4),
                           ),
                         ),
@@ -167,7 +167,7 @@ Widget _statCard(String label, int count, Color color) {
             '$count',
             style: TextStyle(
               color: color,
-              fontSize: 21,
+              fontSize: 20,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -243,8 +243,8 @@ Widget _staffTab(
 
 Widget _staffBookingCard(BuildContext context, Booking booking) {
   return Container(
-    margin: const EdgeInsets.only(bottom: 12),
-    padding: const EdgeInsets.all(14),
+    margin: const EdgeInsets.only(bottom: 11),
+    padding: const EdgeInsets.all(15),
     decoration: panelDecoration(),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,14 +337,14 @@ Widget _staffChip(String label, IconData icon, VoidCallback onTap,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       visualDensity: VisualDensity.compact,
     ),
-    icon: Icon(icon, size: 15),
+    icon: Icon(icon, size: 14),
     label: Text(label, style: const TextStyle(fontSize: 12)),
   );
 }
 
 void _showRescheduleDialog(BuildContext context, Booking booking) {
   const dates = ['Mon 30', 'Tue 1', 'Wed 2', 'Thu 3', 'Fri 4'];
-  const times = ['09:00 AM', '10:30 AM', '12:30 PM', '02:00 PM', '03:30 PM'];
+  const times = ['09:10 AM', '10:40 AM', '12:40 PM', '02:10 PM', '03:40 PM'];
   String date = booking.date;
   String time = booking.time;
 
@@ -369,8 +369,8 @@ void _showRescheduleDialog(BuildContext context, Booking booking) {
                           onTap: () => setDialogState(() => date = d)))
                       .toList(),
                 ),
-                const SizedBox(height: 12),
-                const Text('Time', style: TextStyle(fontSize: 12)),
+                const SizedBox(height: 11),
+                const Text('Times', style: TextStyle(fontSize: 11)),
                 const SizedBox(height: 6),
                 Wrap(
                   spacing: 6,
@@ -387,7 +387,7 @@ void _showRescheduleDialog(BuildContext context, Booking booking) {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+            child: const Text('Cancels'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -396,7 +396,7 @@ void _showRescheduleDialog(BuildContext context, Booking booking) {
                   .staffReschedule(booking.id, date, time);
               Navigator.of(dialogContext).pop();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Booking rescheduled.')),
+                const SnackBar(content: Text('Booking Reschedul.')),
               );
             },
             child: const Text('Save'),
