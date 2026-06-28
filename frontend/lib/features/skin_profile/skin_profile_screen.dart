@@ -13,7 +13,7 @@ class SkinProfileScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundWhite,
       appBar: flowAppBar(context, 'Profile'),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 164),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 168),
         children: [
           _profileHeader(context, state),
           const SizedBox(height: 14),
@@ -39,7 +39,7 @@ class SkinProfileScreen extends StatelessWidget {
 Widget _profileHeader(BuildContext context, AppState state) {
   final displayName =
       state.userName.trim().isEmpty ? 'Seyha Peng' : state.userName.trim();
-  final phone = state.phone.trim().isEmpty ? 'No phone added' : state.phone;
+  final phone = state.phone.trim().isEmpty ? 'No phone add' : state.phone;
   final emailValue = state.email?.trim();
   final email = emailValue == null || emailValue.isEmpty ? null : emailValue;
 
@@ -70,7 +70,7 @@ Widget _profileHeader(BuildContext context, AppState state) {
                 ],
               ),
               child: const Icon(Icons.person_rounded,
-                  color: Colors.white, size: 34),
+                  color: Colors.white, size: 35),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -154,8 +154,8 @@ Widget _profileHeader(BuildContext context, AppState state) {
 
 Widget _skinProfileCard(BuildContext context, AppState state) {
   const concerns = [
-    'Acne & Breakouts',
-    'Dark Spots',
+    'Acne & Breakout',
+    'Dark Spot',
     'Sensitive Skin',
     'Dry Skin',
     'Anti-aging',
@@ -173,11 +173,11 @@ Widget _skinProfileCard(BuildContext context, AppState state) {
         Row(
           children: [
             Expanded(
-              child: _skinMetricCard('Skin type', 'Combination-Oily'),
+              child: _skinMetricCard('Skin type', 'Combination Oily'),
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: _skinMetricCard('Hydration', '42% Low hydration'),
+              child: _skinMetricCard('Hydration', '46% Low hydration'),
             ),
           ],
         ),
@@ -221,7 +221,7 @@ Widget _skinProfileCard(BuildContext context, AppState state) {
 
 Widget _appointmentCard(BuildContext context, Booking? booking) {
   return Container(
-    padding: const EdgeInsets.all(16),
+    padding: const EdgeInsets.all(15),
     decoration: panelDecoration(),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,8 +229,8 @@ Widget _appointmentCard(BuildContext context, Booking? booking) {
         Row(
           children: [
             Container(
-              width: 42,
-              height: 42,
+              width: 41,
+              height: 41,
               decoration: BoxDecoration(
                 color: AppColors.primaryMintLight,
                 borderRadius: BorderRadius.circular(14),
@@ -249,14 +249,14 @@ Widget _appointmentCard(BuildContext context, Booking? booking) {
                         : 'Upcoming consultation',
                     style: const TextStyle(
                       color: AppColors.textDark,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w900,
                     ),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     booking == null
-                        ? 'Book a visit to complete your treatment plan.'
+                        ? 'Book a visit to complete treatment plan.'
                         : '${booking.clinicName} • ${booking.date}, ${booking.time}',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -345,7 +345,7 @@ Widget _accountActionsCard(BuildContext context) {
         _actionRow(
           icon: Icons.logout_rounded,
           title: 'Logout',
-          subtitle: 'End this local demo session',
+          subtitle: 'End this local demo ',
           isDanger: true,
           onTap: () => _switchAccount(context),
         ),
