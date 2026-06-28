@@ -85,7 +85,7 @@ class ClinicStaffScreen extends StatelessWidget {
                         SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            'Demo admin view. Confirm customer requests, reply in chat, and mark visits completed.',
+                            'Admin view. Confirm customer requests, reply in chat, and mark visits completed.',
                             style: TextStyle(
                                 color: AppColors.textDark,
                                 fontSize: 12,
@@ -125,8 +125,8 @@ class ClinicStaffScreen extends StatelessWidget {
                     context,
                     confirmed,
                     Icons.event_available_outlined,
-                    'No confirmed bookings',
-                    'Confirmed appointments will be ready to complete here.',
+                    'No confirmed booking',
+                    'Confirmed appointments will be ready to complete',
                   ),
                   _staffTab(
                     context,
@@ -167,7 +167,7 @@ Widget _statCard(String label, int count, Color color) {
             '$count',
             style: TextStyle(
               color: color,
-              fontSize: 22,
+              fontSize: 21,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -193,7 +193,7 @@ Future<void> _confirmStaffLogout(BuildContext context) async {
     context: context,
     builder: (dialogContext) => AlertDialog(
       title: const Text('Log out?'),
-      content: const Text('You will return to the login screen.'),
+      content: const Text('Return to the login screen.'),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -290,7 +290,7 @@ List<Widget> _staffActions(BuildContext context, Booking booking) {
     case BookingStatus.rescheduled:
       actions.add(_staffChip('Confirm', Icons.check, () {
         state.staffConfirm(booking.id);
-        notify('Booking confirmed. Customer status is updated.');
+        notify('Booking confirmed.');
       }));
       actions.add(_staffChip('Reschedule', Icons.schedule, () {
         _showRescheduleDialog(context, booking);
@@ -299,13 +299,13 @@ List<Widget> _staffActions(BuildContext context, Booking booking) {
           () => context.push('/chat')));
       actions.add(_staffChip('Cancel', Icons.close, () {
         state.staffCancel(booking.id);
-        notify('Booking cancelled. Customer status is updated.');
+        notify('Booking cancelled.');
       }, danger: true));
       break;
     case BookingStatus.confirmed:
       actions.add(_staffChip('Mark Completed', Icons.task_alt, () {
         state.staffComplete(booking.id);
-        notify('Booking marked as completed. Customer can leave a review.');
+        notify('Booking marked as completed.');
       }));
       actions.add(_staffChip('Reschedule', Icons.schedule, () {
         _showRescheduleDialog(context, booking);
@@ -314,7 +314,7 @@ List<Widget> _staffActions(BuildContext context, Booking booking) {
           () => context.push('/chat')));
       actions.add(_staffChip('Cancel', Icons.close, () {
         state.staffCancel(booking.id);
-        notify('Booking cancelled. Customer status is updated.');
+        notify('Booking cancelled');
       }, danger: true));
       break;
     case BookingStatus.completed:
