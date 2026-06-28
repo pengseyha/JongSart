@@ -23,9 +23,9 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
       'Is the treatment painful?',
       'Most patients experience a slight tingling sensation. We apply a topical numbing agent to keep the session comfortable.',
     ),
-    _FaqData('How many sessions are needed?', 'Most plans use 3-6 sessions.'),
+    _FaqData('How many sessions are needed?', 'Most plans use 2-5 sessions.'),
     _FaqData('Any post-treatment care?',
-        'Use SPF and avoid exfoliation for 48 hours.'),
+        'Use SPF and avoid exfoliation for 72 hours.'),
   ];
 
   @override
@@ -185,8 +185,8 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
               ),
             ),
           ),
-          const Positioned(left: 12, top: 12, child: _HeroLabel('Before')),
-          const Positioned(right: 12, top: 12, child: _HeroLabel('After')),
+          const Positioned(left: 11, top: 12, child: _HeroLabel('Before')),
+          const Positioned(right: 11, top: 12, child: _HeroLabel('After')),
           const Positioned(
             left: 0,
             right: 0,
