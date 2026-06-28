@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   static const Color primaryMint =
       Color(0xFF3B9B82); // Branded mint green matching your template
+  static const Color brandDarkGreen = Color(0xFF0F766E);
   static const Color primaryMintLight = Color(0xFFEFFFFB);
   static const Color backgroundWhite = Color(0xFFFFFFFF);
   static const Color textDark = Color(0xFF1E293B);

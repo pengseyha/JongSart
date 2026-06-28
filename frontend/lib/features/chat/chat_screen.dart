@@ -19,12 +19,25 @@ class _ChatScreenState extends State<ChatScreen> {
   void _send() {
     final state = context.read<AppState>();
     final text = _messageController.text;
+    if (text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please type a message first.')),
+      );
+      return;
+    }
     if (state.isStaff) {
       state.sendClinicReply(text);
     } else {
       state.sendChatMessage(text);
     }
     _messageController.clear();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(state.isStaff
+            ? 'Reply sent to the customer.'
+            : 'Message sent to the clinic.'),
+      ),
+    );
   }
 
   @override
@@ -100,6 +113,10 @@ class _ChatScreenState extends State<ChatScreen> {
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert),
             onSelected: (value) {
+              if (value == 'View clinic') {
+                context.push('/clinic-detail?id=clinic_lumina');
+                return;
+              }
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('$value selected.')),
               );
@@ -107,7 +124,6 @@ class _ChatScreenState extends State<ChatScreen> {
             itemBuilder: (context) => const [
               PopupMenuItem(value: 'View clinic', child: Text('View clinic')),
               PopupMenuItem(value: 'Mute chat', child: Text('Mute chat')),
-              PopupMenuItem(value: 'Clear thread', child: Text('Clear thread')),
             ],
           ),
         ],

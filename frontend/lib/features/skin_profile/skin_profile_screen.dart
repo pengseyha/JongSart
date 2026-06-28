@@ -12,9 +12,9 @@ class SkinProfileScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundWhite,
       appBar: flowAppBar(context, 'Profile'),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
         children: [
-          _profileHeader(state),
+          _profileHeader(context, state),
           const SizedBox(height: 16),
           skinScoreCard(state),
           const SizedBox(height: 16),
@@ -24,12 +24,8 @@ class SkinProfileScreen extends StatelessWidget {
             _upcomingBookingCard(context, latestBooking)
           else
             _emptyBookingCard(context),
-          const SizedBox(height: 10),
-          OutlinedButton.icon(
-            onPressed: () => context.push('/my-bookings'),
-            icon: const Icon(Icons.event_note_outlined),
-            label: const Text('View My Bookings'),
-          ),
+          const SizedBox(height: 12),
+          _profileActions(context),
           const SizedBox(height: 18),
           sectionTitle('Clinical Match Recommendations'),
           const SizedBox(height: 10),
@@ -88,21 +84,42 @@ Widget _concernSelector(BuildContext context, AppState state) {
   );
 }
 
-Widget _profileHeader(AppState state) {
+Widget _profileHeader(BuildContext context, AppState state) {
+  final displayName =
+      state.userName.trim().isEmpty ? 'Seyha Peng' : state.userName.trim();
   return Container(
-    padding: const EdgeInsets.all(16),
+    padding: const EdgeInsets.all(18),
     decoration: panelDecoration(),
     child: Column(
       children: [
-        const CircleAvatar(
-          radius: 34,
-          backgroundColor: Color(0xFFB5F0E6),
-          child: Icon(Icons.person, color: Color(0xFF007D68), size: 34),
+        Container(
+          width: 78,
+          height: 78,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: const LinearGradient(
+              colors: [Color(0xFFEFFFFB), Color(0xFFB5F0E6)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            border: Border.all(color: Colors.white, width: 3),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primaryMint.withValues(alpha: 0.16),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: const Icon(Icons.person,
+              color: AppColors.brandDarkGreen, size: 36),
         ),
-        const SizedBox(height: 10),
-        const Text(
-          'Seyha Peng',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+        const SizedBox(height: 12),
+        Text(
+          displayName,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: 4),
         Text(
@@ -130,6 +147,58 @@ Widget _profileHeader(AppState state) {
       ],
     ),
   );
+}
+
+Widget _profileActions(BuildContext context) {
+  return Row(
+    children: [
+      Expanded(
+        child: OutlinedButton.icon(
+          onPressed: () => context.push('/my-bookings'),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.brandDarkGreen,
+            side: const BorderSide(color: AppColors.borderGrey),
+            padding: const EdgeInsets.symmetric(vertical: 13),
+          ),
+          icon: const Icon(Icons.event_note_outlined, size: 18),
+          label: const Text('Bookings'),
+        ),
+      ),
+      const SizedBox(width: 10),
+      Expanded(
+        child: OutlinedButton.icon(
+          onPressed: () => _switchAccount(context),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.brandDarkGreen,
+            side: const BorderSide(color: AppColors.borderGrey),
+            padding: const EdgeInsets.symmetric(vertical: 13),
+          ),
+          icon: const Icon(Icons.switch_account_outlined, size: 18),
+          label: const Text('Switch'),
+        ),
+      ),
+      const SizedBox(width: 10),
+      Expanded(
+        child: ElevatedButton.icon(
+          onPressed: () => _switchAccount(context),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.brandDarkGreen,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            padding: const EdgeInsets.symmetric(vertical: 13),
+          ),
+          icon: const Icon(Icons.logout, size: 18),
+          label: const Text('Logout'),
+        ),
+      ),
+    ],
+  );
+}
+
+Future<void> _switchAccount(BuildContext context) async {
+  await context.read<AppState>().logout();
+  if (!context.mounted) return;
+  context.go('/role-selection');
 }
 
 Widget _profileStat(String value, String label) {

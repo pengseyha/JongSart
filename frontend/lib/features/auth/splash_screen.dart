@@ -70,6 +70,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(28),
+                  border:
+                      Border.all(color: Colors.white.withValues(alpha: 0.75)),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.12),
@@ -79,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ],
                 ),
                 child: const Icon(Icons.spa,
-                    color: AppColors.primaryMint, size: 48),
+                    color: AppColors.brandDarkGreen, size: 48),
               ),
               const SizedBox(height: 22),
               const Text(

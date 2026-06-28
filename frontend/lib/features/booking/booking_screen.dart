@@ -100,6 +100,11 @@ class _BookingScreenState extends State<BookingScreen> {
     );
     state.addBookingChatNotice();
 
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Booking request created as Pending Confirmation.'),
+      ),
+    );
     _showSuccessSheet();
   }
 

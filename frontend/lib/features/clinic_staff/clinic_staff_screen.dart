@@ -8,98 +8,146 @@ class ClinicStaffScreen extends StatelessWidget {
     final state = context.watch<AppState>();
     final pending = state.bookingsByStatus(BookingStatus.pending);
     final rescheduled = state.bookingsByStatus(BookingStatus.rescheduled);
+    final pendingQueue = [...pending, ...rescheduled];
     final confirmed = state.bookingsByStatus(BookingStatus.confirmed);
     final completed = state.bookingsByStatus(BookingStatus.completed);
     final cancelled = state.bookingsByStatus(BookingStatus.cancelled);
 
-    return Scaffold(
-      backgroundColor: AppColors.backgroundWhite,
-      appBar: AppBar(
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
         backgroundColor: AppColors.backgroundWhite,
-        elevation: 0,
-        centerTitle: false,
-        title: const Text(
-          'Clinic Staff Dashboard',
-          style: TextStyle(
-            color: Color(0xFF007D68),
-            fontSize: 14,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-        actions: [
-          if (state.isStaff)
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: TextButton.icon(
-                onPressed: () => _confirmStaffLogout(context),
-                style: TextButton.styleFrom(
-                  foregroundColor: const Color(0xFFD4465D),
-                ),
-                icon: const Icon(Icons.logout, size: 18),
-                label: const Text('Log out',
-                    style: TextStyle(fontWeight: FontWeight.w700)),
-              ),
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundWhite,
+          elevation: 0,
+          centerTitle: false,
+          title: const Text(
+            'Clinic Staff Dashboard',
+            style: TextStyle(
+              color: Color(0xFF007D68),
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
             ),
-        ],
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Divider(height: 1, color: AppColors.borderGrey),
-        ),
-      ),
-      body: state.bookings.isEmpty
-          ? Padding(
-              padding: const EdgeInsets.all(16),
-              child: emptyState(
-                Icons.inbox_outlined,
-                'No appointment requests',
-                'New requests submitted by customers will show up here for staff to manage.',
-              ),
-            )
-          : ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryMintLight,
-                    borderRadius: BorderRadius.circular(12),
+          ),
+          actions: [
+            if (state.isStaff)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: TextButton.icon(
+                  onPressed: () => _confirmStaffLogout(context),
+                  style: TextButton.styleFrom(
+                    foregroundColor: const Color(0xFFD4465D),
                   ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.info_outline, color: AppColors.primaryMint),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          'Demo admin view. Confirm, reschedule, complete, or cancel customer requests.',
-                          style: TextStyle(
-                              color: AppColors.textDark,
-                              fontSize: 12,
-                              height: 1.4),
-                        ),
-                      ),
-                    ],
-                  ),
+                  icon: const Icon(Icons.logout, size: 18),
+                  label: const Text('Log out',
+                      style: TextStyle(fontWeight: FontWeight.w700)),
                 ),
-                const SizedBox(height: 14),
-                Row(
-                  children: [
-                    _statCard('Pending', pending.length, const Color(0xFFB7791F)),
-                    const SizedBox(width: 10),
-                    _statCard('Confirmed', confirmed.length,
-                        AppColors.primaryMint),
-                    const SizedBox(width: 10),
-                    _statCard('Completed', completed.length,
-                        const Color(0xFF15803D)),
+              ),
+          ],
+          bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(49),
+            child: Column(
+              children: [
+                Divider(height: 1, color: AppColors.borderGrey),
+                TabBar(
+                  isScrollable: true,
+                  labelColor: AppColors.primaryMint,
+                  unselectedLabelColor: AppColors.textGrey,
+                  indicatorColor: AppColors.primaryMint,
+                  labelStyle:
+                      TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+                  tabs: [
+                    Tab(text: 'Pending'),
+                    Tab(text: 'Confirmed'),
+                    Tab(text: 'Completed'),
+                    Tab(text: 'Cancelled'),
                   ],
                 ),
-                const SizedBox(height: 16),
-                _staffSection(context, 'Pending Requests', pending),
-                _staffSection(context, 'Rescheduled', rescheduled),
-                _staffSection(context, 'Confirmed', confirmed),
-                _staffSection(context, 'Completed', completed),
-                _staffSection(context, 'Cancelled', cancelled),
               ],
             ),
+          ),
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryMintLight,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.info_outline, color: AppColors.primaryMint),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            'Demo admin view. Confirm customer requests, reply in chat, and mark visits completed.',
+                            style: TextStyle(
+                                color: AppColors.textDark,
+                                fontSize: 12,
+                                height: 1.4),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      _statCard('Pending', pendingQueue.length,
+                          const Color(0xFFB7791F)),
+                      const SizedBox(width: 10),
+                      _statCard(
+                          'Confirmed', confirmed.length, AppColors.primaryMint),
+                      const SizedBox(width: 10),
+                      _statCard('Completed', completed.length,
+                          const Color(0xFF15803D)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  _staffTab(
+                    context,
+                    pendingQueue,
+                    Icons.pending_actions_outlined,
+                    'No pending requests',
+                    'Customer appointment requests will appear here first.',
+                  ),
+                  _staffTab(
+                    context,
+                    confirmed,
+                    Icons.event_available_outlined,
+                    'No confirmed bookings',
+                    'Confirmed appointments will be ready to complete here.',
+                  ),
+                  _staffTab(
+                    context,
+                    completed,
+                    Icons.task_alt_outlined,
+                    'No completed visits',
+                    'Completed bookings will stay here for review tracking.',
+                  ),
+                  _staffTab(
+                    context,
+                    cancelled,
+                    Icons.event_busy_outlined,
+                    'No cancelled bookings',
+                    'Cancelled requests will appear here.',
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -169,22 +217,26 @@ Future<void> _confirmStaffLogout(BuildContext context) async {
   context.go('/role-selection');
 }
 
-Widget _staffSection(
-    BuildContext context, String title, List<Booking> bookings) {
-  if (bookings.isEmpty) return const SizedBox.shrink();
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+Widget _staffTab(
+  BuildContext context,
+  List<Booking> bookings,
+  IconData emptyIcon,
+  String emptyTitle,
+  String emptyBody,
+) {
+  if (bookings.isEmpty) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        emptyState(emptyIcon, emptyTitle, emptyBody),
+      ],
+    );
+  }
+
+  return ListView(
+    padding: const EdgeInsets.fromLTRB(16, 6, 16, 16),
     children: [
-      Padding(
-        padding: const EdgeInsets.only(bottom: 10, top: 4),
-        child: Row(
-          children: [
-            Expanded(child: sectionTitle('$title (${bookings.length})')),
-          ],
-        ),
-      ),
       for (final booking in bookings) _staffBookingCard(context, booking),
-      const SizedBox(height: 8),
     ],
   );
 }
@@ -238,40 +290,37 @@ List<Widget> _staffActions(BuildContext context, Booking booking) {
     case BookingStatus.rescheduled:
       actions.add(_staffChip('Confirm', Icons.check, () {
         state.staffConfirm(booking.id);
-        notify('Booking confirmed.');
+        notify('Booking confirmed. Customer status is updated.');
       }));
       actions.add(_staffChip('Reschedule', Icons.schedule, () {
         _showRescheduleDialog(context, booking);
       }));
-      actions.add(_staffChip('Chat', Icons.chat_bubble_outline,
+      actions.add(_staffChip('Reply Chat', Icons.chat_bubble_outline,
           () => context.push('/chat')));
       actions.add(_staffChip('Cancel', Icons.close, () {
         state.staffCancel(booking.id);
-        notify('Booking cancelled.');
+        notify('Booking cancelled. Customer status is updated.');
       }, danger: true));
       break;
     case BookingStatus.confirmed:
       actions.add(_staffChip('Mark Completed', Icons.task_alt, () {
         state.staffComplete(booking.id);
-        notify('Booking marked as completed.');
+        notify('Booking marked as completed. Customer can leave a review.');
       }));
       actions.add(_staffChip('Reschedule', Icons.schedule, () {
         _showRescheduleDialog(context, booking);
       }));
-      actions.add(_staffChip('Chat', Icons.chat_bubble_outline,
+      actions.add(_staffChip('Reply Chat', Icons.chat_bubble_outline,
           () => context.push('/chat')));
       actions.add(_staffChip('Cancel', Icons.close, () {
         state.staffCancel(booking.id);
-        notify('Booking cancelled.');
+        notify('Booking cancelled. Customer status is updated.');
       }, danger: true));
       break;
     case BookingStatus.completed:
     case BookingStatus.cancelled:
-      actions.add(const Padding(
-        padding: EdgeInsets.symmetric(vertical: 4),
-        child: Text('No actions available.',
-            style: TextStyle(color: AppColors.textGrey, fontSize: 11)),
-      ));
+      actions.add(_staffChip('Reply Chat', Icons.chat_bubble_outline,
+          () => context.push('/chat')));
       break;
   }
   return actions;

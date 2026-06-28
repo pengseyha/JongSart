@@ -49,14 +49,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     final experience = doctor?.experience ?? 12;
     final rating = doctor?.rating.toStringAsFixed(1) ?? '4.9';
     final patients = doctor?.patients ?? 847;
-    final initials = doctorName
-        .replaceAll('Dr. ', '')
-        .split(' ')
-        .where((part) => part.isNotEmpty)
-        .map((part) => part[0])
-        .take(2)
-        .join()
-        .toUpperCase();
     final isFavorite = state.isFavorite(doctorId);
 
     return Scaffold(
@@ -96,7 +88,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 24),
-              // Avatar with verification tag
               Stack(
                 alignment: Alignment.bottomRight,
                 children: [
@@ -107,16 +98,34 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                       border:
                           Border.all(color: AppColors.primaryMint, width: 2),
                     ),
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundColor: AppColors.primaryMintLight,
-                      child: Text(
-                        initials,
-                        style: const TextStyle(
-                          color: AppColors.primaryMint,
-                          fontSize: 28,
-                          fontWeight: FontWeight.w800,
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            _doctorAccent(doctorId).withValues(alpha: 0.24),
+                            AppColors.primaryMintLight,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
+                        boxShadow: [
+                          BoxShadow(
+                            color:
+                                _doctorAccent(doctorId).withValues(alpha: 0.16),
+                            blurRadius: 18,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        doctorId.contains('sarah')
+                            ? Icons.medical_services_outlined
+                            : Icons.person,
+                        color: _doctorAccent(doctorId),
+                        size: 44,
                       ),
                     ),
                   ),
@@ -580,4 +589,10 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
       ),
     );
   }
+}
+
+Color _doctorAccent(String doctorId) {
+  if (doctorId.contains('sarah')) return const Color(0xFF2563EB);
+  if (doctorId.contains('lina')) return const Color(0xFFB7791F);
+  return AppColors.primaryMint;
 }

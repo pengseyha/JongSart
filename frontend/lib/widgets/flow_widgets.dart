@@ -302,8 +302,25 @@ Widget clinicImageTile(String id) {
       height: 72,
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) =>
-          imageTile(Icons.local_hospital),
+          clinicImagePlaceholder(size: 72),
     ),
+  );
+}
+
+Widget clinicImagePlaceholder({double size = 72}) {
+  return Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      gradient: const LinearGradient(
+        colors: [Color(0xFFEFFFFB), Color(0xFFBFEFE4)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    ),
+    child: const Icon(Icons.local_hospital_outlined,
+        color: AppColors.brandDarkGreen, size: 28),
   );
 }
 
@@ -328,9 +345,11 @@ Widget choicePill(String label, bool selected) {
 }
 
 Widget mapClinicPreview(BuildContext context, Clinic clinic) {
+  final screenWidth = MediaQuery.of(context).size.width;
+  final cardWidth = screenWidth < 380 ? screenWidth - 78 : 262.0;
   return Container(
-    width: 260,
-    margin: const EdgeInsets.only(right: 12),
+    width: cardWidth,
+    margin: const EdgeInsets.only(right: 12, bottom: 2),
     decoration: panelDecoration(),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,9 +363,13 @@ Widget mapClinicPreview(BuildContext context, Clinic clinic) {
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) => Container(
               height: 82,
-              color: AppColors.primaryMintLight,
-              child: const Icon(Icons.local_hospital,
-                  color: AppColors.primaryMint),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFFEFFFFB), Color(0xFFBFEFE4)],
+                ),
+              ),
+              child: const Icon(Icons.local_hospital_outlined,
+                  color: AppColors.brandDarkGreen),
             ),
           ),
         ),
@@ -372,7 +395,7 @@ Widget mapClinicPreview(BuildContext context, Clinic clinic) {
                 child: ElevatedButton(
                   onPressed: () => context.push('/booking'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF007D68),
+                    backgroundColor: AppColors.brandDarkGreen,
                     foregroundColor: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -434,6 +457,8 @@ Widget mapBottomSheet(BuildContext context) {
           height: 205,
           child: ListView(
             scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
+            padding: const EdgeInsets.only(right: 8),
             children: clinics
                 .map((clinic) => mapClinicPreview(context, clinic))
                 .toList(),
@@ -515,57 +540,83 @@ Widget favoriteClinicCard(BuildContext context, Clinic clinic) {
     margin: const EdgeInsets.only(bottom: 12),
     padding: const EdgeInsets.all(12),
     decoration: panelDecoration(),
-    child: Row(
+    child: Column(
       children: [
-        clinicImageTile(clinic.id),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                clinic.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: titleStyle(),
+        Row(
+          children: [
+            clinicImageTile(clinic.id),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    clinic.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: titleStyle(),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(clinic.specialty,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          color: AppColors.textGrey, fontSize: 12)),
+                  const SizedBox(height: 7),
+                  Wrap(
+                    spacing: 5,
+                    runSpacing: 5,
+                    children: clinic.tags.take(2).map(smallPill).toList(),
+                  ),
+                ],
               ),
-              const SizedBox(height: 4),
-              Text(clinic.specialty,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style:
-                      const TextStyle(color: AppColors.textGrey, fontSize: 12)),
-              const SizedBox(height: 7),
-              Wrap(
-                spacing: 5,
-                runSpacing: 5,
-                children: clinic.tags.take(2).map(smallPill).toList(),
-              ),
-              const SizedBox(height: 7),
-              Text('${clinic.distance} km',
+            ),
+            IconButton(
+              onPressed: () => context.read<AppState>().toggleFavorite(
+                    clinic.id,
+                  ),
+              icon: const Icon(Icons.favorite, color: AppColors.brandDarkGreen),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: Text('${clinic.distance} away',
                   style:
                       const TextStyle(color: AppColors.textGrey, fontSize: 11)),
-            ],
-          ),
-        ),
-        Column(
-          children: [
-            IconButton(
-              onPressed: () =>
-                  context.read<AppState>().toggleFavorite(clinic.id),
-              icon: const Icon(Icons.favorite, color: Color(0xFF007D68)),
             ),
-            TextButton(
-              onPressed: () => context.push(
-                '/clinic-detail?id=${Uri.encodeComponent(clinic.id)}',
+            SizedBox(
+              height: 36,
+              child: OutlinedButton(
+                onPressed: () => context.push(
+                  '/clinic-detail?id=${Uri.encodeComponent(clinic.id)}',
+                ),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.brandDarkGreen,
+                  side: const BorderSide(color: AppColors.brandDarkGreen),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  textStyle: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w800),
+                ),
+                child: const Text('View Profile'),
               ),
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 6),
-                minimumSize: const Size(48, 30),
-              ),
-              child: const Text(
-                'View Profile',
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(width: 8),
+            SizedBox(
+              height: 36,
+              child: ElevatedButton(
+                onPressed: () => context.push('/booking'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.brandDarkGreen,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  textStyle: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w800),
+                ),
+                child: const Text('Book'),
               ),
             ),
           ],
@@ -639,8 +690,11 @@ Widget favoriteRecommendationCard(
         TextButton(
           onPressed: () => context.push('/booking'),
           style: TextButton.styleFrom(
+            foregroundColor: AppColors.brandDarkGreen,
             padding: const EdgeInsets.symmetric(horizontal: 8),
             minimumSize: const Size(48, 36),
+            textStyle:
+                const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
           ),
           child: const Text('Book'),
         ),
@@ -1180,10 +1234,14 @@ Widget imageTile(IconData icon) {
     width: 64,
     height: 64,
     decoration: BoxDecoration(
-      color: AppColors.primaryMintLight,
+      gradient: const LinearGradient(
+        colors: [Color(0xFFEFFFFB), Color(0xFFBFEFE4)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
       borderRadius: BorderRadius.circular(12),
     ),
-    child: Icon(icon, color: AppColors.primaryMint, size: 30),
+    child: Icon(icon, color: AppColors.brandDarkGreen, size: 30),
   );
 }
 

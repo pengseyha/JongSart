@@ -132,6 +132,10 @@ Widget _treatmentResultCard(BuildContext context, Treatment treatment) {
           onPressed: () => context.push(
             '/treatment-detail?id=${Uri.encodeComponent(treatment.id)}',
           ),
+          style: TextButton.styleFrom(
+            foregroundColor: AppColors.brandDarkGreen,
+            textStyle: const TextStyle(fontWeight: FontWeight.w800),
+          ),
           child: const Text('View'),
         ),
       ],
@@ -146,15 +150,7 @@ Widget _doctorResultCard(BuildContext context, Doctor doctor) {
     decoration: panelDecoration(),
     child: Row(
       children: [
-        CircleAvatar(
-          radius: 24,
-          backgroundColor: AppColors.primaryMintLight,
-          child: Text(
-            doctor.name.replaceAll('Dr. ', '').substring(0, 1),
-            style: const TextStyle(
-                color: AppColors.primaryMint, fontWeight: FontWeight.bold),
-          ),
-        ),
+        _doctorResultAvatar(doctor),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -177,9 +173,42 @@ Widget _doctorResultCard(BuildContext context, Doctor doctor) {
           onPressed: () => context.push(
             '/doctor-profile?id=${Uri.encodeComponent(doctor.id)}',
           ),
+          style: TextButton.styleFrom(
+            foregroundColor: AppColors.brandDarkGreen,
+            textStyle: const TextStyle(fontWeight: FontWeight.w800),
+          ),
           child: const Text('View'),
         ),
       ],
     ),
+  );
+}
+
+Widget _doctorResultAvatar(Doctor doctor) {
+  final color = doctor.id.contains('sarah')
+      ? const Color(0xFF2563EB)
+      : doctor.id.contains('lina')
+          ? const Color(0xFFB7791F)
+          : AppColors.primaryMint;
+  return Container(
+    width: 52,
+    height: 52,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      gradient: LinearGradient(
+        colors: [color.withValues(alpha: 0.25), AppColors.primaryMintLight],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      border: Border.all(color: Colors.white, width: 2),
+      boxShadow: [
+        BoxShadow(
+          color: color.withValues(alpha: 0.12),
+          blurRadius: 12,
+          offset: const Offset(0, 6),
+        ),
+      ],
+    ),
+    child: Icon(Icons.medical_services_outlined, color: color, size: 24),
   );
 }

@@ -122,8 +122,8 @@ class AuthPrimaryButton extends StatelessWidget {
               )
             : Text(
                 label,
-                style: const TextStyle(
-                    fontSize: 15, fontWeight: FontWeight.w700),
+                style:
+                    const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
               ),
       ),
     );
@@ -152,10 +152,15 @@ class AuthHeader extends StatelessWidget {
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-            color: AppColors.primaryMintLight,
+            gradient: const LinearGradient(
+              colors: [Color(0xFFEFFFFB), Color(0xFFB5F0E6)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: const Color(0xFFD6EEE8)),
           ),
-          child: Icon(icon, color: AppColors.primaryMint, size: 28),
+          child: Icon(icon, color: AppColors.brandDarkGreen, size: 28),
         ),
         const SizedBox(height: 18),
         Text(
@@ -198,8 +203,7 @@ void showAuthSnackBar(BuildContext context, String message,
         backgroundColor:
             isError ? const Color(0xFFD4465D) : const Color(0xFF0F766E),
         behavior: SnackBarBehavior.floating,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
 }

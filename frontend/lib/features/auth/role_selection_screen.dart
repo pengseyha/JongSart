@@ -24,11 +24,16 @@ class RoleSelectionScreen extends StatelessWidget {
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color: AppColors.primaryMintLight,
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFEFFFFB), Color(0xFFB5F0E6)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                       borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: const Color(0xFFD6EEE8)),
                     ),
                     child: const Icon(Icons.spa,
-                        color: AppColors.primaryMint, size: 24),
+                        color: AppColors.brandDarkGreen, size: 24),
                   ),
                   const SizedBox(width: 12),
                   const Text(
@@ -120,8 +125,7 @@ class _RoleCard extends StatelessWidget {
           color: highlighted ? AppColors.primaryMintLight : Colors.white,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color:
-                highlighted ? AppColors.primaryMint : AppColors.borderGrey,
+            color: highlighted ? AppColors.primaryMint : AppColors.borderGrey,
             width: highlighted ? 1.4 : 1,
           ),
         ),

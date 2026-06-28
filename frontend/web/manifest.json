@@ -1,11 +1,11 @@
 {
-    "name": "jong_sart",
-    "short_name": "jong_sart",
+    "name": "JongSart Skincare Clinic",
+    "short_name": "JongSart",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#EFFFFB",
+    "theme_color": "#0F766E",
+    "description": "JongSart skincare clinic booking demo.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

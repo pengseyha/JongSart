@@ -591,45 +591,58 @@ class HomeScreen extends StatelessWidget {
   Widget _buildQuickActions(BuildContext context) {
     final actions = [
       (Icons.add_circle_outline, 'Book', '/booking'),
-      (Icons.event_note_outlined, 'My Bookings', '/my-bookings'),
+      (Icons.event_note_outlined, 'Bookings', '/my-bookings'),
       (Icons.chat_bubble_outline, 'Chat', '/chat'),
-      (Icons.local_offer_outlined, 'Promotions', '/promo'),
-      (Icons.face_retouching_natural, 'Skin Profile', '/skin-profile'),
+      (Icons.local_offer_outlined, 'Promos', '/promo'),
+      (Icons.face_retouching_natural, 'Skin', '/skin-profile'),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
+      child: GridView.count(
+        crossAxisCount: 3,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 1.45,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           for (final action in actions)
-            Expanded(
-              child: InkWell(
-                borderRadius: BorderRadius.circular(14),
-                onTap: () => context.push(action.$3),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryMintLight,
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: Icon(action.$1,
-                            color: AppColors.primaryMint, size: 22),
+            InkWell(
+              borderRadius: BorderRadius.circular(14),
+              onTap: () => context.push(action.$3),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: AppColors.borderGrey),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryMintLight,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      const SizedBox(height: 6),
-                      Text(
+                      child: Icon(action.$1,
+                          color: AppColors.primaryMint, size: 20),
+                    ),
+                    const SizedBox(width: 7),
+                    Expanded(
+                      child: Text(
                         action.$2,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textDark),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.textDark,
+                            height: 1.15),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -639,13 +652,32 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildDoctorAvatar(String initials, Color color) {
-    return CircleAvatar(
-      radius: 36,
-      backgroundColor: color.withValues(alpha: 0.12),
-      child: Text(
-        initials,
-        style:
-            TextStyle(color: color, fontSize: 20, fontWeight: FontWeight.w800),
+    return Container(
+      width: 76,
+      height: 76,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [
+            color.withValues(alpha: 0.28),
+            AppColors.primaryMintLight,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: Border.all(color: Colors.white, width: 3),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.18),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Icon(
+        initials == 'SC' ? Icons.medical_services_outlined : Icons.person,
+        color: color,
+        size: 34,
       ),
     );
   }
