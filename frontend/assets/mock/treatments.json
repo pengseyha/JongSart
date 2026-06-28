@@ -1,15 +1,47 @@
 [
   {
-    "id": "t1",
+    "id": "treatment_hydra",
     "name": "Hydra Facial Care",
     "category": "Facial",
     "duration": 45,
     "price": 45.00,
+    "rating": 4.9,
+    "imageUrl": "assets/images/treatments/hydra_facial_care.jpg",
     "description": "A hydrating facial care option designed for customers with dry or combination skin. Clinic staff will check the skin condition first and recommend a suitable care option.",
     "beforeAfter": ["https://picsum.photos/id/15/400/300", "https://picsum.photos/id/16/400/300"],
     "faqs": [
       {"q": "Is it painful?", "a": "It is a gentle facial. Clinic staff will guide you during the session."},
       {"q": "How many sessions?", "a": "Clinic staff will recommend a suitable care plan after consultation."}
+    ]
+  },
+  {
+    "id": "treatment_deep_clean",
+    "name": "Deep Cleansing Facial",
+    "category": "Facial",
+    "duration": 60,
+    "price": 35.00,
+    "rating": 4.8,
+    "imageUrl": "assets/images/treatments/deep_cleansing_facial.jpg",
+    "description": "A gentle cleansing treatment for customers who want clearer pores and a refreshed skin feeling. Clinic staff confirm suitability before treatment.",
+    "beforeAfter": ["https://picsum.photos/id/21/400/300", "https://picsum.photos/id/22/400/300"],
+    "faqs": [
+      {"q": "Can students book this?", "a": "Yes. Students can book and the clinic will confirm the best available time."},
+      {"q": "Is there downtime?", "a": "Most customers can continue normal activity after the session."}
+    ]
+  },
+  {
+    "id": "treatment_pigmentation",
+    "name": "Pigmentation Care Consultation",
+    "category": "Laser",
+    "duration": 50,
+    "price": 90.00,
+    "rating": 4.7,
+    "imageUrl": "assets/images/treatments/brightening_facial_care.jpg",
+    "description": "A consultation-first option for uneven tone and dark spot concerns. Clinic staff review the skin condition before recommending care.",
+    "beforeAfter": ["https://picsum.photos/id/25/400/300", "https://picsum.photos/id/26/400/300"],
+    "faqs": [
+      {"q": "Is laser always required?", "a": "No. The clinic may recommend another care option after consultation."},
+      {"q": "Can I choose a doctor?", "a": "Yes. Customers can select an available doctor during booking."}
     ]
   }
 ]

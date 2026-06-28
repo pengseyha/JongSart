@@ -372,6 +372,10 @@ class AppState extends ChangeNotifier {
     notifyListeners();
 
     _treatments = await _repository.loadTreatments();
+    final mockClinics = await _repository.loadClinics();
+    final mockDoctors = await _repository.loadDoctors();
+    if (mockClinics.isNotEmpty) _clinics = mockClinics;
+    if (mockDoctors.isNotEmpty) _doctors = mockDoctors;
 
     // Restore persisted auth session (no backend).
     final savedAuth = await _store.loadAuth();

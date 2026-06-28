@@ -7,7 +7,8 @@
     "rating": 4.9,
     "patients": 840,
     "clinic": "JongSart Skin Clinic",
-    "about": "Provides dermatology consultation and gentle facial care. Clinic staff will confirm suitability before any treatment."
+    "about": "Provides dermatology consultation and gentle facial care. Clinic staff will confirm suitability before any treatment.",
+    "imageUrl": "assets/images/doctors/dr_peng_seyha.jpg"
   },
   {
     "id": "d2",
@@ -17,7 +18,8 @@
     "rating": 4.8,
     "patients": 530,
     "clinic": "JongSart Skin Clinic",
-    "about": "Supports acne and sensitive skin care through consultation-first planning."
+    "about": "Supports acne and sensitive skin care through consultation-first planning.",
+    "imageUrl": "assets/images/doctors/dr_3.jpg"
   },
   {
     "id": "d3",
@@ -27,7 +29,8 @@
     "rating": 4.8,
     "patients": 410,
     "clinic": "Sovanna Aesthetic Clinic",
-    "about": "Provides aesthetic dermatology consultation and gentle facial care recommendations."
+    "about": "Provides aesthetic dermatology consultation and gentle facial care recommendations.",
+    "imageUrl": "assets/images/doctors/dr_lim_kimhorng.jpg"
   },
   {
     "id": "d4",
@@ -37,7 +40,8 @@
     "rating": 4.8,
     "patients": 385,
     "clinic": "Tonle Skin & Beauty Clinic",
-    "about": "Provides laser and pigmentation care consultation with suitability checks."
+    "about": "Provides laser and pigmentation care consultation with suitability checks.",
+    "imageUrl": "assets/images/doctors/dr_lim_kimhorng.jpg"
   },
   {
     "id": "d5",
@@ -47,6 +51,7 @@
     "rating": 4.7,
     "patients": 460,
     "clinic": "Phnom Penh Derma Care",
-    "about": "Provides skin health consultation and treatment planning support."
+    "about": "Provides skin health consultation and treatment planning support.",
+    "imageUrl": "assets/images/doctors/dr_peng_seyha.jpg"
   }
 ]
