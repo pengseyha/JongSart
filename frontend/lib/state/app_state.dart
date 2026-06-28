@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../core/storage/local_storage_service.dart';
 import '../data/mock/mock_repository.dart';
+import '../data/remote/booking_repository.dart';
 import '../data/remote/catalog_repository.dart';
 import '../models/booking.dart';
 import '../models/chat_message.dart';
@@ -17,10 +18,20 @@ class AppState extends ChangeNotifier {
   final MockRepository _repository = MockRepository();
   final LocalStorageService _store = LocalStorageService();
   final CatalogRepository _catalogRepository;
+  final BookingRepository _bookingRepository;
 
   /// When true, the app tries to load the read-only catalog from the backend
   /// during bootstrap. Disabled in tests for determinism.
   final bool _autoLoadRemoteCatalog;
+
+  // --- Booking backend sync state ---------------------------------------
+  bool _isBookingSyncing = false;
+  // 'local' = local-only so far, 'backend' = at least one backend sync worked.
+  String _bookingSyncSource = 'local';
+  String? _bookingSyncError;
+  // Maps a local booking id -> its backend id, so status updates can target
+  // the right backend record. Kept in memory (backend is also in-memory).
+  final Map<String, String> _backendBookingIds = {};
 
   List<Treatment> _treatments = [];
   bool _isLoading = true;
@@ -279,10 +290,23 @@ class AppState extends ChangeNotifier {
   String get catalogSourceLabel =>
       _catalogSource == 'backend' ? 'Backend API' : 'Local demo data';
 
+  // --- Booking sync getters ---------------------------------------------
+  bool get isBookingSyncing => _isBookingSyncing;
+  String get bookingSyncSource => _bookingSyncSource;
+  bool get isBookingSyncedWithBackend => _bookingSyncSource == 'backend';
+  String? get bookingSyncError => _bookingSyncError;
+
+  /// Friendly label for an optional booking sync indicator in the UI.
+  String get bookingSyncLabel => _bookingSyncSource == 'backend'
+      ? 'Bookings synced with backend'
+      : 'Using local booking data';
+
   AppState({
     CatalogRepository? catalogRepository,
+    BookingRepository? bookingRepository,
     bool autoLoadRemoteCatalog = true,
   })  : _catalogRepository = catalogRepository ?? CatalogRepository(),
+        _bookingRepository = bookingRepository ?? BookingRepository(),
         _autoLoadRemoteCatalog = autoLoadRemoteCatalog {
     _bootstrap();
   }
@@ -342,6 +366,7 @@ class AppState extends ChangeNotifier {
     // usable with local data; this only upgrades to backend data if reachable.
     if (_autoLoadRemoteCatalog) {
       unawaited(_loadRemoteCatalog());
+      unawaited(refreshBackendBookings());
     }
   }
 
@@ -747,18 +772,119 @@ class AppState extends ChangeNotifier {
       status: BookingStatus.pending,
       createdAt: DateTime.now(),
     );
+    // Local first: this is the source of truth and always works.
     _bookings.insert(0, booking);
     _store.saveBookings(_bookings);
     notifyListeners();
+
+    // Best-effort: also send to the backend. Never blocks or breaks the flow.
+    unawaited(_pushBookingToBackend(booking));
     return booking;
   }
 
   void _updateBooking(String id, Booking Function(Booking) update) {
     final index = _bookings.indexWhere((booking) => booking.id == id);
     if (index == -1) return;
-    _bookings[index] = update(_bookings[index]);
+    final updated = update(_bookings[index]);
+    _bookings[index] = updated;
     _store.saveBookings(_bookings);
     notifyListeners();
+
+    // Best-effort: mirror the status change to the backend if we synced this
+    // booking earlier. Local update above already keeps the UI correct.
+    unawaited(_pushStatusToBackend(updated));
+  }
+
+  // --- Booking backend sync (best-effort) -------------------------------
+  Future<void> _pushBookingToBackend(Booking booking) async {
+    _isBookingSyncing = true;
+    _safeNotify();
+    try {
+      final remote = await _bookingRepository.createBackendBooking(booking);
+      if (remote != null) {
+        _backendBookingIds[booking.id] = remote.id;
+        _bookingSyncSource = 'backend';
+        _bookingSyncError = null;
+      } else {
+        _bookingSyncError = 'Backend unavailable; booking saved locally.';
+      }
+    } catch (e) {
+      _bookingSyncError = e.toString();
+    } finally {
+      _isBookingSyncing = false;
+      _safeNotify();
+    }
+  }
+
+  Future<void> _pushStatusToBackend(Booking booking) async {
+    final backendId = _backendBookingIds[booking.id];
+    // Only sync bookings the backend already knows about.
+    if (backendId == null) return;
+    _isBookingSyncing = true;
+    _safeNotify();
+    try {
+      final remote = await _bookingRepository.updateBackendBookingStatus(
+        backendId,
+        booking.status.label,
+      );
+      if (remote != null) {
+        _bookingSyncSource = 'backend';
+        _bookingSyncError = null;
+      } else {
+        _bookingSyncError = 'Backend status update failed; kept local update.';
+      }
+    } catch (e) {
+      _bookingSyncError = e.toString();
+    } finally {
+      _isBookingSyncing = false;
+    }
+    _safeNotify();
+  }
+
+  /// Optional: pull bookings from the backend and merge any that the local list
+  /// does not already have. Never removes local bookings or creates duplicates.
+  /// Not called automatically (keeps the demo list clean); available for a
+  /// future "sync" button.
+  Future<void> refreshBackendBookings() async {
+    _isBookingSyncing = true;
+    _safeNotify();
+    try {
+      final remote = await _bookingRepository.getBackendBookings();
+      if (remote.isEmpty) {
+        _bookingSyncError = 'No backend bookings (or backend offline).';
+        return;
+      }
+      final knownIds = _bookings.map((b) => b.id).toSet()
+        ..addAll(_backendBookingIds.values);
+      final knownFingerprints = _bookings.map(_bookingFingerprint).toSet();
+      final newOnes = remote
+          .where((b) =>
+              !knownIds.contains(b.id) &&
+              !knownFingerprints.contains(_bookingFingerprint(b)))
+          .toList();
+      if (newOnes.isNotEmpty) {
+        _bookings.addAll(newOnes);
+        _store.saveBookings(_bookings);
+      }
+      _bookingSyncSource = 'backend';
+      _bookingSyncError = null;
+    } catch (e) {
+      _bookingSyncError = e.toString();
+    } finally {
+      _isBookingSyncing = false;
+      _safeNotify();
+    }
+  }
+
+  String _bookingFingerprint(Booking booking) {
+    return [
+      booking.patientName.trim().toLowerCase(),
+      booking.phone.trim(),
+      booking.treatmentName.trim().toLowerCase(),
+      booking.clinicName.trim().toLowerCase(),
+      booking.date.trim().toLowerCase(),
+      booking.time.trim().toLowerCase(),
+    ].join('|');
   }
 
   /// Customer cancels their own pending request.

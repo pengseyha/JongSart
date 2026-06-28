@@ -117,10 +117,37 @@ and promotions — from the NestJS mock API, while everything else stays local.
 - The data source is tracked in `AppState.catalogSource` (`local` / `backend`)
   and shown as a small, non-intrusive label on the Home header
   ("Data source: Local demo data" or "Data source: Backend API").
-- **Still local for now (MVP):** auth/login, bookings, chat, reviews, favorites,
-  claimed promos, and skin-profile selection — no write calls go to the backend.
+- **Still local for now (MVP):** auth/login, chat, reviews, favorites, claimed
+  promos, and skin-profile selection. Booking writes have a safe optional sync
+  layer, described below.
 - Base URL: Chrome uses `http://localhost:3000`; the Android emulator may use
   `http://10.0.2.2:3000` (see `ApiConfig`).
+
+## Booking backend sync
+
+Appointment booking now **optionally** syncs with the NestJS mock API while the
+local flow stays the source of truth.
+
+- **Create:** when a customer submits a booking, it is saved **locally first**
+  (SharedPreferences) and the normal "request sent" success is shown. The app
+  then sends it to `POST /bookings` in the background. On success the backend id
+  is remembered (in memory) so later status updates can target the right record.
+- **Status updates:** when staff (or the customer) confirm / cancel / complete /
+  reschedule, the **local booking updates immediately** so the UI always works.
+  The app then mirrors the change to `PATCH /bookings/:id/status` if that booking
+  was synced. A failure here is ignored — the local update stands.
+- **Fallback:** if the backend is offline, slow, or errors, nothing breaks —
+  bookings live in local SharedPreferences exactly as before. No error dialog is
+  shown to the user.
+- **Startup pull:** after local SharedPreferences bookings are restored,
+  `AppState.refreshBackendBookings()` runs in the background. Backend bookings
+  are merged without deleting local bookings, and duplicate-looking records are
+  skipped.
+- Sync state is tracked in `AppState` (`isBookingSyncing`, `bookingSyncSource`
+  = `local` / `backend`, `bookingSyncError`, `bookingSyncLabel`).
+- **Still local for now:** auth/login, chat, reviews, favorites, claimed promos,
+  and skin-profile selection. Staff login stays mock
+  (`staff@jongsart.com` / `staff123`).
 
 ## Folder structure
 

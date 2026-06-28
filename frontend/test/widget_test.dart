@@ -9,6 +9,7 @@ import 'package:jong_sart/models/booking.dart';
 import 'package:jong_sart/models/clinic.dart';
 import 'package:jong_sart/models/treatment_model.dart';
 import 'package:jong_sart/core/router/app_router.dart';
+import 'package:jong_sart/data/remote/booking_repository.dart';
 import 'package:jong_sart/data/remote/catalog_repository.dart';
 import 'package:jong_sart/state/app_state.dart';
 
@@ -53,6 +54,57 @@ class _FakeCatalogRepository extends CatalogRepository {
       offers: const [],
     );
   }
+}
+
+/// Booking repository that always behaves like an offline backend.
+class _FailingBookingRepository extends BookingRepository {
+  @override
+  Future<List<Booking>> getBackendBookings() async => const [];
+
+  @override
+  Future<Booking?> createBackendBooking(Booking booking) async => null;
+
+  @override
+  Future<Booking?> updateBackendBookingStatus(
+    String id,
+    String statusLabel,
+  ) async =>
+      null;
+}
+
+/// Booking repository that accepts create, but fails later status PATCH calls.
+class _CreateThenFailStatusBookingRepository extends BookingRepository {
+  @override
+  Future<List<Booking>> getBackendBookings() async => const [];
+
+  @override
+  Future<Booking?> createBackendBooking(Booking booking) async {
+    return Booking(
+      id: 'backend_${booking.id}',
+      patientName: booking.patientName,
+      phone: booking.phone,
+      telegramOrWhatsapp: booking.telegramOrWhatsapp,
+      concern: booking.concern,
+      treatmentId: booking.treatmentId,
+      treatmentName: booking.treatmentName,
+      clinicId: booking.clinicId,
+      clinicName: booking.clinicName,
+      doctorId: booking.doctorId,
+      doctorName: booking.doctorName,
+      date: booking.date,
+      time: booking.time,
+      note: booking.note,
+      status: booking.status,
+      createdAt: booking.createdAt,
+    );
+  }
+
+  @override
+  Future<Booking?> updateBackendBookingStatus(
+    String id,
+    String statusLabel,
+  ) async =>
+      null;
 }
 
 void main() {
@@ -129,7 +181,10 @@ void main() {
   });
 
   test('a submitted booking request starts as pending', () {
-    final state = AppState(autoLoadRemoteCatalog: false);
+    final state = AppState(
+      bookingRepository: _FailingBookingRepository(),
+      autoLoadRemoteCatalog: false,
+    );
     final booking = state.submitBookingRequest(
       patientName: 'Test Patient',
       phone: '012345678',
@@ -151,6 +206,69 @@ void main() {
 
     state.staffComplete(booking.id);
     expect(state.bookingById(booking.id)?.status, BookingStatus.completed);
+  });
+
+  test('booking can still be created when backend is unavailable', () async {
+    final state = AppState(
+      bookingRepository: _FailingBookingRepository(),
+      autoLoadRemoteCatalog: false,
+    );
+
+    final booking = state.submitBookingRequest(
+      patientName: 'Dara Sok',
+      phone: '012345678',
+      concern: 'Acne & Breakouts',
+      treatmentId: '1',
+      treatmentName: 'Hydra Facial Care',
+      clinicId: 'clinic_lumina',
+      clinicName: 'JongSart Skin Clinic',
+      date: 'Mon 30',
+      time: '09:00 AM',
+      note: 'Sensitive skin',
+    );
+
+    expect(booking.status, BookingStatus.pending);
+    expect(state.bookings, contains(booking));
+
+    await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(state.bookingSyncSource, 'local');
+    expect(state.bookingSyncError, contains('saved locally'));
+  });
+
+  test('staff status update stays local if backend status sync fails',
+      () async {
+    final state = AppState(
+      bookingRepository: _CreateThenFailStatusBookingRepository(),
+      autoLoadRemoteCatalog: false,
+    );
+
+    final booking = state.submitBookingRequest(
+      patientName: 'Dara Sok',
+      phone: '012345678',
+      concern: 'Acne & Breakouts',
+      treatmentId: '1',
+      treatmentName: 'Hydra Facial Care',
+      clinicId: 'clinic_lumina',
+      clinicName: 'JongSart Skin Clinic',
+      date: 'Mon 30',
+      time: '09:00 AM',
+      note: 'Sensitive skin',
+    );
+
+    await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
+    expect(state.bookingSyncSource, 'backend');
+
+    state.staffConfirm(booking.id);
+    expect(state.bookingById(booking.id)?.status, BookingStatus.confirmed);
+
+    await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(state.bookingById(booking.id)?.status, BookingStatus.confirmed);
+    expect(state.bookingSyncError, contains('status update failed'));
   });
 
   test('customer can sign up, log out, and log back in', () async {

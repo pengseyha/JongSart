@@ -3,9 +3,9 @@ import '../../core/network/api_result.dart';
 
 /// Talks to the local NestJS mock backend.
 ///
-/// IMPORTANT: This service is NOT wired into `AppState` yet. The app still runs
-/// fully on local/mock data + SharedPreferences. This class only prepares the
-/// remote calls so the app can be switched to the backend later.
+/// The app still runs safely on local/mock data + SharedPreferences. Catalog
+/// reads and booking sync use this service as an optional best-effort layer;
+/// auth and chat are not connected to the backend yet.
 ///
 /// Every method returns an [ApiResult] so callers never have to try/catch:
 /// on success `result.data` is set, on failure `result.error` holds a
@@ -47,7 +47,8 @@ class BackendApiService {
     String id,
     String status,
   ) =>
-      _guardMap(() => _client.patch('/bookings/$id/status', {'status': status}));
+      _guardMap(
+          () => _client.patch('/bookings/$id/status', {'status': status}));
 
   Future<ApiResult<Map<String, dynamic>>> sendChatMessage(
     Map<String, dynamic> data,
@@ -74,7 +75,8 @@ class BackendApiService {
     try {
       final data = await call();
       if (data is List) return ApiResult.success(data);
-      return const ApiResult.failure('Expected a list response from the server.');
+      return const ApiResult.failure(
+          'Expected a list response from the server.');
     } on ApiException catch (e) {
       return ApiResult.failure(e.message);
     } catch (e) {
@@ -88,7 +90,9 @@ class BackendApiService {
     try {
       final data = await call();
       if (data is Map<String, dynamic>) return ApiResult.success(data);
-      if (data is Map) return ApiResult.success(Map<String, dynamic>.from(data));
+      if (data is Map) {
+        return ApiResult.success(Map<String, dynamic>.from(data));
+      }
       return const ApiResult.failure(
         'Expected an object response from the server.',
       );
