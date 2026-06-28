@@ -256,6 +256,8 @@ class AuthBrandMark extends StatelessWidget {
 }
 
 class AuthGradientHeader extends StatelessWidget {
+  static const String backgroundAsset = 'assets/images/image.png';
+
   final String title;
   final String subtitle;
   final double height;
@@ -274,15 +276,31 @@ class AuthGradientHeader extends StatelessWidget {
     return Container(
       height: height,
       width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFFBFEFE4), Color(0xFF3B9B82), Color(0xFF0F766E)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
+      color: AppColors.brandDarkGreen,
       child: Stack(
         children: [
+          Positioned.fill(
+            child: Image.asset(
+              backgroundAsset,
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+            ),
+          ),
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    const Color(0xFF0F766E).withValues(alpha: 0.84),
+                    const Color(0xFF3B9B82).withValues(alpha: 0.68),
+                    Colors.black.withValues(alpha: 0.30),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
+          ),
           Positioned(
             right: -38,
             top: MediaQuery.of(context).padding.top + 18,
