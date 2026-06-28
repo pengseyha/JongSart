@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../state/app_state.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/image_mapper.dart';
 
 class ClinicDetailScreen extends StatelessWidget {
   final String? clinicId;
@@ -41,8 +42,8 @@ class ClinicDetailScreen extends StatelessWidget {
                             SizedBox(
                               height: 280,
                               width: double.infinity,
-                              child: Image.network(
-                                'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800', // Premium clinic aesthetic
+                              child: Image.asset(
+                                clinicImageById(currentClinicId),
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) =>
                                     Container(

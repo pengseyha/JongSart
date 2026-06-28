@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../state/app_state.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/image_mapper.dart';
 
 class DoctorProfileScreen extends StatefulWidget {
   final String? doctorId;
@@ -98,34 +99,36 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                       border:
                           Border.all(color: AppColors.primaryMint, width: 2),
                     ),
-                    child: Container(
+                    child: SizedBox(
                       width: 100,
                       height: 100,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            _doctorAccent(doctorId).withValues(alpha: 0.24),
-                            AppColors.primaryMintLight,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                                _doctorAccent(doctorId).withValues(alpha: 0.16),
-                            blurRadius: 18,
-                            offset: const Offset(0, 8),
+                      child: ClipOval(
+                        child: Image.asset(
+                          doctorImageById(doctorId),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: [
+                                  _doctorAccent(doctorId)
+                                      .withValues(alpha: 0.24),
+                                  AppColors.primaryMintLight,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            child: Icon(
+                              doctorId.contains('sarah')
+                                  ? Icons.medical_services_outlined
+                                  : Icons.person,
+                              color: _doctorAccent(doctorId),
+                              size: 44,
+                            ),
                           ),
-                        ],
-                      ),
-                      child: Icon(
-                        doctorId.contains('sarah')
-                            ? Icons.medical_services_outlined
-                            : Icons.person,
-                        color: _doctorAccent(doctorId),
-                        size: 44,
+                        ),
                       ),
                     ),
                   ),

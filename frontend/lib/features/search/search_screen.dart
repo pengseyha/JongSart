@@ -105,7 +105,17 @@ Widget _treatmentResultCard(BuildContext context, Treatment treatment) {
     decoration: panelDecoration(),
     child: Row(
       children: [
-        imageTile(Icons.spa_outlined),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.asset(
+            treatmentImageById(treatment.id),
+            width: 52,
+            height: 52,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                imageTile(Icons.spa_outlined),
+          ),
+        ),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -209,6 +219,12 @@ Widget _doctorResultAvatar(Doctor doctor) {
         ),
       ],
     ),
-    child: Icon(Icons.medical_services_outlined, color: color, size: 24),
+    clipBehavior: Clip.antiAlias,
+    child: Image.asset(
+      doctorImageById(doctor.id),
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) =>
+          Icon(Icons.medical_services_outlined, color: color, size: 24),
+    ),
   );
 }

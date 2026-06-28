@@ -27,3 +27,6 @@ flutter:
   assets:
     - assets/mock/
     - assets/images/
+    - assets/images/clinics/
+    - assets/images/doctors/
+    - assets/images/treatments/

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../models/treatment_model.dart';
 import '../../state/app_state.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/image_mapper.dart';
 
 class TreatmentDetailScreen extends StatefulWidget {
   final String? treatmentId;
@@ -66,7 +67,7 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _beforeAfterHero(),
+          _beforeAfterHero(treatment?.id ?? 'treatment_hydra'),
           const SizedBox(height: 8),
           _summaryCard(context, treatment),
           const SizedBox(height: 20),
@@ -141,8 +142,10 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: const [
-                _SimilarTreatment(title: 'Brightening Facial Care', price: '\$40'),
-                _SimilarTreatment(title: 'Deep Cleansing Facial', price: '\$35'),
+                _SimilarTreatment(
+                    title: 'Brightening Facial Care', price: '\$40'),
+                _SimilarTreatment(
+                    title: 'Deep Cleansing Facial', price: '\$35'),
               ],
             ),
           ),
@@ -152,13 +155,13 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
     );
   }
 
-  Widget _beforeAfterHero() {
+  Widget _beforeAfterHero(String treatmentId) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(14),
       child: Stack(
         children: [
-          Image.network(
-            'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80',
+          Image.asset(
+            treatmentImageById(treatmentId),
             height: 210,
             width: double.infinity,
             fit: BoxFit.cover,

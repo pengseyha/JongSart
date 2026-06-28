@@ -9,6 +9,7 @@ import '../models/patient_review.dart';
 import '../models/skin_recommendation.dart';
 import '../state/app_state.dart';
 import '../core/theme/app_colors.dart';
+import '../core/utils/image_mapper.dart';
 
 /// Coloured badge for a booking status, reused across booking screens.
 Widget statusBadge(BookingStatus status) {
@@ -289,15 +290,10 @@ Widget clinicResultCard(BuildContext context, Clinic clinic) {
 }
 
 Widget clinicImageTile(String id) {
-  final image = id.contains('emerald')
-      ? 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=300&q=80'
-      : id.contains('north')
-          ? 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=300&q=80'
-          : 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=300&q=80';
   return ClipRRect(
     borderRadius: BorderRadius.circular(10),
-    child: Image.network(
-      image,
+    child: Image.asset(
+      clinicImageById(id),
       width: 72,
       height: 72,
       fit: BoxFit.cover,
@@ -356,8 +352,8 @@ Widget mapClinicPreview(BuildContext context, Clinic clinic) {
       children: [
         ClipRRect(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
-          child: Image.network(
-            'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=500&q=80',
+          child: Image.asset(
+            clinicImageById(clinic.id),
             height: 82,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -660,7 +656,17 @@ Widget favoriteRecommendationCard(
     decoration: panelDecoration(),
     child: Row(
       children: [
-        imageTile(Icons.spa_outlined),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.asset(
+            treatmentImageById(recommendation.id),
+            width: 52,
+            height: 52,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                imageTile(Icons.spa_outlined),
+          ),
+        ),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
@@ -1159,16 +1165,26 @@ Widget recommendationCard(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          height: 130,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(14)),
-            gradient:
-                LinearGradient(colors: [Color(0xFFCFEFE7), Color(0xFF7BC5A8)]),
+        ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+          child: Image.asset(
+            treatmentImageById(recommendation.id),
+            height: 130,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              height: 130,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFFCFEFE7), Color(0xFF7BC5A8)],
+                ),
+              ),
+              child: Center(
+                child: Icon(Icons.spa_outlined,
+                    color: Colors.white.withValues(alpha: 0.85), size: 54),
+              ),
+            ),
           ),
-          child: Center(
-              child: Icon(Icons.spa_outlined,
-                  color: Colors.white.withValues(alpha: 0.85), size: 54)),
         ),
         Padding(
           padding: const EdgeInsets.all(14),

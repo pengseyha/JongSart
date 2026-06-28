@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/image_mapper.dart';
 import '../../state/app_state.dart';
 import '../../widgets/app_bottom_nav.dart';
 
@@ -251,20 +251,21 @@ class HomeScreen extends StatelessWidget {
                                                           Radius.circular(16),
                                                       bottomLeft:
                                                           Radius.circular(16)),
-                                              child: CachedNetworkImage(
-                                                imageUrl: treatment.imageUrl,
+                                              child: Image.asset(
+                                                treatmentImageById(
+                                                    treatment.id),
                                                 width: 100,
                                                 height: 100,
                                                 fit: BoxFit.cover,
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Container(
-                                                            width: 100,
-                                                            height: 100,
-                                                            color: Colors
-                                                                .grey.shade200,
-                                                            child: const Icon(
-                                                                Icons.error)),
+                                                errorBuilder: (context, error,
+                                                        stackTrace) =>
+                                                    Container(
+                                                        width: 100,
+                                                        height: 100,
+                                                        color: Colors
+                                                            .grey.shade200,
+                                                        child: const Icon(Icons
+                                                            .spa_outlined)),
                                               ),
                                             ),
                                             Positioned(
@@ -439,116 +440,126 @@ class HomeScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(16.0),
       height: 240,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        image: const DecorationImage(
-          image: CachedNetworkImageProvider(
-              'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          gradient: LinearGradient(
-            colors: [
-              AppColors.primaryMint.withValues(alpha: 0.9),
-              Colors.transparent
-            ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-        ),
-        padding: const EdgeInsets.all(18.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.star, size: 14, color: AppColors.primaryMint),
-                      SizedBox(width: 4),
-                      Text('Editor\'s Pick',
-                          style: TextStyle(
-                              color: AppColors.primaryMint,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-              ],
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            clinicImageById('clinic_lumina'),
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              color: AppColors.primaryMintLight,
+              child: const Icon(Icons.local_hospital_outlined,
+                  color: AppColors.brandDarkGreen, size: 52),
             ),
-            const SizedBox(height: 12),
-            const Text('JongSart Skin Clinic',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            const Text('Dermatology consultation & clinical facials',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: Colors.white, fontSize: 12)),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
+          ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.primaryMint.withValues(alpha: 0.9),
+                  Colors.transparent,
+                ],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: AppColors.primaryMint,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    minimumSize: const Size(110, 36),
-                  ),
-                  onPressed: () =>
-                      context.push('/clinic-detail?id=clinic_lumina'),
-                  child: const Text('View Clinic',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                        width: 6,
-                        height: 6,
-                        decoration: const BoxDecoration(
-                            color: Colors.white, shape: BoxShape.circle)),
-                    const SizedBox(width: 4),
-                    Container(
-                        width: 6,
-                        height: 6,
-                        decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.5),
-                            shape: BoxShape.circle)),
-                    const SizedBox(width: 4),
-                    Container(
-                        width: 6,
-                        height: 6,
-                        decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.5),
-                            shape: BoxShape.circle)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.star,
+                              size: 14, color: AppColors.primaryMint),
+                          SizedBox(width: 4),
+                          Text('Editor\'s Pick',
+                              style: TextStyle(
+                                  color: AppColors.primaryMint,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
+                const SizedBox(height: 12),
+                const Text('JongSart Skin Clinic',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                const Text('Dermatology consultation & clinical facials',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.white, fontSize: 12)),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: AppColors.primaryMint,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        minimumSize: const Size(110, 36),
+                      ),
+                      onPressed: () =>
+                          context.push('/clinic-detail?id=clinic_lumina'),
+                      child: const Text('View Clinic',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13)),
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                            width: 6,
+                            height: 6,
+                            decoration: const BoxDecoration(
+                                color: Colors.white, shape: BoxShape.circle)),
+                        const SizedBox(width: 4),
+                        Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.5),
+                                shape: BoxShape.circle)),
+                        const SizedBox(width: 4),
+                        Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.5),
+                                shape: BoxShape.circle)),
+                      ],
+                    ),
+                  ],
+                )
               ],
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -683,7 +694,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDoctorAvatar(String initials, Color color) {
+  Widget _buildDoctorAvatar(String doctorId, String initials, Color color) {
     return Container(
       width: 58,
       height: 58,
@@ -706,10 +717,15 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: Icon(
-        initials == 'SC' ? Icons.medical_services_outlined : Icons.person,
-        color: color,
-        size: 28,
+      clipBehavior: Clip.antiAlias,
+      child: Image.asset(
+        doctorImageById(doctorId),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Icon(
+          initials == 'OR' ? Icons.medical_services_outlined : Icons.person,
+          color: color,
+          size: 28,
+        ),
       ),
     );
   }
@@ -728,7 +744,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           Stack(
             children: [
-              _buildDoctorAvatar(initials, avatarColor),
+              _buildDoctorAvatar(doctorId, initials, avatarColor),
               Positioned(
                 bottom: 0,
                 right: 0,

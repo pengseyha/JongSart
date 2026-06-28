@@ -49,7 +49,7 @@ class DoctorCard extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         ClipRRect(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-          child: Image.network(
+          child: Image.asset(
             imageUrl,
             height: 100,
             width: double.infinity,

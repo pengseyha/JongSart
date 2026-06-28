@@ -1,29 +1,29 @@
 [
   {
-    "id": "1",
+    "id": "treatment_hydra",
     "title": "Hydra Facial Care",
     "category": "Facial",
     "price": "$45.00",
     "rating": "4.9",
-    "imageUrl": "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=500",
+    "imageUrl": "assets/images/treatments/hydra_facial_care.jpg",
     "duration": "45m"
   },
   {
-    "id": "2",
+    "id": "treatment_deep_clean",
     "title": "Deep Cleansing Facial",
     "category": "Facial",
     "price": "$35.00",
     "rating": "4.8",
-    "imageUrl": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=500",
+    "imageUrl": "assets/images/treatments/deep_cleansing_facial.jpg",
     "duration": "60m"
   },
   {
-    "id": "3",
+    "id": "treatment_pigmentation",
     "title": "Pigmentation Care Consultation",
     "category": "Laser",
     "price": "$90.00",
     "rating": "4.7",
-    "imageUrl": "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=500",
+    "imageUrl": "assets/images/treatments/brightening_facial_care.jpg",
     "duration": "50m"
   }
 ]
