@@ -10,6 +10,13 @@ to confirm, reschedule, or cancel.
 > This project uses **mock / local data** and **shared_preferences** for storage.
 > There is **no backend, no Firebase, and no complex authentication** yet.
 
+> **Demo content notice:** All clinics, doctors, treatments, prices, reviews,
+> promotions, and chat messages in this app are **fictional demo content** created
+> for an MVP school project. They do not represent real clinics or real people.
+> Content is **localized for Cambodia / Phnom Penh** (names, locations, and wording)
+> to make the demo feel natural. Nothing in the app is medical advice — wording is
+> kept safe ("consultation", "may help", "clinic staff will confirm suitability").
+
 ---
 
 ## Problem statement
@@ -134,6 +141,9 @@ Promotions · Chat · Map · Reviews · Skin Profile.
 ## Current limitations
 
 - Mock / local data only — no backend, server, or real authentication.
+- All clinics, doctors, treatments, and reviews are fictional Cambodia-localized
+  demo content (e.g. JongSart Skin Clinic, Sovanna Aesthetic Clinic; Dr. Sok
+  Vicheka, Dr. Lim Rachana) — not real businesses or people.
 - Detail screens (treatment/clinic/doctor) use representative sample content.
 - The map is a stylized mock, not live map tiles.
 - "Clinic Staff" is a demo admin view on the same device (no separate login).

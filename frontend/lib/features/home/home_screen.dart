@@ -303,7 +303,7 @@ class HomeScreen extends StatelessWidget {
                                                         TextOverflow.ellipsis),
                                                 const SizedBox(height: 2),
                                                 const Text(
-                                                    'Luminaire Aesthetics',
+                                                    'JongSart Skin Clinic',
                                                     style: TextStyle(
                                                         color:
                                                             AppColors.textGrey,
@@ -361,11 +361,11 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   children: [
-                    _buildDoctorCard(context, 'doctor_sarah', 'Dr. Sarah Chen',
-                        'MEDICAL LASER', 4.9, 'SC', AppColors.primaryMint),
+                    _buildDoctorCard(context, 'doctor_sarah', 'Dr. Lim Rachana',
+                        'LASER & PIGMENTATION', 4.8, 'SC', AppColors.primaryMint),
                     const SizedBox(width: 12),
-                    _buildDoctorCard(context, 'doctor_frances', 'Dr. Frances',
-                        'DERMATOLOGIST', 4.9, 'DF', const Color(0xFF2563EB)),
+                    _buildDoctorCard(context, 'doctor_frances', 'Dr. Sok Vicheka',
+                        'DERMATOLOGY', 4.9, 'DF', const Color(0xFF2563EB)),
                   ],
                 ),
               ),
@@ -469,7 +469,7 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            const Text('Luminaire Aesthetics',
+            const Text('JongSart Skin Clinic',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -477,7 +477,7 @@ class HomeScreen extends StatelessWidget {
                     fontSize: 20,
                     fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
-            const Text('Elite Laser & Anti-Aging Specialists',
+            const Text('Dermatology consultation & clinical facials',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.white, fontSize: 12)),

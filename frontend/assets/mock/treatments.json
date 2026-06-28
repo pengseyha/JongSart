@@ -1,15 +1,15 @@
 [
   {
     "id": "t1",
-    "name": "Hydra-Laser",
-    "category": "Laser",
+    "name": "Hydra Facial Care",
+    "category": "Facial",
     "duration": 45,
-    "price": 120.00,
-    "description": "Multi-step rejuvenation combining precision laser with hyaluronic acid.",
+    "price": 45.00,
+    "description": "A hydrating facial care option designed for customers with dry or combination skin. Clinic staff will check the skin condition first and recommend a suitable care option.",
     "beforeAfter": ["https://picsum.photos/id/15/400/300", "https://picsum.photos/id/16/400/300"],
     "faqs": [
-      {"q": "Is it painful?", "a": "Slight tingling. Numbing applied."},
-      {"q": "Sessions needed?", "a": "3-6 sessions, 4 weeks apart."}
+      {"q": "Is it painful?", "a": "It is a gentle facial. Clinic staff will guide you during the session."},
+      {"q": "How many sessions?", "a": "Clinic staff will recommend a suitable care plan after consultation."}
     ]
   }
 ]

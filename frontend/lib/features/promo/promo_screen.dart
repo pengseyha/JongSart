@@ -15,7 +15,7 @@ class PromoScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
         children: [
           const Text(
-            'Curated Offers',
+            'Offers',
             style: TextStyle(
               color: AppColors.textDark,
               fontSize: 22,
@@ -24,7 +24,7 @@ class PromoScreen extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           const Text(
-            'Premium clinical treatments at special rates.',
+            'Special offers for consultations and facial care. Clinic staff will confirm the available time before the visit.',
             style: TextStyle(color: AppColors.textGrey, fontSize: 13),
           ),
           const SizedBox(height: 16),

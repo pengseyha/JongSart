@@ -14,7 +14,7 @@ class ReviewsScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
         children: [
           const Text(
-            'Patient Experiences',
+            'Customer Reviews',
             style: TextStyle(
               color: AppColors.textDark,
               fontSize: 24,
@@ -23,7 +23,7 @@ class ReviewsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           const Text(
-            'Transparent feedback from our clinical community.',
+            'Feedback from customers who booked through JongSart.',
             style: TextStyle(color: AppColors.textGrey, fontSize: 13),
           ),
           const SizedBox(height: 18),

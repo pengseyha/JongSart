@@ -35,8 +35,8 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
         : state.treatmentById(widget.treatmentId!);
     final treatment = selectedTreatment ??
         (state.treatments.isNotEmpty ? state.treatments.first : null);
-    final treatmentName = treatment?.title ?? 'Hydra-Laser Revive';
-    final category = treatment?.category ?? 'Advanced Therapy';
+    final treatmentName = treatment?.title ?? 'Hydra Facial Care';
+    final category = treatment?.category ?? 'Facial Care';
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
@@ -91,7 +91,7 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Recommended consultation. Please consult with clinic staff before treatment.',
+                    'Information in this app is for booking and consultation support only. Please consult clinic staff or a qualified doctor before treatment.',
                     style: TextStyle(
                         color: AppColors.textGrey, fontSize: 11, height: 1.4),
                   ),
@@ -120,7 +120,7 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
           const _JourneyStep('2', 'Preparation',
               'Double cleansing and numbing gel application.'),
           const _JourneyStep('3', 'Treatment',
-              '45-minute active laser therapy and serum infusion.'),
+              'Care session performed by trained clinic staff.'),
           const _JourneyStep(
               '4', 'Recovery', 'Cooling mask and SPF application.'),
           const SizedBox(height: 22),
@@ -141,8 +141,8 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: const [
-                _SimilarTreatment(title: 'Radiance Peel', price: '\$120'),
-                _SimilarTreatment(title: 'Oxygen Boost', price: '\$180'),
+                _SimilarTreatment(title: 'Brightening Facial Care', price: '\$40'),
+                _SimilarTreatment(title: 'Deep Cleansing Facial', price: '\$35'),
               ],
             ),
           ),
@@ -204,9 +204,9 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
 
   Widget _summaryCard(BuildContext context, Treatment? treatment) {
     final state = context.watch<AppState>();
-    final title = treatment?.title ?? 'Hydra-Laser Revive';
-    final category = treatment?.category ?? 'Advanced Therapy';
-    final price = treatment?.price ?? '\$450.00';
+    final title = treatment?.title ?? 'Hydra Facial Care';
+    final category = treatment?.category ?? 'Facial Care';
+    final price = treatment?.price ?? '\$45.00';
     final treatmentId = treatment?.id;
     final isFavorite =
         treatmentId == null ? _isFavorite : state.isFavorite(treatmentId);
@@ -239,7 +239,7 @@ class _TreatmentDetailScreenState extends State<TreatmentDetailScreen> {
                 fontSize: 20, fontWeight: FontWeight.w800, height: 1.05),
           ),
           const SizedBox(height: 6),
-          const Text('Radiance Clinic, Central',
+          const Text('JongSart Skin Clinic, BKK1, Phnom Penh',
               style: TextStyle(color: AppColors.textGrey, fontSize: 11)),
           const Divider(height: 22),
           Row(

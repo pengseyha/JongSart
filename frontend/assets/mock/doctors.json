@@ -1,13 +1,12 @@
 [
   {
     "id": "d1",
-    "name": "Dr. Frances",
-    "specialty": "Regenerative Dermatology",
+    "name": "Dr. Sok Vicheka",
+    "specialty": "Dermatology Consultation",
     "experience": 12,
     "rating": 4.9,
-    "patients": 847,
-    "clinic": "Advanced Clinic",
-    "imageUrl": "https://randomuser.me/api/portraits/women/68.jpg",
-    "about": "World-renowned specialist in regenerative dermatology."
+    "patients": 840,
+    "clinic": "JongSart Skin Clinic",
+    "about": "Provides skin health consultation and gentle facial care. Clinic staff will confirm suitability before any treatment."
   }
 ]

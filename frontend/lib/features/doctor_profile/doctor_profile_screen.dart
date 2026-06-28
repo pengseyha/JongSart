@@ -41,11 +41,11 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     final doctor = state.doctorById(widget.doctorId ?? '') ??
         (state.doctors.isNotEmpty ? state.doctors.first : null);
     final doctorId = doctor?.id ?? 'doctor_frances';
-    final doctorName = doctor?.name ?? 'Dr. Frances';
-    final specialty = doctor?.specialty ?? 'Dermatologist';
-    final clinicName = doctor?.clinic ?? 'JongSart Clinic';
+    final doctorName = doctor?.name ?? 'Dr. Sok Vicheka';
+    final specialty = doctor?.specialty ?? 'Dermatology Consultation';
+    final clinicName = doctor?.clinic ?? 'JongSart Skin Clinic';
     final about = doctor?.about ??
-        'Specialist in clinical skincare and gentle facial treatments.';
+        'Provides skin health consultation and gentle facial care. Clinic staff will confirm suitability before any treatment.';
     final experience = doctor?.experience ?? 12;
     final rating = doctor?.rating.toStringAsFixed(1) ?? '4.9';
     final patients = doctor?.patients ?? 847;
@@ -409,18 +409,18 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 child: Column(
                   children: [
                     _buildReviewCard(
-                        'SM',
-                        'Sarah M.',
+                        'SR',
+                        'Sreyneang',
                         '2 days ago',
-                        'Dr. Frances is amazing! My skin has never looked better. Highly professional.',
+                        'The staff were friendly and explained everything clearly. Booking through the app was easy.',
                         5,
                         Colors.blue.shade100),
                     const SizedBox(height: 12),
                     _buildReviewCard(
-                        'JL',
-                        'James L.',
+                        'DR',
+                        'Dara',
                         '1 week ago',
-                        'The clinic is beautiful and the treatment was very detailed. Very satisfied.',
+                        'Clean clinic and the consultation was helpful. I felt comfortable during the visit.',
                         4,
                         Colors.teal.shade200),
                   ],
@@ -458,7 +458,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.5)),
                   SizedBox(height: 2),
-                  Text('\$120.00',
+                  Text('\$25.00',
                       style: TextStyle(
                           color: AppColors.primaryMint,
                           fontSize: 20,

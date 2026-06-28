@@ -822,10 +822,10 @@ Widget couponCard() {
         const Row(
           children: [
             Expanded(
-              child: Text('\$20 OFF',
+              child: Text('\$5 OFF',
                   style: TextStyle(fontWeight: FontWeight.w800)),
             ),
-            Text('EXPIRES OCT 31',
+            Text('EXPIRES DEC 31',
                 style: TextStyle(
                     color: Color(0xFFD4465D),
                     fontSize: 10,
@@ -833,7 +833,7 @@ Widget couponCard() {
           ],
         ),
         const SizedBox(height: 4),
-        const Text('First-time Consultation',
+        const Text('First Visit Consultation Discount',
             style: TextStyle(color: AppColors.textGrey, fontSize: 12)),
         const SizedBox(height: 14),
         Container(
@@ -845,7 +845,7 @@ Widget couponCard() {
           child: const Row(
             children: [
               Expanded(
-                child: Text('DERMA-NEW-20',
+                child: Text('JONGSART-NEW',
                     style:
                         TextStyle(fontSize: 11, fontWeight: FontWeight.w800)),
               ),
@@ -1007,7 +1007,7 @@ Widget ratingSummary(AppState state) {
                 (_) => const Icon(Icons.star,
                     color: Color(0xFF3FCDB5), size: 18))),
         const Text(
-          '1,240 Reviews',
+          'Based on recent customer visits',
           style: TextStyle(color: AppColors.textGrey, fontSize: 10),
         ),
         const SizedBox(height: 16),
