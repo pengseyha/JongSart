@@ -14,7 +14,38 @@ class ClinicStaffScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: flowAppBar(context, 'Clinic Staff (Demo)'),
+      appBar: AppBar(
+        backgroundColor: AppColors.backgroundWhite,
+        elevation: 0,
+        centerTitle: false,
+        title: const Text(
+          'Clinic Staff Dashboard',
+          style: TextStyle(
+            color: Color(0xFF007D68),
+            fontSize: 14,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        actions: [
+          if (state.isStaff)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: TextButton.icon(
+                onPressed: () => _confirmStaffLogout(context),
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color(0xFFD4465D),
+                ),
+                icon: const Icon(Icons.logout, size: 18),
+                label: const Text('Log out',
+                    style: TextStyle(fontWeight: FontWeight.w700)),
+              ),
+            ),
+        ],
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(height: 1, color: AppColors.borderGrey),
+        ),
+      ),
       body: state.bookings.isEmpty
           ? Padding(
               padding: const EdgeInsets.all(16),
@@ -49,6 +80,18 @@ class ClinicStaffScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    _statCard('Pending', pending.length, const Color(0xFFB7791F)),
+                    const SizedBox(width: 10),
+                    _statCard('Confirmed', confirmed.length,
+                        AppColors.primaryMint),
+                    const SizedBox(width: 10),
+                    _statCard('Completed', completed.length,
+                        const Color(0xFF15803D)),
+                  ],
+                ),
                 const SizedBox(height: 16),
                 _staffSection(context, 'Pending Requests', pending),
                 _staffSection(context, 'Rescheduled', rescheduled),
@@ -59,6 +102,71 @@ class ClinicStaffScreen extends StatelessWidget {
             ),
     );
   }
+}
+
+Widget _statCard(String label, int count, Color color) {
+  return Expanded(
+    child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.borderGrey),
+      ),
+      child: Column(
+        children: [
+          Text(
+            '$count',
+            style: TextStyle(
+              color: color,
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: AppColors.textGrey,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Future<void> _confirmStaffLogout(BuildContext context) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Log out?'),
+      content: const Text('You will return to the role selection screen.'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(dialogContext).pop(false),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF0F766E),
+            foregroundColor: Colors.white,
+          ),
+          onPressed: () => Navigator.of(dialogContext).pop(true),
+          child: const Text('Log out'),
+        ),
+      ],
+    ),
+  );
+
+  if (confirmed != true || !context.mounted) return;
+  await context.read<AppState>().logout();
+  if (!context.mounted) return;
+  context.go('/role-selection');
 }
 
 Widget _staffSection(
@@ -135,6 +243,8 @@ List<Widget> _staffActions(BuildContext context, Booking booking) {
       actions.add(_staffChip('Reschedule', Icons.schedule, () {
         _showRescheduleDialog(context, booking);
       }));
+      actions.add(_staffChip('Chat', Icons.chat_bubble_outline,
+          () => context.push('/chat')));
       actions.add(_staffChip('Cancel', Icons.close, () {
         state.staffCancel(booking.id);
         notify('Booking cancelled.');
@@ -148,6 +258,8 @@ List<Widget> _staffActions(BuildContext context, Booking booking) {
       actions.add(_staffChip('Reschedule', Icons.schedule, () {
         _showRescheduleDialog(context, booking);
       }));
+      actions.add(_staffChip('Chat', Icons.chat_bubble_outline,
+          () => context.push('/chat')));
       actions.add(_staffChip('Cancel', Icons.close, () {
         state.staffCancel(booking.id);
         notify('Booking cancelled.');

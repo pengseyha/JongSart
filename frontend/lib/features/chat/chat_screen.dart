@@ -17,13 +17,34 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _send() {
-    context.read<AppState>().sendChatMessage(_messageController.text);
+    final state = context.read<AppState>();
+    final text = _messageController.text;
+    if (state.isStaff) {
+      state.sendClinicReply(text);
+    } else {
+      state.sendChatMessage(text);
+    }
     _messageController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    final messages = context.watch<AppState>().chatMessages;
+    final state = context.watch<AppState>();
+    final messages = state.chatMessages;
+    final isStaff = state.isStaff;
+    // `isMe` is stored from the customer's perspective. When staff opens the
+    // same shared thread, flip the sides so the clinic's replies are "mine".
+    final quickReplies = isStaff
+        ? const [
+            'Your booking is confirmed.',
+            'Please arrive 10 minutes early.',
+            'Could you share your preferred time?',
+          ]
+        : const [
+            'What is included?',
+            'Do I need a referral?',
+            'Book a slot',
+          ];
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
@@ -35,30 +56,35 @@ class _ChatScreenState extends State<ChatScreen> {
           icon: const Icon(Icons.arrow_back, color: Color(0xFF007D68)),
         ),
         titleSpacing: 0,
-        title: const Row(
+        title: Row(
           children: [
             CircleAvatar(
               radius: 18,
-              backgroundColor: Color(0xFFB5F0E6),
+              backgroundColor: const Color(0xFFB5F0E6),
+              child: Icon(
+                isStaff ? Icons.person_outline : Icons.spa,
+                size: 18,
+                color: const Color(0xFF007D68),
+              ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'JongSart Reception',
+                    isStaff ? 'Customer Chat' : 'JongSart Reception',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.textDark,
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
                   Text(
-                    'ONLINE',
-                    style: TextStyle(
+                    isStaff ? 'REPLYING AS STAFF' : 'ONLINE',
+                    style: const TextStyle(
                       color: Color(0xFF007D68),
                       fontSize: 9,
                       fontWeight: FontWeight.w800,
@@ -111,17 +137,15 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 const SizedBox(height: 18),
-                ...messages.map((message) =>
-                    ChatBubble(text: message.text, isMe: message.isMe)),
+                ...messages.map((message) => ChatBubble(
+                      text: message.text,
+                      isMe: isStaff ? !message.isMe : message.isMe,
+                    )),
                 const SizedBox(height: 4),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: [
-                      'What is included?',
-                      'Do I need a referral?',
-                      'Book a slot'
-                    ]
+                    children: quickReplies
                         .map(
                           (text) => Container(
                             margin: const EdgeInsets.only(right: 8),

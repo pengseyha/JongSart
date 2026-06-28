@@ -79,20 +79,18 @@ Widget _bookingCard(BuildContext context, Booking booking) {
           const Divider(height: 20),
           Row(
             children: [
-              if (booking.status == BookingStatus.pending)
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _confirmCancel(context, booking.id),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFFD4465D),
-                      side: const BorderSide(color: Color(0xFFE7B6C0)),
-                    ),
-                    icon: const Icon(Icons.close, size: 16),
-                    label: const Text('Cancel'),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => context.push('/chat'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primaryMint,
+                    side: const BorderSide(color: AppColors.borderGrey),
                   ),
+                  icon: const Icon(Icons.chat_bubble_outline, size: 16),
+                  label: const Text('Chat Clinic'),
                 ),
-              if (booking.status == BookingStatus.pending)
-                const SizedBox(width: 10),
+              ),
+              const SizedBox(width: 10),
               Expanded(
                 child: ElevatedButton(
                   onPressed: () =>
@@ -109,6 +107,21 @@ Widget _bookingCard(BuildContext context, Booking booking) {
               ),
             ],
           ),
+          if (booking.status == BookingStatus.pending) ...[
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => _confirmCancel(context, booking.id),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: const Color(0xFFD4465D),
+                  side: const BorderSide(color: Color(0xFFE7B6C0)),
+                ),
+                icon: const Icon(Icons.close, size: 16),
+                label: const Text('Cancel Request'),
+              ),
+            ),
+          ],
         ],
       ),
     ),

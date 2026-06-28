@@ -34,8 +34,15 @@ void main() {
   testWidgets('renders the home screen', (WidgetTester tester) async {
     await pumpApp(tester);
 
-    expect(find.text('JongSart'), findsOneWidget);
+    // App now boots on the splash screen; navigate to the customer home.
+    AppRouter.router.go('/');
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
     expect(find.text('Search clinics, treatments, doctors...'), findsOneWidget);
+
+    // Drain the splash branding timer so no timers stay pending.
+    await tester.pump(const Duration(seconds: 2));
   });
 
   testWidgets('main mobile screens render without layout errors',
@@ -43,6 +50,10 @@ void main() {
     await pumpApp(tester);
 
     final routes = [
+      '/role-selection',
+      '/login',
+      '/signup',
+      '/staff-login',
       '/',
       '/search',
       '/map',
@@ -66,6 +77,9 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
       expect(tester.takeException(), isNull, reason: route);
     }
+
+    // Drain the splash branding timer so no timers stay pending.
+    await tester.pump(const Duration(seconds: 2));
   });
 
   test('a submitted booking request starts as pending', () {
@@ -91,5 +105,94 @@ void main() {
 
     state.staffComplete(booking.id);
     expect(state.bookingById(booking.id)?.status, BookingStatus.completed);
+  });
+
+  test('customer can sign up, log out, and log back in', () async {
+    final state = AppState();
+
+    final signupError = await state.signUpCustomer(
+      fullName: 'Dara Sok',
+      phone: '012345678',
+      email: 'dara@example.com',
+      password: 'secret123',
+    );
+
+    expect(signupError, isNull);
+    expect(state.isLoggedIn, isTrue);
+    expect(state.isCustomer, isTrue);
+    expect(state.userName, 'Dara Sok');
+
+    await state.logout();
+    expect(state.isLoggedIn, isFalse);
+    expect(state.userRole, isNull);
+
+    // Wrong password is rejected.
+    final wrong = await state.loginCustomer(
+      identifier: '012345678',
+      password: 'nope',
+    );
+    expect(wrong, isNotNull);
+    expect(state.isLoggedIn, isFalse);
+
+    // Login by email works.
+    final loginError = await state.loginCustomer(
+      identifier: 'dara@example.com',
+      password: 'secret123',
+    );
+    expect(loginError, isNull);
+    expect(state.isCustomer, isTrue);
+  });
+
+  test('duplicate customer phone is rejected on sign up', () async {
+    final state = AppState();
+
+    final first = await state.signUpCustomer(
+      fullName: 'First User',
+      phone: '011111111',
+      password: 'secret123',
+    );
+    expect(first, isNull);
+
+    final duplicate = await state.signUpCustomer(
+      fullName: 'Second User',
+      phone: '011111111',
+      password: 'another123',
+    );
+    expect(duplicate, isNotNull);
+  });
+
+  test('customer and clinic share one chat thread', () async {
+    final state = AppState();
+    final initialCount = state.chatMessages.length;
+
+    // Customer message adds the message plus an auto acknowledgement.
+    state.sendChatMessage('Is the facial okay for sensitive skin?');
+    expect(state.chatMessages.length, initialCount + 2);
+    expect(state.chatMessages.last.isMe, isFalse); // clinic auto-reply
+
+    // Staff reply lands in the same thread as a clinic message.
+    state.sendClinicReply('Yes, we start with a gentle consultation.');
+    expect(state.chatMessages.last.isMe, isFalse);
+    expect(state.chatMessages.last.text,
+        'Yes, we start with a gentle consultation.');
+  });
+
+  test('staff login only accepts the mock staff account', () async {
+    final state = AppState();
+
+    final bad = await state.loginStaff(
+      username: 'staff@jongsart.com',
+      password: 'wrong',
+    );
+    expect(bad, isNotNull);
+    expect(state.isLoggedIn, isFalse);
+
+    final ok = await state.loginStaff(
+      username: 'staff@jongsart.com',
+      password: 'staff123',
+    );
+    expect(ok, isNull);
+    expect(state.isStaff, isTrue);
+    expect(state.isCustomer, isFalse);
   });
 }

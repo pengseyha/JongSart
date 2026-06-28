@@ -25,15 +25,30 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Expanded(
-                      child: Text(
-                        'JongSart',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryMint),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            state.isLoggedIn && state.userName.isNotEmpty
+                                ? 'Hi, ${state.userName} 👋'
+                                : 'Hi there 👋',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryMint),
+                          ),
+                          const SizedBox(height: 2),
+                          const Text(
+                            'Welcome back to JongSart',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 12, color: AppColors.textGrey),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -63,10 +78,16 @@ class HomeScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 4),
                         IconButton(
                           onPressed: () => context.push('/promo'),
                           icon: const Icon(Icons.notifications_none,
+                              color: AppColors.textDark),
+                        ),
+                        IconButton(
+                          tooltip: 'Log out',
+                          onPressed: () => _confirmLogout(context),
+                          icon: const Icon(Icons.logout,
                               color: AppColors.textDark),
                         ),
                       ],
@@ -358,6 +379,35 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _confirmLogout(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Log out?'),
+        content: const Text('You will need to sign in again to continue.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF0F766E),
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Log out'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !context.mounted) return;
+    await context.read<AppState>().logout();
+    if (!context.mounted) return;
+    context.go('/role-selection');
+  }
+
   Widget _buildClinicBanner(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(16.0),
@@ -543,7 +593,8 @@ class HomeScreen extends StatelessWidget {
       (Icons.add_circle_outline, 'Book', '/booking'),
       (Icons.event_note_outlined, 'My Bookings', '/my-bookings'),
       (Icons.chat_bubble_outline, 'Chat', '/chat'),
-      (Icons.badge_outlined, 'Staff Demo', '/clinic-staff'),
+      (Icons.local_offer_outlined, 'Promotions', '/promo'),
+      (Icons.face_retouching_natural, 'Skin Profile', '/skin-profile'),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

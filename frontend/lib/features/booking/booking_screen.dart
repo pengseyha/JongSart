@@ -52,6 +52,12 @@ class _BookingScreenState extends State<BookingScreen> {
     super.initState();
     final state = context.read<AppState>();
     _concern = state.selectedConcern;
+    // Pre-fill contact details for the signed-in customer so the booking is
+    // automatically tied to their account.
+    if (state.isLoggedIn && state.isCustomer) {
+      _nameController.text = state.userName;
+      _phoneController.text = state.phone;
+    }
     _clinicId = widget.clinicId ??
         (state.clinics.isNotEmpty ? state.clinics.first.id : null);
     _treatmentId = widget.treatmentId ??

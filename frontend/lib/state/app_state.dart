@@ -17,6 +17,18 @@ class AppState extends ChangeNotifier {
   List<Treatment> _treatments = [];
   bool _isLoading = true;
 
+  // --- Auth state (local only, no backend) ------------------------------
+  bool _authLoaded = false;
+  bool _isLoggedIn = false;
+  String? _userRole; // 'customer' or 'staff'
+  String _userName = '';
+  String _phone = '';
+  String? _email;
+
+  // Mock staff account (no public staff registration).
+  static const String _staffUsername = 'staff@jongsart.com';
+  static const String _staffPassword = 'staff123';
+
   Set<String> _favoriteIds = {'clinic_lumina', 'treatment_hydra'};
   Set<String> _claimedOfferIds = {};
   List<Booking> _bookings = [];
@@ -199,6 +211,16 @@ class AppState extends ChangeNotifier {
   // --- Getters ----------------------------------------------------------
   List<Treatment> get treatments => _treatments;
   bool get isLoading => _isLoading;
+
+  // --- Auth getters -----------------------------------------------------
+  bool get authLoaded => _authLoaded;
+  bool get isLoggedIn => _isLoggedIn;
+  String? get userRole => _userRole;
+  bool get isCustomer => _userRole == 'customer';
+  bool get isStaff => _userRole == 'staff';
+  String get userName => _userName;
+  String get phone => _phone;
+  String? get email => _email;
   List<String> get favoriteIds => _favoriteIds.toList();
   List<Clinic> get clinics => List.unmodifiable(_clinics);
   List<Doctor> get doctors => List.unmodifiable(_doctors);
@@ -229,6 +251,17 @@ class AppState extends ChangeNotifier {
 
     _treatments = await _repository.loadTreatments();
 
+    // Restore persisted auth session (no backend).
+    final savedAuth = await _store.loadAuth();
+    if (savedAuth != null && savedAuth['isLoggedIn'] == true) {
+      _isLoggedIn = true;
+      _userRole = savedAuth['userRole'] as String?;
+      _userName = (savedAuth['userName'] as String?) ?? '';
+      _phone = (savedAuth['phone'] as String?) ?? '';
+      _email = savedAuth['email'] as String?;
+    }
+    _authLoaded = true;
+
     // Restore persisted local state (no backend).
     final savedFavorites = await _store.loadFavorites();
     if (savedFavorites.isNotEmpty) _favoriteIds = savedFavorites;
@@ -250,6 +283,131 @@ class AppState extends ChangeNotifier {
     }
 
     _isLoading = false;
+    notifyListeners();
+  }
+
+  // --- Auth -------------------------------------------------------------
+  void _applySession({
+    required String role,
+    required String name,
+    required String phone,
+    String? email,
+  }) {
+    _isLoggedIn = true;
+    _userRole = role;
+    _userName = name;
+    _phone = phone;
+    _email = (email != null && email.trim().isEmpty) ? null : email?.trim();
+  }
+
+  Future<void> _persistSession() async {
+    await _store.saveAuth({
+      'isLoggedIn': _isLoggedIn,
+      'userRole': _userRole,
+      'userName': _userName,
+      'phone': _phone,
+      'email': _email,
+    });
+  }
+
+  /// Registers a new customer locally and signs them in.
+  /// Returns null on success, or an error message on failure.
+  Future<String?> signUpCustomer({
+    required String fullName,
+    required String phone,
+    String? email,
+    required String password,
+  }) async {
+    final name = fullName.trim();
+    final phoneNumber = phone.trim();
+    final mail = email?.trim() ?? '';
+
+    final accounts = await _store.loadAccounts();
+    final duplicate = accounts.any((account) =>
+        account['phone'] == phoneNumber ||
+        (mail.isNotEmpty && account['email'] == mail));
+    if (duplicate) {
+      return 'An account with this phone or email already exists.';
+    }
+
+    accounts.add({
+      'name': name,
+      'phone': phoneNumber,
+      'email': mail,
+      'password': password,
+    });
+    await _store.saveAccounts(accounts);
+
+    _applySession(role: 'customer', name: name, phone: phoneNumber, email: mail);
+    await _persistSession();
+    notifyListeners();
+    return null;
+  }
+
+  /// Logs in a previously registered customer by phone or email.
+  /// Returns null on success, or an error message on failure.
+  Future<String?> loginCustomer({
+    required String identifier,
+    required String password,
+  }) async {
+    final id = identifier.trim().toLowerCase();
+    final accounts = await _store.loadAccounts();
+
+    Map<String, String>? match;
+    for (final account in accounts) {
+      final accountPhone = (account['phone'] ?? '').toLowerCase();
+      final accountEmail = (account['email'] ?? '').toLowerCase();
+      if ((accountPhone == id || (accountEmail.isNotEmpty && accountEmail == id)) &&
+          account['password'] == password) {
+        match = account;
+        break;
+      }
+    }
+
+    if (match == null) {
+      return 'Invalid phone/email or password.';
+    }
+
+    _applySession(
+      role: 'customer',
+      name: match['name'] ?? '',
+      phone: match['phone'] ?? '',
+      email: match['email'],
+    );
+    await _persistSession();
+    notifyListeners();
+    return null;
+  }
+
+  /// Logs in clinic staff against the mock staff account.
+  /// Returns null on success, or an error message on failure.
+  Future<String?> loginStaff({
+    required String username,
+    required String password,
+  }) async {
+    final user = username.trim().toLowerCase();
+    if (user == _staffUsername && password == _staffPassword) {
+      _applySession(
+        role: 'staff',
+        name: 'Clinic Staff',
+        phone: '',
+        email: _staffUsername,
+      );
+      await _persistSession();
+      notifyListeners();
+      return null;
+    }
+    return 'Invalid staff account. Please check your credentials.';
+  }
+
+  /// Clears the current session and persisted auth state.
+  Future<void> logout() async {
+    _isLoggedIn = false;
+    _userRole = null;
+    _userName = '';
+    _phone = '';
+    _email = null;
+    await _store.clearAuth();
     notifyListeners();
   }
 
@@ -370,6 +528,23 @@ class AppState extends ChangeNotifier {
     _chatMessages.add(ChatMessage(
       id: 'm${DateTime.now().millisecondsSinceEpoch + 1}',
       text: _autoReplyFor(trimmed),
+      isMe: false,
+      sentAt: DateTime.now(),
+    ));
+    _store.saveChatMessages(_chatMessages);
+    notifyListeners();
+  }
+
+  /// Clinic staff reply in the shared clinic thread. Stored as a non-customer
+  /// message (isMe == false) so it shows on the clinic side for customers and
+  /// on the "mine" side when viewed by staff. No auto-reply is generated.
+  void sendClinicReply(String text) {
+    final trimmed = text.trim();
+    if (trimmed.isEmpty) return;
+
+    _chatMessages.add(ChatMessage(
+      id: 'm${DateTime.now().millisecondsSinceEpoch}',
+      text: trimmed,
       isMe: false,
       sentAt: DateTime.now(),
     ));

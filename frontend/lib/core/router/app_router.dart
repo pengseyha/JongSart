@@ -1,4 +1,9 @@
 import 'package:go_router/go_router.dart';
+import '../../features/auth/login_screen.dart';
+import '../../features/auth/role_selection_screen.dart';
+import '../../features/auth/signup_screen.dart';
+import '../../features/auth/splash_screen.dart';
+import '../../features/auth/staff_login_screen.dart';
 import '../../features/booking/booking_detail_screen.dart';
 import '../../features/booking/booking_screen.dart';
 import '../../features/booking/my_bookings_screen.dart';
@@ -17,8 +22,28 @@ import '../../features/treatment_detail/treatment_detail_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
-    initialLocation: '/',
+    initialLocation: '/splash',
     routes: [
+      GoRoute(
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: '/role-selection',
+        builder: (context, state) => const RoleSelectionScreen(),
+      ),
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/signup',
+        builder: (context, state) => const SignUpScreen(),
+      ),
+      GoRoute(
+        path: '/staff-login',
+        builder: (context, state) => const StaffLoginScreen(),
+      ),
       GoRoute(
         path: '/',
         builder: (context, state) => const HomeScreen(),

@@ -14,6 +14,8 @@ class LocalStorageService {
   static const _kSkinConcern = 'jongsart_skin_concern';
   static const _kChatMessages = 'jongsart_chat_messages';
   static const _kReviews = 'jongsart_reviews';
+  static const _kAuth = 'jongsart_auth';
+  static const _kAccounts = 'jongsart_accounts';
 
   SharedPreferences? _prefs;
 
@@ -94,6 +96,49 @@ class LocalStorageService {
           .toList();
     } catch (_) {
       return null;
+    }
+  }
+
+  // --- Auth session -----------------------------------------------------
+  Future<void> saveAuth(Map<String, dynamic> auth) async {
+    final prefs = await _instance;
+    await prefs.setString(_kAuth, jsonEncode(auth));
+  }
+
+  Future<Map<String, dynamic>?> loadAuth() async {
+    final prefs = await _instance;
+    final raw = prefs.getString(_kAuth);
+    if (raw == null || raw.isEmpty) return null;
+    try {
+      return jsonDecode(raw) as Map<String, dynamic>;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> clearAuth() async {
+    final prefs = await _instance;
+    await prefs.remove(_kAuth);
+  }
+
+  // --- Registered customer accounts (local only, demo) ------------------
+  Future<void> saveAccounts(List<Map<String, String>> accounts) async {
+    final prefs = await _instance;
+    await prefs.setString(_kAccounts, jsonEncode(accounts));
+  }
+
+  Future<List<Map<String, String>>> loadAccounts() async {
+    final prefs = await _instance;
+    final raw = prefs.getString(_kAccounts);
+    if (raw == null || raw.isEmpty) return [];
+    try {
+      final List<dynamic> data = jsonDecode(raw);
+      return data
+          .map((item) => (item as Map<String, dynamic>)
+              .map((key, value) => MapEntry(key, value?.toString() ?? '')))
+          .toList();
+    } catch (_) {
+      return [];
     }
   }
 
