@@ -1,86 +1,137 @@
 # JongSart Backend
 
-This folder contains the starter structure for the future JongSart API.
-JongSart is a skincare clinic booking system for Cambodia, and the backend will
-eventually power customer accounts, clinic staff workflows, appointment
-bookings, chat, reviews, and promotions.
+This is a simple NestJS mock API for the JongSart MVP demo. It uses in-memory
+data only, so data resets whenever the server restarts.
 
-This is only a clean starter scaffold. No production authentication, database
-connection, or Flutter integration has been implemented yet.
+There is no PostgreSQL, Prisma, JWT, or Flutter integration yet.
 
-## Planned Tech Stack
-
-- NestJS
-- PostgreSQL
-- JWT authentication
-- TypeScript
-
-## Planned Modules
-
-- `auth` - customer signup/login, staff login, JWT auth, roles
-- `users` - customer and staff profiles
-- `clinics` - clinic catalog and clinic details
-- `doctors` - doctor profiles and clinic assignment
-- `treatments` - treatment catalog, pricing, duration, categories
-- `bookings` - appointment requests and staff status updates
-- `chats` - customer/staff messages linked to bookings
-- `reviews` - customer reviews after completed visits
-- `promotions` - offers, bundles, and active promotions
-
-## Planned API Endpoints
-
-```text
-POST  /auth/register
-POST  /auth/login
-GET   /clinics
-GET   /doctors
-GET   /treatments
-POST  /bookings
-GET   /bookings/my
-GET   /staff/bookings
-PATCH /bookings/:id/status
-GET   /chats/:bookingId
-POST  /chats/:bookingId/messages
-POST  /reviews
-GET   /promotions
-```
-
-The starter app uses a global `/api` prefix, so future routes will be exposed as
-`/api/...` unless that setting changes.
-
-## Install Later
+## Run
 
 ```bash
 cd backend
 npm install
-```
-
-## Run Later
-
-```bash
-cd backend
 npm run start:dev
 ```
 
-The API will listen on `PORT` from `.env` or default to `3000`.
+The API listens on `PORT` from the environment or defaults to `3000`.
 
-## Environment
-
-Copy `.env.example` to `.env` when implementation begins:
+## Build
 
 ```bash
-cp .env.example .env
+cd backend
+npm run build
 ```
 
-The current `.env.example` includes placeholders for future PostgreSQL and JWT
-configuration only.
+## Demo Staff Account
 
-## Not Implemented Yet
+```text
+email: staff@jongsart.com
+password: staff123
+```
 
-- Real controllers and services
-- Authentication logic
-- Role guards
-- PostgreSQL connection
-- Database entities or migrations
-- Flutter API integration
-- Tests
+## Endpoints
+
+```text
+GET   /health
+
+POST  /auth/register
+POST  /auth/login
+
+GET   /clinics
+GET   /doctors
+GET   /treatments
+GET   /promotions
+
+POST  /bookings
+GET   /bookings
+GET   /bookings/:id
+PATCH /bookings/:id/status
+
+GET   /chats
+POST  /chats/messages
+
+POST  /reviews
+```
+
+## Example curl Commands
+
+Health:
+
+```bash
+curl http://localhost:3000/health
+```
+
+Register a customer:
+
+```bash
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"fullName":"Dara Sok","phone":"012345678","email":"dara@example.com","password":"secret123"}'
+```
+
+Customer login:
+
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"identifier":"dara@example.com","password":"secret123"}'
+```
+
+Staff login:
+
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"identifier":"staff@jongsart.com","password":"staff123"}'
+```
+
+List clinics, doctors, treatments, and promotions:
+
+```bash
+curl http://localhost:3000/clinics
+curl http://localhost:3000/doctors
+curl http://localhost:3000/treatments
+curl http://localhost:3000/promotions
+```
+
+Create a booking request:
+
+```bash
+curl -X POST http://localhost:3000/bookings \
+  -H "Content-Type: application/json" \
+  -d '{"patientName":"Dara Sok","phone":"012345678","treatmentName":"Bio-Restorative HydraFacial","clinicName":"Lumina Skin Institute","doctorName":"Dr. Frances","date":"Mon 30","time":"09:00 AM","note":"Sensitive skin"}'
+```
+
+Update booking status:
+
+```bash
+curl -X PATCH http://localhost:3000/bookings/booking_demo_1/status \
+  -H "Content-Type: application/json" \
+  -d '{"status":"Confirmed"}'
+```
+
+Shared clinic chat:
+
+```bash
+curl http://localhost:3000/chats
+
+curl -X POST http://localhost:3000/chats/messages \
+  -H "Content-Type: application/json" \
+  -d '{"senderRole":"customer","senderName":"Dara Sok","message":"Hello, can you confirm my booking?"}'
+```
+
+Create a review:
+
+```bash
+curl -X POST http://localhost:3000/reviews \
+  -H "Content-Type: application/json" \
+  -d '{"customerName":"Dara Sok","treatmentName":"Bio-Restorative HydraFacial","rating":5,"comment":"Great consultation and friendly staff."}'
+```
+
+## Current Limitations
+
+- In-memory data only.
+- No production authentication or authorization.
+- No database, Prisma, or migrations.
+- Flutter frontend is not connected to this backend yet.
+- Chat is one shared clinic thread for the demo.
