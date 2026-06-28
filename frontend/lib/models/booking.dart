@@ -14,15 +14,15 @@ enum BookingStatus {
   String get label {
     switch (this) {
       case BookingStatus.pending:
-        return 'Pending Confirmation';
+        return 'Pending confirmation';
       case BookingStatus.confirmed:
-        return 'Confirmed';
+        return 'Confirme';
       case BookingStatus.rescheduled:
-        return 'Rescheduled';
+        return 'Reschedule';
       case BookingStatus.cancelled:
-        return 'Cancelled';
+        return 'Cancelle';
       case BookingStatus.completed:
-        return 'Completed';
+        return 'Complete';
     }
   }
 
