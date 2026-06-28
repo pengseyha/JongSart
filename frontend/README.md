@@ -130,13 +130,17 @@ Promotions · Chat · Map · Reviews · Skin Profile.
 
 ## Demo flow (for presentation)
 
-1. Open **Home** → tap a skin concern or **Book** quick action.
-2. Fill the **Book Consultation** form and submit → see the "request sent" message.
-3. Open **My Bookings** → the request is **Pending**.
-4. From Home quick actions open **Clinic Staff (Demo)** → **Confirm** the request.
-5. Back in **My Bookings / Booking Detail** → status is now **Confirmed**.
-6. In Clinic Staff, **Mark Completed** → then **Leave Review** from Booking Detail.
-7. Close and reopen the app → bookings, favorites, and promos are still there.
+1. On the splash screen tap **Get Started**, then log in as a **customer**
+   (sign up first, or use the demo account `pengseyha0000@gmail.com` / `12345678`).
+2. On **Home** → tap a skin concern or the **Book** quick action.
+3. Fill the **Book Consultation** form and submit → see the "request sent" message.
+4. Open **My Bookings** → the request is **Pending**, then **log out**.
+5. Log in again as **staff** (`staff@jongsart.com` / `staff123`) → the
+   **Clinic Staff Dashboard** shows the same pending request (shared local data).
+6. **Confirm** the request, then **Mark Completed**, and **log out**.
+7. Log back in as the customer → in **My Bookings / Booking Detail** the status is
+   now **Confirmed/Completed**, and you can **Leave Review** from Booking Detail.
+8. Close and reopen the app → bookings, favorites, and promos are still there.
 
 ## Current limitations
 
@@ -146,7 +150,8 @@ Promotions · Chat · Map · Reviews · Skin Profile.
   Vicheka, Dr. Lim Rachana) — not real businesses or people.
 - Detail screens (treatment/clinic/doctor) use representative sample content.
 - The map is a stylized mock, not live map tiles.
-- "Clinic Staff" is a demo admin view on the same device (no separate login).
+- "Clinic Staff" uses a single mock staff login (`staff@jongsart.com` / `staff123`)
+  and acts on the same local data as the customer on that device.
 
 ## Future improvements
 
