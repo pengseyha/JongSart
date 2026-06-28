@@ -15,7 +15,9 @@ export class ReviewsService {
         : Number.parseFloat(String(ratingValue));
 
     if (!Number.isFinite(rating)) {
-      throw new BadRequestException("rating is required and must be a number.");
+      throw new BadRequestException(
+        "rating is required and it must be a number !",
+      );
     }
 
     return this.mockData.createReview({

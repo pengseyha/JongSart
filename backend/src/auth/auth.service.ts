@@ -15,7 +15,7 @@ export class AuthService {
     const password = requireText(body, "password");
 
     if (password.length < 6) {
-      throw new BadRequestException("password must be at least 6 characters.");
+      throw new BadRequestException("password must be at least 6 character ");
     }
 
     const user = this.mockData.registerCustomer({
@@ -26,7 +26,7 @@ export class AuthService {
     });
 
     return {
-      message: "Customer registered successfully.",
+      message: "Customer registered successful.",
       token: "mock-token",
       userRole: "customer",
       userName: user.fullName,
@@ -42,7 +42,9 @@ export class AuthService {
       optionalText(body, "phone");
 
     if (identifier === undefined) {
-      throw new BadRequestException("identifier, email, or phone is required.");
+      throw new BadRequestException(
+        "identifier alert, email or phone is required.",
+      );
     }
 
     const password = requireText(body, "password");
