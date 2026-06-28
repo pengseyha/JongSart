@@ -100,113 +100,228 @@ export class MockDataService {
   private readonly clinics: Clinic[] = [
     {
       id: "clinic_lumina",
-      name: "Lumina Skin Institute",
-      specialty: "Laser dermatology and clinical facials",
-      address: "Russian Federation Blvd, Phnom Penh",
+      name: "JongSart Skin Clinic",
+      specialty: "Dermatology consultation and clinical facials",
+      address: "BKK1, Phnom Penh",
       distance: "0.9 km",
       rating: 4.9,
-      tags: ["Dermatology", "Laser", "Open"],
+      tags: ["Dermatology", "Facial", "Open"],
       isOpen: true,
     },
     {
       id: "clinic_emerald",
-      name: "Emerald Medical Spa",
-      specialty: "Hydration, anti-aging, and recovery care",
-      address: "BKK1, Phnom Penh",
+      name: "Sovanna Aesthetic Clinic",
+      specialty: "Facial care and skin health consultation",
+      address: "Toul Kork, Phnom Penh",
       distance: "2.7 km",
       rating: 4.8,
-      tags: ["Cosmetic", "Hydrafacial"],
+      tags: ["Acne Care", "Hydra Facial"],
       isOpen: true,
     },
     {
       id: "clinic_north_peak",
-      name: "North Peak Surgical",
-      specialty: "Surgical dermatology and scar support",
-      address: "Toul Kork, Phnom Penh",
+      name: "Mekong Dermatology Center",
+      specialty: "Pigmentation care and scar care consultation",
+      address: "Sen Sok, Phnom Penh",
       distance: "4.8 km",
       rating: 4.7,
-      tags: ["Surgical", "Scar Care"],
+      tags: ["Pigmentation", "Scar Care"],
       isOpen: false,
+    },
+    {
+      id: "clinic_tonle",
+      name: "Tonle Skin & Beauty Clinic",
+      specialty: "Facial treatments and brightening care",
+      address: "Street 271, Phnom Penh",
+      distance: "3.4 km",
+      rating: 4.7,
+      tags: ["Facial", "Brightening", "Open"],
+      isOpen: true,
+    },
+    {
+      id: "clinic_ppderma",
+      name: "Phnom Penh Derma Care",
+      specialty: "Skin health consultation and laser care",
+      address: "Monivong Blvd, Phnom Penh",
+      distance: "5.2 km",
+      rating: 4.6,
+      tags: ["Dermatology", "Laser"],
+      isOpen: true,
     },
   ];
 
   private readonly doctors: Doctor[] = [
     {
       id: "doctor_frances",
-      name: "Dr. Frances",
-      specialty: "Dermatologist",
-      clinicName: "Lumina Skin Institute",
+      name: "Dr. Sok Vicheka",
+      specialty: "Dermatology Consultation",
+      clinicName: "JongSart Skin Clinic",
       experienceYears: 12,
       rating: 4.9,
     },
     {
       id: "doctor_sarah",
-      name: "Dr. Sarah Chen",
-      specialty: "Medical Laser",
-      clinicName: "Lumina Skin Institute",
+      name: "Dr. Lim Rachana",
+      specialty: "Laser & Pigmentation Care",
+      clinicName: "JongSart Skin Clinic",
       experienceYears: 9,
       rating: 4.8,
     },
     {
       id: "doctor_lina",
-      name: "Dr. Lina Sok",
-      specialty: "Cosmetic Care",
-      clinicName: "Emerald Medical Spa",
+      name: "Dr. Chan Sopheak",
+      specialty: "Acne & Sensitive Skin Care",
+      clinicName: "Sovanna Aesthetic Clinic",
       experienceYears: 7,
       rating: 4.8,
+    },
+    {
+      id: "doctor_sreyneang",
+      name: "Dr. Kim Sreyneang",
+      specialty: "Aesthetic Dermatology",
+      clinicName: "Tonle Skin & Beauty Clinic",
+      experienceYears: 8,
+      rating: 4.8,
+    },
+    {
+      id: "doctor_dara",
+      name: "Dr. Heng Dara",
+      specialty: "Skin Health Consultation",
+      clinicName: "Phnom Penh Derma Care",
+      experienceYears: 10,
+      rating: 4.7,
     },
   ];
 
   private readonly treatments: Treatment[] = [
     {
       id: "treatment_hydra",
-      title: "Bio-Restorative HydraFacial",
+      title: "Hydra Facial Care",
       category: "Facial",
-      price: "$120",
-      duration: "60 min",
+      price: "$45",
+      duration: "45 min",
       description:
-        "Medical-grade hydration treatment for dry, congested combination skin.",
+        "A hydrating facial care option that may help dry or combination skin. Clinic staff will confirm suitability first.",
     },
     {
       id: "treatment_blue_light",
-      title: "Blue Light Detox Therapy",
-      category: "Acne Care",
-      price: "$95",
-      duration: "45 min",
+      title: "Acne Consultation",
+      category: "Consultation",
+      price: "$15",
+      duration: "30 min",
       description:
-        "Targeted blemish support for sensitive and breakout-prone skin.",
+        "A short consultation for acne and breakout-prone skin. Clinic staff will recommend a suitable care option.",
     },
     {
       id: "treatment_lactic_peel",
-      title: "Lactic Silk Peel",
-      category: "Peeling",
-      price: "$115",
+      title: "Brightening Facial Care",
+      category: "Facial",
+      price: "$40",
+      duration: "45 min",
+      description:
+        "A gentle facial care option that may help with uneven or dull skin tone.",
+    },
+    {
+      id: "treatment_deep_clean",
+      title: "Deep Cleansing Facial",
+      category: "Facial",
+      price: "$35",
+      duration: "60 min",
+      description:
+        "Designed for skin that feels oily or congested. Clinic staff will check the skin condition before recommending care.",
+    },
+    {
+      id: "treatment_sensitive",
+      title: "Sensitive Skin Consultation",
+      category: "Consultation",
+      price: "$18",
+      duration: "30 min",
+      description:
+        "A consultation for sensitive or easily irritated skin to help find a suitable care option.",
+    },
+    {
+      id: "treatment_pigmentation",
+      title: "Pigmentation Care Consultation",
+      category: "Laser & Pigmentation",
+      price: "$90",
       duration: "50 min",
-      description: "Gentle polish and glow support for uneven skin texture.",
+      description:
+        "A consultation for dark spots and uneven tone. Clinic staff will confirm suitability before any care.",
+    },
+    {
+      id: "treatment_scar",
+      title: "Scar Care Consultation",
+      category: "Consultation",
+      price: "$25",
+      duration: "40 min",
+      description:
+        "A consultation that may help customers understand care options for acne scars or marks.",
+    },
+    {
+      id: "treatment_antiaging",
+      title: "Anti-Aging Facial",
+      category: "Facial",
+      price: "$55",
+      duration: "60 min",
+      description:
+        "A facial care option that may help with fine lines and skin texture. Clinic staff will confirm suitability.",
+    },
+    {
+      id: "treatment_pore",
+      title: "Pore Cleansing Treatment",
+      category: "Facial",
+      price: "$30",
+      duration: "45 min",
+      description:
+        "A pore cleansing care option for skin affected by daily pollution and congestion.",
+    },
+    {
+      id: "treatment_barrier",
+      title: "Skin Barrier Recovery Care",
+      category: "Recovery Care",
+      price: "$40",
+      duration: "50 min",
+      description:
+        "A recovery care option that may help support a dry or sensitive skin barrier.",
     },
   ];
 
   private readonly promotions: Promotion[] = [
     {
       id: "offer_flash_facial",
-      title: "Advanced Lactic Facial",
-      subtitle: "Flash deal for sensitive glow care",
-      price: "$85",
-      badge: "40% Off",
+      title: "First Visit Consultation Discount",
+      subtitle:
+        "For new customers booking through JongSart. Clinic staff will confirm the available time before the visit.",
+      price: "$12",
+      badge: "New",
     },
     {
       id: "offer_radiance_trio",
-      title: "The Radiance Trio",
-      subtitle: "3 clinical sessions with aftercare",
-      price: "$120",
-      badge: "Bundle",
+      title: "Weekend Facial Offer",
+      subtitle: "Deep cleansing facial care on weekends",
+      price: "$30",
+      badge: "Weekend",
     },
     {
       id: "offer_age_reverse",
-      title: "Age-Reverse Cycle",
-      subtitle: "Laser, recovery, and barrier repair",
-      price: "$180",
-      badge: "Premium",
+      title: "Student Skin Care Package",
+      subtitle: "Consultation and basic facial for students",
+      price: "$20",
+      badge: "Student",
+    },
+    {
+      id: "offer_acne_promo",
+      title: "Acne Care Consultation Promo",
+      subtitle: "Acne consultation with a recommended care option",
+      price: "$15",
+      badge: "Promo",
+    },
+    {
+      id: "offer_hydra_month",
+      title: "Hydra Facial Month-End Offer",
+      subtitle: "Hydra facial care at a special month-end rate",
+      price: "$40",
+      badge: "Limited",
     },
   ];
 
@@ -215,9 +330,9 @@ export class MockDataService {
       id: "booking_demo_1",
       patientName: "Dara Sok",
       phone: "012345678",
-      treatmentName: "Bio-Restorative HydraFacial",
-      clinicName: "Lumina Skin Institute",
-      doctorName: "Dr. Frances",
+      treatmentName: "Hydra Facial Care",
+      clinicName: "JongSart Skin Clinic",
+      doctorName: "Dr. Sok Vicheka",
       date: "Mon 30",
       time: "09:00 AM",
       note: "Sensitive skin, first consultation.",
@@ -231,7 +346,8 @@ export class MockDataService {
       id: "chat_1",
       senderRole: "staff",
       senderName: "Clinic Staff",
-      message: "Hello! Welcome to JongSart. How can our clinic help you today?",
+      message:
+        "Thank you for contacting JongSart. Please share your preferred date and phone number, our clinic staff will confirm the appointment.",
       createdAt: "2026-06-28T02:00:00.000Z",
     },
   ];
@@ -239,12 +355,30 @@ export class MockDataService {
   private reviews: Review[] = [
     {
       id: "review_1",
-      customerName: "Elena Morn",
-      treatmentName: "Chemical Peel",
+      customerName: "Sreyneang",
+      treatmentName: "Deep Cleansing Facial",
       rating: 5,
       comment:
-        "Professional, calming, and clear consultation. My skin feels hydrated.",
+        "The staff explained the facial process clearly and the clinic was clean. Booking through the app was simple.",
       createdAt: "2026-06-27T04:20:00.000Z",
+    },
+    {
+      id: "review_2",
+      customerName: "Dara",
+      treatmentName: "Acne Consultation",
+      rating: 4,
+      comment:
+        "I liked that the appointment was pending first, then staff contacted me to confirm the time.",
+      createdAt: "2026-06-26T09:10:00.000Z",
+    },
+    {
+      id: "review_3",
+      customerName: "Pisey",
+      treatmentName: "Skin Health Consultation",
+      rating: 5,
+      comment:
+        "The consultation helped me understand which treatment was suitable for my skin concern.",
+      createdAt: "2026-06-25T07:45:00.000Z",
     },
   ];
 
@@ -350,7 +484,7 @@ export class MockDataService {
       senderRole: "staff",
       senderName: "Clinic Staff",
       message:
-        "Thank you. Your appointment request is pending confirmation. Our clinic staff will contact you soon.",
+        "Your appointment request has been sent. Clinic staff will contact you to confirm the schedule.",
     });
     return booking;
   }
