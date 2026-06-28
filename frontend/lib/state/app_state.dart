@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../core/storage/local_storage_service.dart';
 import '../data/mock/mock_repository.dart';
+import '../data/remote/catalog_repository.dart';
 import '../models/booking.dart';
 import '../models/chat_message.dart';
 import '../models/clinic.dart';
@@ -13,9 +16,21 @@ import '../models/treatment_model.dart';
 class AppState extends ChangeNotifier {
   final MockRepository _repository = MockRepository();
   final LocalStorageService _store = LocalStorageService();
+  final CatalogRepository _catalogRepository;
+
+  /// When true, the app tries to load the read-only catalog from the backend
+  /// during bootstrap. Disabled in tests for determinism.
+  final bool _autoLoadRemoteCatalog;
 
   List<Treatment> _treatments = [];
   bool _isLoading = true;
+
+  // --- Read-only backend catalog state ----------------------------------
+  bool _isCatalogLoading = false;
+  // 'local' = using bundled/mock data, 'backend' = loaded from NestJS API.
+  String _catalogSource = 'local';
+  String? _catalogError;
+  bool _disposed = false;
 
   // --- Auth state (local only, no backend) ------------------------------
   bool _authLoaded = false;
@@ -67,7 +82,8 @@ class AppState extends ChangeNotifier {
 
   String _selectedConcern = 'Acne & Breakouts';
 
-  final List<Clinic> _clinics = const [
+  // Mutable so the read-only backend catalog can replace it when available.
+  List<Clinic> _clinics = const [
     Clinic(
       id: 'clinic_lumina',
       name: 'JongSart Skin Clinic',
@@ -103,7 +119,7 @@ class AppState extends ChangeNotifier {
     ),
   ];
 
-  final List<Doctor> _doctors = const [
+  List<Doctor> _doctors = const [
     Doctor(
       id: 'doctor_frances',
       name: 'Dr. Sok Vicheka',
@@ -142,7 +158,7 @@ class AppState extends ChangeNotifier {
     ),
   ];
 
-  final List<Offer> _offers = const [
+  List<Offer> _offers = const [
     Offer(
       id: 'offer_flash_facial',
       title: 'First Visit Consultation Discount',
@@ -253,8 +269,33 @@ class AppState extends ChangeNotifier {
       : _reviews.fold<double>(0, (sum, review) => sum + review.rating) /
           _reviews.length;
 
-  AppState() {
+  // --- Catalog (read-only backend) getters ------------------------------
+  bool get isCatalogLoading => _isCatalogLoading;
+  String get catalogSource => _catalogSource;
+  bool get isUsingBackendCatalog => _catalogSource == 'backend';
+  String? get catalogError => _catalogError;
+
+  /// Friendly label for an optional "data source" indicator in the UI.
+  String get catalogSourceLabel =>
+      _catalogSource == 'backend' ? 'Backend API' : 'Local demo data';
+
+  AppState({
+    CatalogRepository? catalogRepository,
+    bool autoLoadRemoteCatalog = true,
+  })  : _catalogRepository = catalogRepository ?? CatalogRepository(),
+        _autoLoadRemoteCatalog = autoLoadRemoteCatalog {
     _bootstrap();
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  /// notifyListeners that is safe to call from async work after disposal.
+  void _safeNotify() {
+    if (!_disposed) notifyListeners();
   }
 
   Future<void> _bootstrap() async {
@@ -296,6 +337,41 @@ class AppState extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+
+    // Try the read-only backend catalog in the background. The app is already
+    // usable with local data; this only upgrades to backend data if reachable.
+    if (_autoLoadRemoteCatalog) {
+      unawaited(_loadRemoteCatalog());
+    }
+  }
+
+  // --- Read-only backend catalog ----------------------------------------
+  /// Public entry point (e.g. for a future pull-to-refresh) to (re)load the
+  /// catalog from the backend with automatic fallback to local data.
+  Future<void> refreshCatalog() => _loadRemoteCatalog();
+
+  /// Loads clinics, doctors, treatments, and offers from the backend. On ANY
+  /// failure it keeps the existing local/mock data silently — the demo never
+  /// breaks if the backend is offline or slow.
+  Future<void> _loadRemoteCatalog() async {
+    _isCatalogLoading = true;
+    _safeNotify();
+    try {
+      final catalog = await _catalogRepository.fetchCatalog();
+      _clinics = catalog.clinics;
+      _doctors = catalog.doctors;
+      _treatments = catalog.treatments;
+      _offers = catalog.offers;
+      _catalogSource = 'backend';
+      _catalogError = null;
+    } catch (e) {
+      // Keep current local/mock data; just record why for optional debug.
+      _catalogSource = 'local';
+      _catalogError = e.toString();
+    } finally {
+      _isCatalogLoading = false;
+      _safeNotify();
+    }
   }
 
   // --- Auth -------------------------------------------------------------

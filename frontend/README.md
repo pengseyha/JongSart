@@ -102,6 +102,26 @@ the **NestJS mock backend** later **without rewriting the screens**.
 - To try it manually, start the backend (`cd backend && npm run start:dev`) and
   call `BackendApiService().debugPingHealth()`.
 
+## Read-only backend catalog integration
+
+The app can now load **read-only catalog data** — clinics, doctors, treatments,
+and promotions — from the NestJS mock API, while everything else stays local.
+
+- On startup, `AppState` calls the backend (`GET /clinics`, `/doctors`,
+  `/treatments`, `/promotions`) through `CatalogRepository` and maps the JSON to
+  the existing models.
+- **Automatic fallback:** if the backend is offline, slow, errors, or returns an
+  empty catalog, the app **silently keeps the local/mock data** — the app still
+  opens and Home/Search/detail screens keep working. No error is shown to the
+  user during the demo.
+- The data source is tracked in `AppState.catalogSource` (`local` / `backend`)
+  and shown as a small, non-intrusive label on the Home header
+  ("Data source: Local demo data" or "Data source: Backend API").
+- **Still local for now (MVP):** auth/login, bookings, chat, reviews, favorites,
+  claimed promos, and skin-profile selection — no write calls go to the backend.
+- Base URL: Chrome uses `http://localhost:3000`; the Android emulator may use
+  `http://10.0.2.2:3000` (see `ApiConfig`).
+
 ## Folder structure
 
 ```

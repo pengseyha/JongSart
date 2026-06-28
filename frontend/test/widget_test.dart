@@ -6,8 +6,54 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:jong_sart/app.dart';
 import 'package:jong_sart/models/booking.dart';
+import 'package:jong_sart/models/clinic.dart';
+import 'package:jong_sart/models/treatment_model.dart';
 import 'package:jong_sart/core/router/app_router.dart';
+import 'package:jong_sart/data/remote/catalog_repository.dart';
 import 'package:jong_sart/state/app_state.dart';
+
+/// Catalog repository that always fails, to simulate an offline backend.
+class _FailingCatalogRepository extends CatalogRepository {
+  @override
+  Future<RemoteCatalog> fetchCatalog() async {
+    throw const CatalogException('Backend offline (test).');
+  }
+}
+
+/// Catalog repository that returns fixed backend data.
+class _FakeCatalogRepository extends CatalogRepository {
+  @override
+  Future<RemoteCatalog> fetchCatalog() async {
+    return RemoteCatalog(
+      clinics: const [
+        Clinic(
+          id: 'c1',
+          name: 'Backend Clinic',
+          specialty: 'Consultation',
+          address: 'BKK1, Phnom Penh',
+          distance: '1 km',
+          rating: 4.5,
+          reviewCount: 0,
+          tags: ['Dermatology'],
+          isOpen: true,
+        ),
+      ],
+      doctors: const [],
+      treatments: [
+        Treatment(
+          id: 't1',
+          title: 'Backend Treatment',
+          category: 'Facial',
+          price: r'$20',
+          rating: '4.5',
+          imageUrl: '',
+          duration: '30 min',
+        ),
+      ],
+      offers: const [],
+    );
+  }
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +71,7 @@ void main() {
 
     await tester.pumpWidget(
       ChangeNotifierProvider(
-        create: (_) => AppState(),
+        create: (_) => AppState(autoLoadRemoteCatalog: false),
         child: const JongSartApp(),
       ),
     );
@@ -83,7 +129,7 @@ void main() {
   });
 
   test('a submitted booking request starts as pending', () {
-    final state = AppState();
+    final state = AppState(autoLoadRemoteCatalog: false);
     final booking = state.submitBookingRequest(
       patientName: 'Test Patient',
       phone: '012345678',
@@ -108,7 +154,7 @@ void main() {
   });
 
   test('customer can sign up, log out, and log back in', () async {
-    final state = AppState();
+    final state = AppState(autoLoadRemoteCatalog: false);
 
     final signupError = await state.signUpCustomer(
       fullName: 'Dara Sok',
@@ -144,7 +190,7 @@ void main() {
   });
 
   test('duplicate customer phone is rejected on sign up', () async {
-    final state = AppState();
+    final state = AppState(autoLoadRemoteCatalog: false);
 
     final first = await state.signUpCustomer(
       fullName: 'First User',
@@ -162,7 +208,7 @@ void main() {
   });
 
   test('customer and clinic share one chat thread', () async {
-    final state = AppState();
+    final state = AppState(autoLoadRemoteCatalog: false);
     final initialCount = state.chatMessages.length;
 
     // Customer message adds the message plus an auto acknowledgement.
@@ -178,7 +224,7 @@ void main() {
   });
 
   test('staff login only accepts the mock staff account', () async {
-    final state = AppState();
+    final state = AppState(autoLoadRemoteCatalog: false);
 
     final bad = await state.loginStaff(
       username: 'staff@jongsart.com',
@@ -197,7 +243,7 @@ void main() {
   });
 
   test('demo customer can log in without signing up first', () async {
-    final state = AppState();
+    final state = AppState(autoLoadRemoteCatalog: false);
 
     final error = await state.loginWithRole(
       identifier: 'pengseyha0000@gmail.com',
@@ -208,5 +254,39 @@ void main() {
     expect(state.isCustomer, isTrue);
     expect(state.userName, 'Seyha Peng');
     expect(state.email, 'pengseyha0000@gmail.com');
+  });
+
+  test('catalog falls back to local data when backend is unavailable',
+      () async {
+    final state = AppState(
+      catalogRepository: _FailingCatalogRepository(),
+      autoLoadRemoteCatalog: false,
+    );
+
+    // Local data is present before any backend attempt.
+    expect(state.clinics, isNotEmpty);
+    expect(state.catalogSource, 'local');
+
+    // A failed backend load must not crash and must keep local data.
+    await state.refreshCatalog();
+
+    expect(state.catalogSource, 'local');
+    expect(state.isUsingBackendCatalog, isFalse);
+    expect(state.clinics.first.name, 'JongSart Skin Clinic');
+    expect(state.catalogError, isNotNull);
+  });
+
+  test('catalog uses backend data when available', () async {
+    final state = AppState(
+      catalogRepository: _FakeCatalogRepository(),
+      autoLoadRemoteCatalog: false,
+    );
+
+    await state.refreshCatalog();
+
+    expect(state.catalogSource, 'backend');
+    expect(state.isUsingBackendCatalog, isTrue);
+    expect(state.clinics.first.name, 'Backend Clinic');
+    expect(state.treatments.first.title, 'Backend Treatment');
   });
 }

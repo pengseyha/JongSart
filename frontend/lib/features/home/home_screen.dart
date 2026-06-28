@@ -49,6 +49,16 @@ class HomeScreen extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 12, color: AppColors.textGrey),
                           ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Data source: ${state.catalogSourceLabel}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: AppColors.textGrey
+                                    .withValues(alpha: 0.7)),
+                          ),
                         ],
                       ),
                     ),
